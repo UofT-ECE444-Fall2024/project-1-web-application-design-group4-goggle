@@ -1,43 +1,102 @@
 version: '3'
 
 services:
-  db:
-    image: postgres:13
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks: 
-      - app_network
-
-  web:
-    build: .
-    command: gunicorn --bind 0.0.0.0:8000 uoftrade.wsgi:application
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    depends_on:
-      - db
-    networks:
-      - app_network
+  identity-service:
+    build:
+      context: ./identity_service
     ports:
-      - "8000:8000"
+      - "12000:12000"
+    env_file:
+      - ./.env
+    depends_on:
+      db-identity-service:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db-identity-service:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: identity_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_IDENTITY_PASSWORD}
+    ports:
+      - "10000:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d identity_db -U ${POSTGRES_USER} -p 10000"]
+      interval: 1s
+      timeout: 1s
+      retries: 8
+    command: -p 10000
+
+  marketplace-service:
+    build:
+      context: ./marketplace_service
+    ports:
+      - "12001:12001"
+    env_file:
+      - ./.env
+    depends_on:
+      db-marketplace-service:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db-marketplace-service:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: marketplace_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_MARKETPLACE_PASSWORD}
+    ports:
+      - "10001:10001"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d marketplace_db -U ${POSTGRES_USER} -p 10001"]
+      interval: 1s
+      timeout: 1s
+      retries: 8
+    command: -p 10001
+
+  messaging-service:
+    build:
+      context: ./messaging_service
+    ports:
+      - "12002:12002"
+    env_file:
+      - ./.env
+    depends_on:
+      db-messaging-service:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db-messaging-service:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: messaging_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_MESSAGING_PASSWORD}
+    ports:
+      - "10002:10002"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d messaging_db -U ${POSTGRES_USER} -p 10002"]
+      interval: 1s
+      timeout: 1s
+      retries: 8
+    command: -p 10002
+
+  redis:
+    image: "redis:latest"
+    # command: sh -c "redis-server > redis.out 2>&1"
+    ports:
+      - "6379:6379"
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
     depends_on:
-      - web
-    networks:
-      - app_network
-
-volumes:
-  postgres_data:
-
-networks:
-  app_network:
+      - identity-service
+      - marketplace-service
+      - messaging-service
