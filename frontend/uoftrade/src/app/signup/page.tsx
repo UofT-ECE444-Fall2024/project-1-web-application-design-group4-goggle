@@ -19,16 +19,25 @@ const SignUpPage = () => {
                 height={30}
                 className="m-5"
             />
-            <section className="relative z-10 overflow-hidden pb-16 pt-8 md:pb-20 lg:pb-28 lg:pt-16">
+            <section className="relative z-10 overflow-hidden pb-16 md:pb-20 lg:pb-28 lg:pt-16">
                 <div className="container">
                     <div className="-mx-4 flex flex-wrap">
                         <div className="w-full px-4">
                             <div className="shadow-three mx-auto max-w-[500px] rounded-3xl bg-white-bg px-6 py-10 dark:bg-dark sm:p-[60px]">
-                                <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white-bg sm:text-3xl">
-                                    Welcome Back!
+                                <div className="flex justify-center">
+                                    <Image
+                                        src="/images/logo/UTrade_small.svg" 
+                                        alt="logo"
+                                        width={60}
+                                        height={50}
+                                        className="my-5"
+                                    />
+                                </div>
+                                <h3 className="mb-3 text-center text-2xl font-bold text-heading-1 dark:text-white-bg sm:text-3xl">
+                                    Create an Account
                                 </h3>
-                                <p className="text-center text-base font-medium text-body-color">
-                                    Sign in to manage your listings and discover new deals.
+                                <p className="text-center text-base font-medium text-subheading">
+                                    Join a growing community of trusted buyers and sellers!
                                 </p>
                                 <form>
                                     <div className="my-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
