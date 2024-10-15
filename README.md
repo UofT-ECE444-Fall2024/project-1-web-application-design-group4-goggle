@@ -10,7 +10,7 @@ Welcome to the UofTrade repository. Developed by Team 4, Goggle.
 
 Jira was used to manage and rank user stories/epics and keep track of tasks to do, in progress, and complete.
 
-#### Frontend
+### Frontend
 #### NextJS Frontend Template: https://github.com/NextJSTemplates/startup-nextjs
 
 ### Backend
