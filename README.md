@@ -12,6 +12,8 @@ Jira was used to manage and rank user stories/epics and keep track of tasks to d
 
 ### Frontend
 #### NextJS Frontend Template: https://github.com/NextJSTemplates/startup-nextjs
+#### NPM https://www.npmjs.com/
+#### NVM https://github.com/nvm-sh/nvm
 
 ### Backend
 
