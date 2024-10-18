@@ -53,6 +53,7 @@ const SignInForm = () => {
                                 <div className="mb-5 asterisk">
                                     <input
                                     placeholder="Enter your Password"
+                                    type="password"
                                     className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
                                     text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
                                     dark:bg-[#2C303B] dark:focus:shadow-none"
