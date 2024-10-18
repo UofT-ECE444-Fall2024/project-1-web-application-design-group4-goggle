@@ -7,16 +7,20 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form"
 
 import "../../types/inputs"
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
-
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm<Inputs>()
     
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        console.log(data)
+        router.push('\home')
+    };
 
     return (
         <section className="relative z-10 overflow-hidden pb-16 md:pb-20 lg:pb-28 lg:pt-16">

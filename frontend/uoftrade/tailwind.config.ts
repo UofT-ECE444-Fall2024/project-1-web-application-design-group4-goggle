@@ -15,6 +15,10 @@ const config: Config = {
       primary: '#28047a',
       'white-bg': '#fefefe',
       'black-fg': '#0e0e0e',
+      'uoftrade-purple': '#4B0082',
+      'white': '#ffffff',
+      'red': '#ff0000',
+      'balck': '#000000',
       'outline-grey': 'rgba(0, 0, 0, 0.1)',
       'heading-1': '#212B27',
       'subheading': '#32403B'
