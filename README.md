@@ -1,6 +1,7 @@
 # UofTrade
 
 Welcome to the UofTrade repository. Developed by Team 4, Goggle.
+*no update to tech stack for second sprint, same as first sprint*
 
 ## Tools
 
