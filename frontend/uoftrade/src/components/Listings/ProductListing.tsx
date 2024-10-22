@@ -2,14 +2,10 @@
 
 import Link from 'next/link';
 
-const ProductListing = () => {
-  const categories = [
-    { name: 'Textbooks', link: '/listings/textbooks' },
-    { name: 'Furniture', link: '/listings/furniture' },
-    { name: 'Electronics', link: '/listings/electronics' },
-    { name: 'Clothing', link: '/listings/clothing' },
-  ];
+import { categories } from '@/data/categories';
 
+const ProductListing = () => {
+ 
   return (
     <div className="py-8 bg-uoftrade-purple text-white text-center">
       <h2 className="text-2xl font-bold mb-4">Explore Categories...</h2>
