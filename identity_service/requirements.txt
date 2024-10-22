@@ -12,3 +12,4 @@ rest_framework_simplejwt==0.0.2
 PyJWT==2.8.0
 requests==2.31.0
 celery==5.3.4
+django-cors-headers==4.5.0

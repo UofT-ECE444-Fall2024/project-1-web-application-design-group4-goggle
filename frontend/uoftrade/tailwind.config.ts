@@ -15,6 +15,10 @@ const config: Config = {
       primary: '#28047a',
       'white-bg': '#fefefe',
       'black-fg': '#0e0e0e',
+      'outline-grey': 'rgba(0, 0, 0, 0.1)',
+      'heading-1': '#212B27',
+      'subheading': '#32403B',
+      'dark-red': '#9c0000'
     },
     container: {
       center: true,

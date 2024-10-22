@@ -1,0 +1,8 @@
+.asterisk::after {
+    content:" *"; 
+    color: #9c0000;
+    position: absolute; 
+    margin: 0px 0px 0px -20px; 
+    font-size: x-large; 
+    padding: 0 5px 0 0; 
+  }
