@@ -6,11 +6,9 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import TextBox from "../TextBox/TextBox";
 
 import "../../types/inputs"
-
-import InlineErrorMessage from "../InlineErrorMessage/InlineErrorMessage";
-
 
 const SignUpForm = () => {
 
@@ -76,74 +74,60 @@ const SignUpForm = () => {
                                     Join a growing community of trusted buyers and sellers!
                                 </p>
                                 <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-                                        <div className="asterisk">
-                                            <input
+                                    <div className="mt-5 flex flex-col justify-between items-top gap-5 sm:flex-row">
+                                        <TextBox<RegistrationInputs>
                                             placeholder="First Name"
-                                            className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                            text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                            dark:bg-[#2C303B] dark:focus:shadow-none"
-                                            {...register("first_name", { required: true })}
-                                            />
-                                        </div>
-                                        
-                                        <div className="asterisk">
-                                            <input
+                                            name="first_name"
+                                            register={register}
+                                            errors={errors}
+                                        />
+                                        <TextBox<RegistrationInputs>
                                             placeholder="Last Name"
-                                            className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                            text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                            dark:bg-[#2C303B] dark:focus:shadow-none"
-                                            {...register("last_name", { required: true })}
-                                            />
-                                        </div>                              
+                                            name="last_name"
+                                            register={register}
+                                            errors={errors}
+                                        />                             
                                     </div>
-                                    <div className="flex flex-col justify-between sm:flex-row sm:items-center">
-                                        {errors.first_name && <InlineErrorMessage/>}
-                                        {errors.last_name && <InlineErrorMessage/>}
-                                    </div>
-                                    <div className="mt-3 asterisk">
-                                        <input
+                                    <TextBox<RegistrationInputs>
                                         placeholder="U of T Email Address"
                                         type="email"
-                                        className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                        text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                        dark:bg-[#2C303B] dark:focus:shadow-none"
-                                        {...register("email", { required: true, pattern: {
-                                            value: /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/i,
-                                            message: "Please use a mail.utoronto.ca email address"
-                                          } })}
-                                        />
-                                    </div>
-                                    {errors.email && errors.email.type === "required" && <InlineErrorMessage/>}
-                                    {errors.email && errors.email.type === "pattern" && <InlineErrorMessage message={errors.email.message}/> }
-                                    <div className="mt-7 asterisk">
-                                        <input
+                                        name="email"
+                                        register={register}
+                                        options={{
+                                            pattern: {
+                                                value: /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/i,
+                                                message: "Please use a mail.utoronto.ca email address"
+                                                } 
+                                            }}
+                                        divClassNames={"mt-3"}
+                                        errors={errors}
+                                    />
+                                    <TextBox<RegistrationInputs>
                                         placeholder="Enter your Password"
                                         type="password"
-                                        className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                        text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                        dark:bg-[#2C303B] dark:focus:shadow-none"
-                                        {...register("password", { required: true, pattern: {
-                                            value: /^(?=.*[!@#$&*])(?=.*[0-9]).{8}$/,
-                                            message: "Password must be 8 characters long and contain at least a number and special character"
-                                          } })}
-                                        /> 
-                                    </div>
-                                    {errors.password && errors.password.type === "required" && <InlineErrorMessage/>}
-                                    {errors.password && errors.password.type === "pattern" && <InlineErrorMessage message={errors.password.message}/> }
-                                    <div className="mt-3 asterisk">
-                                        <input
+                                        name="password"
+                                        register={register}
+                                        options={{
+                                            pattern: {
+                                                value: /^(?=.*[!@#$&*])(?=.*[0-9]).{8}$/,
+                                                message: "Password must be 8 characters long and contain at least a number and special character"
+                                            }
+                                        }}
+                                        divClassNames={"mt-3"}
+                                        errors={errors}
+                                    />
+                                    <TextBox<RegistrationInputs>
                                         placeholder="Confirm your Password"
                                         type="password"
-                                        className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                        text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                        dark:bg-[#2C303B] dark:focus:shadow-none"
-                                        {...register("password_confirmation", { required: true, validate: value =>
-                                            value === password.current || "The passwords do not match"})}
-                                        /> 
-                                    </div>
-                                    {errors.password_confirmation && errors.password_confirmation.type === "required" && <InlineErrorMessage/>}
-                                    {errors.password_confirmation && errors.password_confirmation.type === "validate" && <InlineErrorMessage message={errors.password_confirmation.message} />}
+                                        name="password_confirmation"
+                                        register={register}
+                                        options={{
+                                            validate: value => 
+                                                value === password.current || "The passwords do not match"
+                                        }}
+                                        divClassNames={"mt-3"}
+                                        errors={errors}
+                                    />
                                 <button type="submit" className="mt-5 mb-2 rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
                                 text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 ">
                                     Create Account
