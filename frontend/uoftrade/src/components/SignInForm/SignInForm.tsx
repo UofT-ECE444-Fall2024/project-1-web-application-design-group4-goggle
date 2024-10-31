@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import TextBox from "../TextBox/TextBox";
 
 import { useForm, SubmitHandler } from "react-hook-form"
 
@@ -40,27 +41,28 @@ const SignInForm = () => {
                                 Sign in to manage your listings and discover new deals.
                             </p>
                             <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="mt-5 asterisk">
-                                    <input
-                                    placeholder="U of T Email Address"
-                                    className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                    text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                    dark:bg-[#2C303B] dark:focus:shadow-none"
-                                    {...register("email", { required: true })}
-                                    />   
-                                </div>
-                                {errors.email && <span className="text-center text-base font-small text-subheading">This field is required</span>}
-                                <div className="mt-5 asterisk">
-                                    <input
+                                <TextBox<LoginInputs>
+                                        placeholder="U of T Email Address"
+                                        type="email"
+                                        name="email"
+                                        register={register}
+                                        options={{
+                                            pattern: {
+                                                value: /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/i,
+                                                message: "Please use a mail.utoronto.ca email address"
+                                                } 
+                                            }}
+                                        divClassNames={"mt-5"}
+                                        errors={errors}
+                                    />
+                                <TextBox<LoginInputs>
                                     placeholder="Enter your Password"
                                     type="password"
-                                    className="dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
-                                    text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
-                                    dark:bg-[#2C303B] dark:focus:shadow-none"
-                                    {...register("password", { required: true })}
-                                    />          
-                                </div>
-                                {errors.password && <span className="text-center text-base font-small text-subheading">This field is required</span>}
+                                    name="password"
+                                    register={register}
+                                    divClassNames="mt-5"
+                                    errors={errors}
+                                />
                                 <div className="my-5 flex flex-col justify-between sm:flex-row sm:items-center">
                                     <div className="mb-4 sm:mb-0">
                                         <label
