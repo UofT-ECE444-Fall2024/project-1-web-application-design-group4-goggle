@@ -48,9 +48,9 @@ const SignInForm = () => {
                                         register={register}
                                         options={{
                                             pattern: {
-                                                value: /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/i,
-                                                message: "Please use a mail.utoronto.ca email address"
-                                                } 
+                                                value: /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*utoronto\.ca$/i,
+                                                message: "Please use a UofT email address containing 'utoronto.ca'"
+                                                }
                                             }}
                                         divClassNames={"mt-5"}
                                         errors={errors}
