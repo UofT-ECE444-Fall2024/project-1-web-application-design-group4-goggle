@@ -109,8 +109,8 @@ const SignUpForm = () => {
                                         register={register}
                                         options={{
                                             pattern: {
-                                                value: /^(?=.*[!@#$&*])(?=.*[0-9]).{8}$/,
-                                                message: "Password must be 8 characters long and contain at least a number and special character"
+                                                value: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[ -\/:-@[-`{-~])[a-zA-Z\d -\/:-@[-`{-~]{8,}$/,
+                                                message: "Password must be atleast 8 characters long and contain at least a letter, a number and a special character"
                                             }
                                         }}
                                         divClassNames={"mt-3"}
