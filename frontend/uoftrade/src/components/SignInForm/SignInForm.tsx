@@ -42,7 +42,7 @@ const SignInForm = () => {
                             </p>
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <TextBox<LoginInputs>
-                                        placeholder="U of T Email Address"
+                                        placeholder="UofT Email Address"
                                         type="email"
                                         name="email"
                                         register={register}
@@ -54,6 +54,7 @@ const SignInForm = () => {
                                             }}
                                         divClassNames={"mt-5"}
                                         errors={errors}
+                                        topText="Email"
                                     />
                                 <TextBox<LoginInputs>
                                     placeholder="Enter your Password"
@@ -62,6 +63,7 @@ const SignInForm = () => {
                                     register={register}
                                     divClassNames="mt-5"
                                     errors={errors}
+                                    topText="Password"
                                 />
                                 <div className="my-5 flex flex-col justify-between sm:flex-row sm:items-center">
                                     <div className="mb-4 sm:mb-0">

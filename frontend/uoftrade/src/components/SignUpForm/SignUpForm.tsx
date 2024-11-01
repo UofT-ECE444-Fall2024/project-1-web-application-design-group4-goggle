@@ -80,16 +80,18 @@ const SignUpForm = () => {
                                             name="first_name"
                                             register={register}
                                             errors={errors}
+                                            topText="First Name"
                                         />
                                         <TextBox<RegistrationInputs>
                                             placeholder="Last Name"
                                             name="last_name"
                                             register={register}
                                             errors={errors}
+                                            topText="Last Name"
                                         />                             
                                     </div>
                                     <TextBox<RegistrationInputs>
-                                        placeholder="U of T Email Address"
+                                        placeholder="UofT Email Address"
                                         type="email"
                                         name="email"
                                         register={register}
@@ -101,6 +103,7 @@ const SignUpForm = () => {
                                             }}
                                         divClassNames={"mt-3"}
                                         errors={errors}
+                                        topText="Email"
                                     />
                                     <TextBox<RegistrationInputs>
                                         placeholder="Enter your Password"
@@ -115,6 +118,7 @@ const SignUpForm = () => {
                                         }}
                                         divClassNames={"mt-3"}
                                         errors={errors}
+                                        topText="Password"
                                     />
                                     <TextBox<RegistrationInputs>
                                         placeholder="Confirm your Password"
@@ -127,6 +131,7 @@ const SignUpForm = () => {
                                         }}
                                         divClassNames={"mt-3"}
                                         errors={errors}
+                                        topText="Password Confirmation"
                                     />
                                 <button type="submit" className="mt-5 mb-2 rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
                                 text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 ">
