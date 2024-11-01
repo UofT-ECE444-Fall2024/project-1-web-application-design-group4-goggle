@@ -14,6 +14,8 @@ interface TextBoxProps<T extends FieldValues> {
   inputClassNames?: string;
   errors?: FieldErrors<T>; // Adding errors as a prop
   topText?: string; // Text of the name above the TextBox
+  textArea?: boolean;
+  textAreaRows?: number;
 }
 
 const TextBox = <T extends FieldValues>({
@@ -26,7 +28,9 @@ const TextBox = <T extends FieldValues>({
   divClassNames = "",
   inputClassNames = "",
   errors,
-  topText= "",
+  topText = "",
+  textArea = false,
+  textAreaRows = 5,
 }: TextBoxProps<T>) => {
   // Check if there's an error for the field using "name" as the key
   const error = errors?.[name];
@@ -35,6 +39,15 @@ const TextBox = <T extends FieldValues>({
     <div className={`mb-0 leading-none ${divClassNames}`}>
         {topText && <span className="text-xs text-heading-1">{topText}</span>}
         <div className="flex flex-col relative">
+                {textArea ? 
+                <textarea
+                placeholder={placeholder}
+                rows={textAreaRows}
+                className={`dark:text-body-color-dark dark:shadow-two w-full rounded-xl border border-outline-grey bg-white px-6 py-3 
+                            text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
+                            dark:bg-[#2C303B] dark:focus:shadow-none ${inputClassNames}`}
+                {...(register ? register(name, { required, ...options }) : { name })}
+            /> :
                 <input
                     placeholder={placeholder}
                     type={type}
@@ -42,8 +55,8 @@ const TextBox = <T extends FieldValues>({
                                 text-base text-body-color outline-none transition-all duration-300 dark:border-transparent 
                                 dark:bg-[#2C303B] dark:focus:shadow-none ${inputClassNames}`}
                     {...(register ? register(name, { required, ...options }) : { name })}
-                />
-                {required && <span className="asterisk"></span>}
+                />}
+                {required && (<span className={`asterisk`}></span>)}
             {error && (
                 <div>
                 {error.type === "required" && <InlineErrorMessage message="This field is required" />}
