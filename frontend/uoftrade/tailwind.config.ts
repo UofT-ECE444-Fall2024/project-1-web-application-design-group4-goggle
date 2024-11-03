@@ -18,7 +18,9 @@ const config: Config = {
       'outline-grey': 'rgba(0, 0, 0, 0.1)',
       'heading-1': '#212B27',
       'subheading': '#32403B',
-      'dark-red': '#9c0000'
+      'dark-red': '#9c0000',
+      'grey-bg': 'rgba(247, 247, 247, 0.5)',
+      'dark-grey': 'rgba(121, 121, 121, 0.4)',
     },
     container: {
       center: true,
