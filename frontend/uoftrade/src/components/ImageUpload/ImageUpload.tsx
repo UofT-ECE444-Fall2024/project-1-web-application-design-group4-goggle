@@ -33,15 +33,15 @@ const ImageUpload = () => {
   };
 
   return (
-    <section className="w-full max-h-[40vh] bg-gray-100 flex flex-col items-center p-4">
+    <section className="w-full max-h-[40vh] flex flex-col items-center p-4">
       <div className="container mx-auto px-4 sm:px-8 md:w-full">
         {/* Styled container for file input */}
         <div
           className="mb-4 xl:w-[40%] lg:w-[40%] md:max-w-full aspect-square bg-light-grey rounded-lg flex flex-col items-center justify-center cursor-pointer border-[3px] border-outline-grey hover:border-primary transition"
           onClick={() => document.getElementById('fileInput')?.click()}
         >
-          <span className="text-4xl font-bold text-heading-1">+</span>
-          <span className="text-2xl font-bold text-heading-1">Add photo</span>
+          <span className="text-4xl user-select-none font-bold text-heading-1">+</span>
+          <span className="text-2xl user-select-none font-bold text-heading-1">Add photo</span>
           <input
             id="fileInput"
             type="file"
@@ -54,10 +54,10 @@ const ImageUpload = () => {
 
         {/* Image Previews */}
         <div className="grid grid-cols-3 gap-2 xl:w-[40%] lg:w-[40%] md:max-w-full">
-          {imagePreviews.map((src, index) => (
+          {imagePreviews.slice(0, 5).map((src, index) => (
             <div
               key={index}
-              className="w-full aspect-square bg-gray-100 rounded-md overflow-hidden"
+              className="w-full aspect-square border-2 bg-light-grey border-outline-grey rounded-md overflow-hidden"
             >
               <img
                 src={src}
@@ -66,11 +66,16 @@ const ImageUpload = () => {
               />
             </div>
           ))}
+          {imagePreviews.length > 5 && (
+            <div className="w-full aspect-square border-2 bg-light-grey border-outline-grey hover:border-primary rounded-md flex items-center justify-center">
+              <span className="text-gray-600 user-select-none font-bold">View More</span>
+            </div>
+          )}
         </div>
 
         <button
           onClick={handleSubmit}
-          className="mt-4 bg-primary text-white-bg px-4 py-2 rounded hover:bg-primary transition duration-200"
+          className="mt-4 bg-primary text-white-bg px-4 py-2 rounded hover:bg-light-grey hover:text-heading-1 transition duration-200"
         >
           Upload Images
         </button>
