@@ -28,6 +28,7 @@ const PostListingPage = () => {
     formData.append("price", textData.price);
     formData.append("description", textData.description);
     formData.append("pickup_location", textData.pickup_location);
+    formData.append("category", textData.category);
 
     try {
       const response = await axios.post("/api/upload", formData);

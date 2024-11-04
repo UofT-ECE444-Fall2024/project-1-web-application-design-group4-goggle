@@ -17,4 +17,5 @@ type CreatePostInputs = {
   price: number
   description: string
   pickup_location: string
+  category: string
 }

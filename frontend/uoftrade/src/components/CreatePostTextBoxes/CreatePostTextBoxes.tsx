@@ -47,7 +47,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
           </div>
 
           <TextBox<CreatePostInputs>
-            placeholder="Description"
+            placeholder="Description (optional)"
             name="description"
             register={register}
             errors={errors}
@@ -58,11 +58,20 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
 
           <div className="mt-5 flex flex-col justify-between items-top gap-2 sm:flex-row w-full">
             <TextBox<CreatePostInputs>
-              placeholder="Location"
+              placeholder="Location (optional)"
               name="pickup_location"
               register={register}
               errors={errors}
               topText="Pickup Location"
+              divClassNames="w-full"
+              required={false}
+            />
+            <TextBox<CreatePostInputs>
+              placeholder="Category (optional)"
+              name="category"
+              register={register}
+              errors={errors}
+              topText="Category"
               divClassNames="w-full"
               required={false}
             />
