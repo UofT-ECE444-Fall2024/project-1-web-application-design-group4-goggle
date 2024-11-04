@@ -10,15 +10,15 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
   const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm<CreatePostInputs>();
 
-  const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
+  const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data:CreatePostInputs) => {
     await onPublish(data);
-    router.push("/home");
+    router.push("/home"); // success page
   };
 
   return (
     <div className="w-full">
       <div className="bg-white-bg rounded-3xl px-6 py-10 dark:bg-dark w-full">
-        <form onChange={handleSubmit(handleFormSubmit)} className="w-full">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full">
         <div className="mt-5 flex flex-col justify-between items-top gap-2 sm:flex-row w-full">
             <TextBox<CreatePostInputs>
               placeholder="Title"
@@ -27,6 +27,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               errors={errors}
               topText="Title"
               divClassNames="w-full"
+              required={true}
             />
             <TextBox<CreatePostInputs>
               placeholder="Price"
@@ -34,7 +35,14 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               register={register}
               errors={errors}
               topText="Price"
+              options={{
+                pattern: {
+                    value: /^(?:[$€£¥])?\s?(\d{1,3}(?:,\d{3})*|\d+)(\.\d{2})?$/,
+                    message: "Price field must contain a valid numberical value as a cost."
+                }
+            }}
               divClassNames="w-full"
+              required={true}
             />
           </div>
 
