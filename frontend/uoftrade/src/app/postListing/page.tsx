@@ -9,9 +9,15 @@ import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostText
 
 const PostListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const handleImagesChange = (images: File[]) => {
-    setUploadedImages(images); // Update the state with selected images
+  const handleImagesChange = (newImages: File[]) => {
+    // Update the uploaded images
+    setUploadedImages((prevImages) => [...prevImages, ...newImages]); // Append new images to existing ones
+
+    // Create new previews and append them to existing previews
+    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]); // Append new previews
   };
 
   const handlePublish = async (textData: any) => {
@@ -38,7 +44,7 @@ const PostListingPage = () => {
       <section className="w-full flex flex-col items-center p-4 gap-8">
         <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
           <div className="xl:w-[40%] lg:w-[40%] w-full">
-            <ImageUpload onImagesChange={handleImagesChange} />
+            <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
           </div>
           <div className="xl:w-[60%] lg:w-[60%] w-full">
             <CreatePostTextBoxes onPublish={handlePublish} />

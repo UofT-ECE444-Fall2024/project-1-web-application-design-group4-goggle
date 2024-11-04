@@ -1,24 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { useState, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
 interface ImageUploadProps {
-  onImagesChange: (images: File[]) => void; // Define the prop type
+  onImagesChange: (images: File[]) => void;
+  imagePreviews: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange }) => {
-  const [images, setImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews }) => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      setImages((prevImages) => [...prevImages, ...files]);
-      const newPreviews = files.map((file) => URL.createObjectURL(file));
-      setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
-
-      onImagesChange([...images, ...files]); // Send updated files to parent
+      onImagesChange(files); // Send updated files to parent
     }
   };
 
