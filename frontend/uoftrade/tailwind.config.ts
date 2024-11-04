@@ -20,6 +20,8 @@ const config: Config = {
       'subheading': '#32403B',
       'dark-red': '#9c0000',
       'light-grey': 'rgba(217, 217, 217, 0.46)',
+      'grey-bg': 'rgba(247, 247, 247, 0.5)',
+      'dark-grey': 'rgba(121, 121, 121, 0.4)',
     },
     container: {
       center: true,
