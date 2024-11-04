@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const ProfilePage = () => {
-  return <SettingsContent ContentComponent={ProfileEdit}/>
+  return <SettingsContent ContentComponent={ProfileEdit} highlightIndex={0}/>
 };
 
 export default ProfilePage;
