@@ -36,13 +36,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
 
       <div className="grid grid-cols-3 gap-2 mt-4 w-full">
         {imagePreviews.slice(0, 5).map((src, index) => (
-          <div
-            key={index}
-            className="w-full aspect-square border-2 bg-light-grey border-outline-grey rounded-md overflow-hidden"
-          >
-            <img src={src} alt={`Preview ${index}`} className="object-cover w-full h-full" />
-          </div>
-        ))}
+            <div
+              key={index}
+              className="w-full aspect-square border-2 bg-light-grey border-outline-grey rounded-md overflow-hidden"
+            >
+              <img
+                src={src}
+                alt={`Preview ${index}`}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          ))}
+          {imagePreviews.length > 5 && (
+            <div className="w-full aspect-square bg-light-grey border-outline-grey rounded-md flex items-center justify-center">
+              <span className="text-heading-1 font-bold">View More</span>
+            </div>
+          )}
       </div>
     </div>
   );
