@@ -38,7 +38,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               options={{
                 pattern: {
                     value: /^(?:[$€£¥])?\s?(\d{1,3}(?:,\d{3})*|\d+)(\.\d{2})?$/,
-                    message: "Price field must contain a valid numberical value as a cost."
+                    message: "Price field must contain a valid numerical value as a cost."
                 }
             }}
               divClassNames="w-full"
