@@ -11,3 +11,11 @@ type LoginInputs = {
     email: string
     signedin: boolean
   }
+
+type CreatePostInputs = {
+  title: string
+  price: number
+  description: string
+  pickup_location: string
+  category: string
+}
