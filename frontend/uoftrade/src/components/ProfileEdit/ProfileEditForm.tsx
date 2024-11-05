@@ -38,7 +38,7 @@ const ProfileEditForm = () => {
 
     return (
         <div className="container">
-            <h3 className="mb-3 text-center text-xl font-bold text-heading-1 dark:text-white-bg sm:text-3xl">
+            <h3 className="mb-3 text-center text-2xl font-bold text-heading-1 dark:text-white-bg">
                 Edit Profile Information
             </h3>
             <form onSubmit={handleSubmit(onSubmit)}>
