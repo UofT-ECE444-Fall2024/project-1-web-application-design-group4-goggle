@@ -151,16 +151,3 @@ class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     # permission_classes = [ChangePasswordPermission]
     lookup_field = "email"
-        
-class SignOnView(generics.UpdateAPIView):    
-    queryset = UofTUser.objects.all()
-    serializer_class = SignOnSerializer
-    
-    def put(self, request, *args, **kwargs):
-        instance = UofTUser.objects.get(email=kwargs["email"])
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.update(instance=instance, validated_data=serializer.validated_data)
-        serialized_data = UofTUserFeaturesSerializer(instance=instance).data.copy()
-        serialized_data["token"] = UofT_JWTAuthentication.create_jwt(instance)
-        return Response(data=serialized_data, status=status.HTTP_201_CREATED)
