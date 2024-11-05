@@ -15,8 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from marketplace.views import ProductViewSet
+
+router = DefaultRouter()
+router.register(r'products', ProductViewSet)
+
+'''
+This setup will generate the following endpoints automatically:
+
+GET /products/: List all products.
+POST /products/: Create a new product (only available for authenticated users).
+GET /products/<id>/: Retrieve a specific product by its ID.
+PUT /products/<id>/: Update a specific product (only available for the product's owner).
+DELETE /products/<id>/: Delete a specific product (only available for the product's owner).
+GET /products/my_products/: Custom action to list products created by the authenticated user.
+'''
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
 ]
