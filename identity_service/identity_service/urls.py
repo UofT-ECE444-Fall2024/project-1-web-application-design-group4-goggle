@@ -20,14 +20,13 @@ from identity.views import *
 
 urlpatterns = [
     path('user-list', UserList.as_view(), name='user-list'),
-    path('info/<str:email>', UserDetail.as_view()),
-    path('name/<str:email>', UserName.as_view()),
+    path('info/<str:email>', UserDetail.as_view(), name='info'),
+    path('name/<str:email>', UserName.as_view(), name='name'),
     path('admin/', admin.site.urls),
-    path('auth', AuthenticateToken.as_view()),
-    path('register', RegisterUserView.as_view()),
-    path('signon/<str:email>', SignOnView.as_view(), name='signon'),
-    path('login', LoginView.as_view()),
-    path('reset-code/<str:email>', ResetCodeView.as_view()),
-    path('password-reset/<str:email>', PasswordResetView.as_view()),
-    path('change-password/<str:email>', ChangePasswordView.as_view()),
+    path('auth', AuthenticateToken.as_view(), name='auth'),
+    path('register', RegisterUserView.as_view(), name='register'),
+    path('login', LoginView.as_view(), name='login'),
+    path('reset-code/<str:email>', ResetCodeView.as_view(), name='reset-code'),
+    path('password-reset/<str:email>', PasswordResetView.as_view(), name='password-reset'),
+    path('change-password/<str:email>', ChangePasswordView.as_view(), name='change-password'),
 ]
