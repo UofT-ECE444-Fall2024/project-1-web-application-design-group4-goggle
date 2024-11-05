@@ -12,6 +12,12 @@ type LoginInputs = {
     signedin: boolean
   }
 
+type ProfileEditInputs = {
+    first_name: string
+    last_name: string
+    email: string
+  }
+
 type CreatePostInputs = {
   title: string
   price: number
@@ -19,3 +25,4 @@ type CreatePostInputs = {
   pickup_location: string
   category: string
 }
+

@@ -1,21 +1,15 @@
-import Image from "next/image";
 import { Metadata } from "next";
 import React from "react";
-import SettingSidebar from "@/components/SettingSidebar/SettingSidebar";
+import ProfileEdit from "@/components/ProfileEdit/ProfileEdit";
+import SettingsContent from "@/components/Settings/SettingsContent";
 
 export const metadata: Metadata = {
-    title: "UofTrade Profile",
-    description: "This is the Profile Page for UofTrade",
-    // other metadata
-  };
-  
-  const ProfilePage = () => {
-  
-      return (
-        <>
-           <SettingSidebar highlightIndex={0}/>
-        </>
-      );
-  }
-  
-  export default ProfilePage
+  title: "UofTrade Profile",
+  description: "This is the Profile Page for UofTrade",
+};
+
+const ProfilePage = () => {
+  return <SettingsContent ContentComponent={ProfileEdit} highlightIndex={0}/>
+};
+
+export default ProfilePage;
