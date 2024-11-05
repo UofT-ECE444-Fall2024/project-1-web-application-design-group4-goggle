@@ -1,7 +1,7 @@
 # UofTrade
 
 Welcome to the UofTrade repository. Developed by Team 4, Goggle.
-*no update to tech stack for second sprint, same as first sprint*
+*no update to tech stack for third sprint - Added Figma UX/UI link for reference*
 
 ## Tools
 
@@ -19,3 +19,7 @@ Jira was used to manage and rank user stories/epics and keep track of tasks to d
 ### Backend
 
 #### Django: https://www.djangoproject.com/
+
+### UX/UI
+
+#### Figma: https://www.figma.com/design/DolofYHeEpjSKpAXpFCiiv/UofT-Second-Hand-Hub?node-id=0-1&t=XfcTSeNaaONkTkR0-1
