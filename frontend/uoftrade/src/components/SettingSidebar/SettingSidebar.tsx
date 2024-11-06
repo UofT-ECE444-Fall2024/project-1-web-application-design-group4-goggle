@@ -30,7 +30,7 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
-                <div className="flex flex-col justify-between border border-solid border-outline-grey h-full shadow-three max-w-[500px] bg-grey-bg dark:bg-dark">
+                <div className="flex flex-col justify-between border border-solid border-outline-grey h-full shadow-three max-w-[500px] bg-grey-bg-opaque dark:bg-dark-fg">
                     <div className="flex-grow pt-10">
                         <h3 className="mb-6 text-center text-2xl font-bold text-black dark:text-white-bg sm:text-3xl">
                             Settings
