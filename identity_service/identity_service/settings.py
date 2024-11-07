@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['identity-service', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'identity',
     'daphne',
     'rest_framework',
@@ -49,6 +50,16 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'corsheaders'
 ]
+
+# Redis Channel Layer Configuration
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,6 +97,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'identity_service.wsgi.application'
 
+ASGI_APPLICATION = "identity_service.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
