@@ -57,7 +57,7 @@ const TrendingCarousel = () => {
             <div
               key={item.id}
               className="listing-item rounded-2xl bg-grey-bg text-black 
-              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden"
+              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden mb-10"
               style={{ height: '25rem', width: '30rem' }}
             >
               <div className="relative border-b border-gray-400" style={{ height: '80%' }}>

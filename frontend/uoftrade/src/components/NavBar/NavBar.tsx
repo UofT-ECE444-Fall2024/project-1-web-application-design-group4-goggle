@@ -6,7 +6,12 @@ import { useState, useEffect } from "react";
 import { categories } from "@/data/categories"; 
 import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
 
-const NavBar = () => {
+// Define the NavBarProps interface
+interface NavBarProps {
+  title: string; // Define the `title` prop type
+}
+
+const NavBar:React.FC<NavBarProps> = ({title}) => {
   const [searchInput, setSearchInput] = useState("");
   const [inputWidth, setInputWidth] = useState(0);
   const [dropdownVisible, setDropdownVisible] = useState(false);
