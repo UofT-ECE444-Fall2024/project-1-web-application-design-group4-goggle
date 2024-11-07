@@ -5,15 +5,23 @@ import { categories as categoryData, Category } from '@/data/categories';
 
 const CategorySelection = () => {
   return (
-    <Box 
-      display="flex" 
-      justifyContent="center" 
-      alignItems="center" 
-      gap={12} 
-      mt={2} 
-      p={1} 
-      flexWrap="wrap"
-    >
+    <Box
+          display="flex"
+          flexDirection="row"  // Aligns items vertically
+          justifyContent="space-evenly"  // Aligns items to the start vertically
+          alignItems="center"  // Aligns items horizontally (centered)
+          mt={10} 
+          mb={0}
+          p={0}
+          flexWrap="nowrap"
+          sx={{
+            overflow: 'hidden',
+            height: 'auto',
+            width: '100%',  // Ensures the width is 100% of the container
+          }}
+        >
+
+
       {categoryData.map((category: Category, index) => (
         <Link href={category.link} passHref key={index}>
           <Box 

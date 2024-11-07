@@ -53,7 +53,7 @@ const TrendingCarousel = () => {
 
         // If we've scrolled to the end, reset the scroll position to the start
         if (scrollPosition >= maxScrollLeft) {
-          carouselRef.current.scrollLeft = 0;
+          carouselRef.current.scrollLeft = 0; // Reset position to the beginning
         }
       }
     };
@@ -70,9 +70,16 @@ const TrendingCarousel = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Ensure the scroll always stays at the start (without waiting for the loop to finish)
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, []);
+
   return (
     <div
-      className="carousel-wrapper"
+      className="carousel-wrapper mt-10"
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onMouseUp={onMouseUp}
@@ -113,7 +120,7 @@ const TrendingCarousel = () => {
 
       <style jsx>{`
         .carousel-wrapper {
-          overflow: show;
+          overflow: hidden;
           white-space: nowrap;
           width: 100%;
           background-color: white;
