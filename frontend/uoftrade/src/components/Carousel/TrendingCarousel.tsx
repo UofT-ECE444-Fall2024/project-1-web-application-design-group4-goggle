@@ -18,7 +18,7 @@ const TrendingCarousel = () => {
     mobile: { breakpoint: { max: 464, min: 0 }, items: 1 },
   };
 
-  const CustomLeftArrow = ({ onClick }: { onClick?: () => void }) => (
+  const CustomLeftArrow = ({ onClick }: {onClick?:() =>void}) => (
     <button
       onClick={onClick}
       className="absolute z-20 p-2 bg-primary text-white rounded-full"
@@ -28,7 +28,7 @@ const TrendingCarousel = () => {
     </button>
   );
 
-  const CustomRightArrow = ({ onClick }: { onClick?: () => void }) => (
+  const CustomRightArrow =({ onClick }: {onClick?:() =>void}) => (
     <button
       onClick={onClick}
       className="absolute z-20 p-2 bg-primary text-white rounded-full"
@@ -38,40 +38,39 @@ const TrendingCarousel = () => {
     </button>
   );
 
-
   return (
-    <div className="py-5 text-black text-center ">
-      <div className="relative w-full mx-auto px-4 ">
+    <div className="py-5 bg-white text-white text-center">
+      <div className="relative w-full mx-auto px-4">
         <Carousel
           responsive={responsive}
-          infinite={true}
+          infinite
           autoPlay={false}
-          keyBoardControl={true}
+          keyBoardControl
           containerClass="w-full"
-          itemClass="px-10"
-          showDots={true}
+          itemClass="px-2"
+          showDots
+          dotListClass="custom-dot-list-style"
           customLeftArrow={<CustomLeftArrow />}
           customRightArrow={<CustomRightArrow />}
-         
         >
           {items.map((item) => (
             <div
               key={item.id}
-              className="listing-item rounded-2xl text-black overflow-hidden 
-              shadow-lg flex flex-col justify-between border border-dark-grey mb-10"
-              style={{ height: '30rem', width: '18rem' }}
+              className="listing-item rounded-2xl bg-grey-bg text-black 
+              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden"
+              style={{ height: '25rem', width: '30rem' }}
             >
-              <div className="relative " style={{ height: '80%' }}>
+              <div className="relative border-b border-gray-400" style={{ height: '80%' }}>
                 <Image
                   src={item.img}
                   alt={item.name}
                   layout="fill"
                   objectFit="contain"
-                  className="border-b border-dark-grey "
+                  className="bg-white"
                 />
               </div>
-              <div className="text-center bg-dark-grey py-6">
-                <p className="font-bold text-lg ">{item.name}</p>
+              <div className="bg-gray-400 p-4 rounded-b-2xl text-center">
+                <p className="font-bold text-lg">{item.name}</p>
                 <p className="text-gray-700 text-sm">{item.price}</p>
               </div>
             </div>

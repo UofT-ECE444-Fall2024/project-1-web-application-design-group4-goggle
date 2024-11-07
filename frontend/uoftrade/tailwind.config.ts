@@ -15,6 +15,7 @@ const config: Config = {
       primary: '#28047a',
       'white-bg': '#fefefe',
       'white': '#ffffff',
+      'black': '#000000',
       'black-fg': '#0e0e0e',
       'outline-grey': 'rgba(0, 0, 0, 0.1)',
       'heading-1': '#212B27',
