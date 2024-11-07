@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { categories } from "@/data/categories"; 
-import CategoryDropdown from "../Dropdown_nav/DropDown";
+import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
 
 const NavBar = () => {
   const [searchInput, setSearchInput] = useState("");
