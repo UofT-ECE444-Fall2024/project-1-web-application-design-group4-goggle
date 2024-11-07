@@ -61,7 +61,7 @@ const NavBar:React.FC<NavBarProps> = ({title}) => {
     <header className="flex items-center justify-between p-4 bg-white shadow-md relative"> 
       {/* Left Section: Logo */}
       <div className="flex items-center mr-10" style={{color: "white"}}>
-        <Link href="/">
+        <Link href="/home">
           <Image src="/images/logo/UTrade_logo.svg" alt="UTrade Logo" width={100} height={50} />
         </Link>
       </div>

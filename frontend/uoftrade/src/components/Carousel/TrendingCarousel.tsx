@@ -1,8 +1,6 @@
 'use client';
-
 import Image from 'next/image';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import { useState, useRef, useEffect } from 'react';
 
 const TrendingCarousel = () => {
   const items = [
@@ -12,52 +10,87 @@ const TrendingCarousel = () => {
     // Additional items...
   ];
 
-  const responsive = {
-    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3 },
-    tablet: { breakpoint: { max: 1024, min: 464 }, items: 2 },
-    mobile: { breakpoint: { max: 464, min: 0 }, items: 1 },
+  // Duplicate items to create a seamless loop effect
+  const scrollingItems = [...items, ...items]; // Duplicate the items
+
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [animationPaused, setAnimationPaused] = useState(false);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - carouselRef.current!.offsetLeft);
+    setScrollLeft(carouselRef.current!.scrollLeft);
+    setAnimationPaused(true); // Pause auto-scrolling while dragging
   };
 
-  const CustomLeftArrow = ({ onClick }: {onClick?:() =>void}) => (
-    <button
-      onClick={onClick}
-      className="absolute z-20 p-2 bg-primary text-white rounded-full"
-      style={{ top: '50%', transform: 'translateY(-50%)', left: '1rem' }}
-    >
-      &#9664;
-    </button>
-  );
+  const onMouseLeave = () => {
+    if (!isDragging) {
+      setAnimationPaused(false); // Allow auto-scrolling when mouse leaves, but not during dragging
+    }
+  };
 
-  const CustomRightArrow =({ onClick }: {onClick?:() =>void}) => (
-    <button
-      onClick={onClick}
-      className="absolute z-20 p-2 bg-primary text-white rounded-full"
-      style={{ top: '50%', transform: 'translateY(-50%)', right: '1rem' }}
-    >
-      &#9654;
-    </button>
-  );
+  const onMouseUp = () => {
+    setIsDragging(false);
+    setAnimationPaused(false); // Resume auto-scrolling after mouse is released
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current!.offsetLeft;
+    const walk = (x - startX) * 3; // Adjust the scroll speed (3 is a multiplier)
+    carouselRef.current!.scrollLeft = scrollLeft - walk;
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (carouselRef.current) {
+        const scrollPosition = carouselRef.current.scrollLeft;
+        const maxScrollLeft = carouselRef.current.scrollWidth - carouselRef.current.offsetWidth;
+
+        // If we've scrolled to the end, reset the scroll position to the start
+        if (scrollPosition >= maxScrollLeft) {
+          carouselRef.current.scrollLeft = 0;
+        }
+      }
+    };
+
+    if (carouselRef.current) {
+      carouselRef.current.addEventListener('scroll', handleScroll);
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      if (carouselRef.current) {
+        carouselRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   return (
-    <div className="py-5 bg-white text-white text-center">
-      <div className="relative w-full mx-auto px-4">
-        <Carousel
-          responsive={responsive}
-          infinite
-          autoPlay={false}
-          keyBoardControl
-          containerClass="w-full"
-          itemClass="px-2"
-          showDots
-          dotListClass="custom-dot-list-style"
-          customLeftArrow={<CustomLeftArrow />}
-          customRightArrow={<CustomRightArrow />}
-        >
-          {items.map((item) => (
+    <div
+      className="carousel-wrapper"
+      onMouseDown={onMouseDown}
+      onMouseLeave={onMouseLeave}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseMove}
+    >
+      <div
+        ref={carouselRef}
+        className="carousel"
+        style={{
+          cursor: isDragging ? 'grabbing' : 'grab',
+          animationPlayState: animationPaused ? 'paused' : 'running', // Control the animation state
+        }}
+      >
+        {scrollingItems.map((item, index) => (
+          <div key={index} className="carousel-item">
             <div
-              key={item.id}
               className="listing-item rounded-2xl bg-grey-bg text-black 
-              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden mb-10"
+              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden"
               style={{ height: '25rem', width: '30rem' }}
             >
               <div className="relative border-b border-gray-400" style={{ height: '80%' }}>
@@ -74,9 +107,38 @@ const TrendingCarousel = () => {
                 <p className="text-gray-700 text-sm">{item.price}</p>
               </div>
             </div>
-          ))}
-        </Carousel>
+          </div>
+        ))}
       </div>
+
+      <style jsx>{`
+        .carousel-wrapper {
+          overflow: show;
+          white-space: nowrap;
+          width: 100%;
+          background-color: white;
+          padding: 2rem 0;
+        }
+
+        .carousel {
+          display: inline-flex;
+          animation: scroll 20s linear infinite;
+        }
+
+        .carousel-item {
+          display: inline-block;
+          margin-right: 1rem;
+        }
+
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 };
