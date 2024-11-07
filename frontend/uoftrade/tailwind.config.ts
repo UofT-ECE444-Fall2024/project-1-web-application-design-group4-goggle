@@ -14,6 +14,7 @@ const config: Config = {
       transparent: "transparent",
       primary: '#28047a',
       'white-bg': '#fefefe',
+      'white': '#ffffff',
       'black-fg': '#0e0e0e',
       'outline-grey': 'rgba(0, 0, 0, 0.1)',
       'heading-1': '#212B27',

@@ -11,7 +11,7 @@ const Footer = () => {
         <Link href="/" className="text-white text-lg font-semibold">
           Go to Home Page
         </Link>
-        <p className="mt-2 text-sm">© {new Date().getFullYear()} UTrade. All rights reserved.</p>
+        <p className="mt-2 text-sm">© {new Date().getFullYear()} UofTrade. All rights reserved.</p>
       </div>
     </footer>
   );

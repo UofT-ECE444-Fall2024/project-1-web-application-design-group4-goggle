@@ -1,18 +1,23 @@
-import Header from "@/components/Header/Header";
+import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
-import Content from "@/components/Layout/MainContent"; 
+import TrendingCarousel from "@/components/Carousel/TrendingCarousel";
+
 
 
 const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header at the top */}
-      <Header />
+      <NavBar />
 
       {/* Content in the middle, taking up remaining space */}
-      <div className="flex-grow container mx-auto py-8">
-        <h1 className="text-2xl font-bold text-center mb-8">Welcome to UofTrade</h1>
-        <Content />  {/* This is where your listings and layout will go */}
+      <div className="flex-grow w-full mx-auto">
+        <h1 className="text-4xl font-bold text-left pl-10 mb-8 bg-primary text-white py-10">Currently Trending on UofTrade ... </h1>
+        <TrendingCarousel />  
+      </div>
+      <div className="flex-grow w-full mx-auto">
+        <h1 className="text-4xl font-bold text-left pl-10 mb-8 bg-primary text-white py-10">Browse Categories ... </h1>
+        <TrendingCarousel />  
       </div>
 
       {/* Footer pinned to the bottom */}
