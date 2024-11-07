@@ -2,6 +2,9 @@ import Image from "next/image";
 import { Metadata } from "next";
 import React from "react";
 import SettingSidebar from "@/components/SettingSidebar/SettingSidebar";
+import NavBar from "@/components/NavBar/NavBar";
+import Footer from "@/components/Footer/Footer";
+import ListingInfo from "@/components/ListingInfo/ListingInfo";
 
 export const metadata: Metadata = {
     title: "UofTrade User Listings",
@@ -13,7 +16,10 @@ export const metadata: Metadata = {
   
       return (
         <>
-           <SettingSidebar highlightIndex={1}/>
+          <NavBar title=""/>
+          <SettingSidebar highlightIndex={1}/>
+          <ListingInfo />
+          <Footer />
         </>
       );
   }
