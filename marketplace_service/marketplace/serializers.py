@@ -36,7 +36,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
     def get_image_url(self, obj):
         if obj.image:
             request = self.context.get('request')
-            image_url = obj.image.url
+            image_url = obj.image_url
             if request is not None:
                 return request.build_absolute_uri(image_url)
             return image_url
@@ -62,7 +62,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'user_profile',
             ]
         extra_kwargs = {
-            'user_id': {'read_only': True},
             'id': {'read_only': True},
             'location': {'required': True},
             'date_posted': {'read_only': True},

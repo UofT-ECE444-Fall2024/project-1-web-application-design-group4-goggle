@@ -18,7 +18,7 @@ def validate_image(image):
     # Validate image dimensions (including error handling)
     try:
         image_file = Image.open(image.file)
-        image.verify()  # Verify the image format
+        image_file.verify()  # Verify the image format
         max_width, max_height, min_width, min_height = 2000, 2000, 100, 100
         if image_file.width > max_width or image_file.height > max_height:
             raise ValidationError(f'Image dimensions exceed {max_width}x{max_height}px.')
@@ -50,6 +50,7 @@ class Category(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+        self.full_clean()
         super().save(*args, **kwargs)
 
 class Product(models.Model):
@@ -64,20 +65,12 @@ class Product(models.Model):
         ('Other', 'Other')
     ]
 
-    CATEGORY_CHOICES = [
-        ('Books', 'Books'),
-        ('Electronics', 'Electronics'),
-        ('Furniture', 'Furniture'),
-        ('Clothing', 'Clothing'),
-        ('Miscellaneous', 'Miscellaneous')
-    ]
-
     user_id         = models.IntegerField()
     id              = models.AutoField(primary_key=True)
     title           = models.CharField(max_length=255)
     description     = models.TextField(blank=True)
-    price           = models.DecimalField(max_digits=10, decimal_places=2, required=True)
-    category        = models.ManyToManyField(Category, related_name='products', required=True, choices=CATEGORY_CHOICES)
+    price           = models.DecimalField(max_digits=10, decimal_places=2)
+    category        = models.ManyToManyField(Category, related_name='products')
     location        = models.CharField(max_length=16, choices=LOCATION_CHOICES, default='Myhal')
     date_posted     = models.DateTimeField(auto_now_add=True)
     is_active       = models.BooleanField(default=True)
@@ -90,7 +83,12 @@ class Product(models.Model):
         verbose_name = 'product'
 
     def __str__(self):
-        return self.title + ' - ' + self.id
+        return f"{self.title} - {str(self.id)}"
+
+    def clean(self):
+        if self.price < 0:
+            raise ValidationError('Price must be a positive number.')
+        super().clean()
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -101,12 +99,8 @@ class Product(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+        self.full_clean()
         super().save(*args, **kwargs)
-    
-    def clean(self):
-        super().clean()
-        if self.price < 0:
-            raise ValidationError('Price must be a positive number.')
 
 class ProductImage(models.Model):
     id              = models.AutoField(primary_key=True)
@@ -121,13 +115,6 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Image for {self.product.title}"
     
-    def get_image_url(self):
+    @property
+    def image_url(self):
         return self.image.url
-    
-    def set_image(self, image):
-        self.image = image
-        self.save()
-    
-    def clean(self):
-        super().clean()
-        validate_image(self.image)
