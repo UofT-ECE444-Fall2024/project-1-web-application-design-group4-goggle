@@ -28,12 +28,13 @@ def validate_image(image):
         raise ValidationError('Invalid image file.')
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
-    slug = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
+    id              = models.AutoField(primary_key=True)
+    name            = models.CharField(max_length=255, unique=True)
+    parent          = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
+    slug            = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
 
     class Meta:
-        ordering = ['name']
+        ordering = ['name'] # Sort categories alphabetically
         verbose_name_plural = 'categories'
         verbose_name = 'category'
     
@@ -52,21 +53,36 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 class Product(models.Model):
-    user_id = models.IntegerField()
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
-    location = models.CharField(max_length=255)
-    date_posted = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-    is_sold = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
+    # University of Toronto Location Choices
+    LOCATION_CHOICES = [
+        ('Myhal', 'Myhal Centre for Engineering Innovation & Entrepreneurship'),
+        ('Bahen', 'Bahen Centre for Information Technology'),
+        ('Gerstein', 'Gerstein Science Information Centre'),
+        ('Robarts', 'Robarts Library'),
+        ('SidneySmith', 'Sidney Smith Hall'),
+        ('MedicalScience', 'Medical Sciences Building'),
+        ('Other', 'Other')
+    ]
+
+    user_id         = models.IntegerField()
+    id              = models.AutoField(primary_key=True)
+    title           = models.CharField(max_length=255)
+    description     = models.TextField(blank=True)
+    price           = models.DecimalField(max_digits=10, decimal_places=2)
+    category        = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
+    location        = models.CharField(max_length=16, choices=LOCATION_CHOICES, default='Myhal')
+    date_posted     = models.DateTimeField(auto_now_add=True)
+    is_active       = models.BooleanField(default=True)
+    is_sold         = models.BooleanField(default=False)
+    slug            = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
 
     class Meta:
         ordering = ['-date_posted']
         verbose_name_plural = 'products'
         verbose_name = 'product'
+
+    def __str__(self):
+        return self.title + ' - ' + self.id
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -85,9 +101,14 @@ class Product(models.Model):
             raise ValidationError('Price must be a positive number.')
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/', validators=[validate_image])
-    alt_text = models.CharField(max_length=255, blank=True, null=True)
+    id              = models.AutoField(primary_key=True)
+    product         = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image           = models.ImageField(upload_to='product_images/', validators=[validate_image])
+    alt_text        = models.CharField(max_length=255, blank=True, null=True)
+    
+    class Meta:
+        verbose_name = 'product image'
+        verbose_name_plural = 'product images'
 
     def __str__(self):
         return f"Image for {self.product.title}"
