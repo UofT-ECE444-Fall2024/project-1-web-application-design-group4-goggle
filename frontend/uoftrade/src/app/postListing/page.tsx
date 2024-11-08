@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import Header from "@/components/Header/Header";
+import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
 import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
 
@@ -41,7 +41,7 @@ const PostListingPage = () => {
   return (
     <div>
       <Image src="/images/logo/UTrade_logo.svg" alt="logo" width={140} height={30} className="m-5" />
-      <Header title="Create a Post!" />
+      <NavBar title="Create a Post!" />
       <section className="w-full flex flex-col items-center p-4 gap-8">
         <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
           <div className="xl:w-[40%] lg:w-[40%] w-full">
