@@ -2,16 +2,61 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 
+import { Listing } from "@/types/listing";
+import ListingCard from '../Listing/ListingCard';
+
 const TrendingCarousel = () => {
-  const items = [
-    { id: 1, name: 'ECE444 Textbook', price: '$100', img: '/images/logo/test.jpg' },
-    { id: 2, name: 'Desk Chair', price: '$75', img: '/images/logo/test2.jpg' },
-    { id: 3, name: 'Cultural Anthropology', price: '$80', img: '/images/logo/test.jpg' },
-    // Additional items...
+
+  const listingData: Listing[] = [
+    {
+      id: 1,
+      title: "Microwave",
+      price: "$28",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      image: "/images/misc/microwave.jpg",
+      seller: {
+        name: "Guy Dude",
+        image: "/images/logo/UTrade_small.svg",
+        rating: 4.5,
+      },
+      tags: ["Appliances"],
+      publishDate: "Nov 2th, 2024",
+    },
+    {
+      id: 2,
+      title: "Textbook",
+      price: "$25",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      image: "/images/misc/textbook.jpg",
+      seller: {
+        name: "Guy Dude",
+        image: "/images/logo/UTrade_small.svg",
+        rating: 4.5,
+      },
+      tags: ["Textbooks"],
+      publishDate: "Nov 3th, 2024",
+    },
+    {
+      id: 3,
+      title: "Chair",
+      price: "$32",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      image: "/images/misc/chair.jpg",
+      seller: {
+        name: "Guy Dude",
+        image: "/images/logo/UTrade_small.svg",
+        rating: 4.5,
+      },
+      tags: ["Furniture"],
+      publishDate: "Nov 4th, 2024",
+    },
   ];
 
   // Duplicate items to create a seamless loop effect
-  const scrollingItems = [...items, ...items]; // Duplicate the items
+  const scrollingItems = [...listingData, ...listingData]; // Duplicate the items
 
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -93,28 +138,10 @@ const TrendingCarousel = () => {
           animationPlayState: animationPaused ? 'paused' : 'running', // Control the animation state
         }}
       >
-        {scrollingItems.map((item, index) => (
-          <div key={index} className="carousel-item">
-            <div
-              className="listing-item rounded-2xl bg-grey-bg text-black 
-              shadow-lg flex flex-col justify-between border border-gray-400 overflow-hidden"
-              style={{ height: '25rem', width: '30rem' }}
-            >
-              <div className="relative border-b border-gray-400" style={{ height: '80%' }}>
-                <Image
-                  src={item.img}
-                  alt={item.name}
-                  layout="fill"
-                  objectFit="contain"
-                  className="bg-white"
-                />
-              </div>
-              <div className="bg-gray-400 p-4 rounded-b-2xl text-center">
-                <p className="font-bold text-lg">{item.name}</p>
-                <p className="text-gray-700 text-sm">{item.price}</p>
-              </div>
+        {scrollingItems.map((listing) => (
+            <div key={listing.id} className="w-full mx-6">
+                <ListingCard listing={listing} />
             </div>
-          </div>
         ))}
       </div>
 
