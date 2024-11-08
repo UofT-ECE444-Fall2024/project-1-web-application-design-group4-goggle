@@ -14,13 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from marketplace.views import ProductViewSet
+from marketplace.views import ProductViewSet, CategoryViewSet, ProductImageViewSet
 
 router = DefaultRouter()
+router.register(r'categories', CategoryViewSet)
 router.register(r'products', ProductViewSet)
+router.register(r'product-images', ProductImageViewSet)
 
 '''
 GET /products/ - List all products.
@@ -35,6 +36,5 @@ POST /products/<id>/mark_as_active/ - Custom action to mark a specific product a
 '''
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include(router.urls)),
 ]

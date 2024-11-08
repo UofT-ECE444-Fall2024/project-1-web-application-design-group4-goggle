@@ -1,25 +1,40 @@
-from rest_framework import viewsets, permissions
-from .models import Product
-from .serializers import ProductSerializer
+# views.py
+from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from .models import Product, Category, ProductImage
+from .serializers import ProductSerializer, CategorySerializer, ProductImageSerializer
 
+
+# Category ViewSet
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug'  # Allows lookup by slug instead of ID
+
+
+# Product ViewSet
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'price', 'location']
+    filterset_fields = ['category', 'price', 'location', 'is_active', 'is_sold']
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'date_posted']
 
     def perform_create(self, serializer):
         # Automatically set the user_id to the currently logged-in user's ID.
-        user_id = self.request.user.id  # Assuming `user.id` is a UUID or similar identifier
+        user_id = self.request.user.id
         serializer.save(user_id=user_id)
-    
+
+    def get_queryset(self):
+        # Limit the queryset to only products that are active by default.
+        queryset = Product.objects.filter(is_active=True)
+        return queryset
+
     @action(detail=False, methods=['get'])
     def my_products(self, request):
         # Custom endpoint to retrieve products for the authenticated user.
@@ -27,21 +42,35 @@ class ProductViewSet(viewsets.ModelViewSet):
         user_products = Product.objects.filter(user_id=user_id)
         serializer = self.get_serializer(user_products, many=True)
         return Response(serializer.data)
-    
+
     @action(detail=True, methods=['post'])
     def mark_as_sold(self, request, pk=None):
         # Custom endpoint to mark a product as sold.
         product = self.get_object()
-        product.mark_as_sold()
-        return Response({'status': 'sold'})
-    
+        product.is_sold = True
+        product.save()
+        return Response({'status': 'Product marked as sold'})
+
     @action(detail=True, methods=['post'])
     def mark_as_active(self, request, pk=None):
         # Custom endpoint to mark a product as active.
         product = self.get_object()
-        product.mark_as_active()
-        return Response({'status': 'active'})
-    
-    def get_queryset(self):
-        # Limit the queryset to only products that are active.
-        return Product.objects.filter(status='active')
+        product.is_active = True
+        product.save()
+        return Response({'status': 'Product marked as active'})
+
+
+# ProductImage ViewSet
+class ProductImageViewSet(viewsets.ModelViewSet):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Set the product context for the image being uploaded
+        product_id = self.request.data.get('product')
+        if not product_id:
+            return Response({'error': 'Product ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        product = Product.objects.get(id=product_id)
+        serializer.save(product=product)
