@@ -2,9 +2,9 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from .models import Product, Category, Rating
+from .models import Product, Category
 from django.contrib.auth.models import User
-from .serializers import ProductSerializer, RatingSerializer
+from .serializers import ProductSerializer
 from rest_framework.response import Response
 
 # -----------------------------------------
@@ -20,7 +20,7 @@ class CategoryModelTest(TestCase):
 
 class ProductModelTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = "testuser"
         self.category = Category.objects.create(name="Books")
         self.product = Product.objects.create(
             user=self.user,
@@ -51,7 +51,7 @@ class ProductModelTest(TestCase):
 
 class ProductSerializerTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = "testuser"
         self.category = Category.objects.create(name="Furniture")
         self.product = Product.objects.create(
             user=self.user,
@@ -67,7 +67,7 @@ class ProductSerializerTest(TestCase):
     def test_serializer_contains_expected_fields(self):
         """Test that serializer has the expected fields."""
         data = self.serializer.data
-        self.assertEqual(set(data.keys()), {"id", "user", "title", "description", "price", "category", "location", "date_posted", "status", "images", "rating"})
+        self.assertEqual(set(data.keys()), {"id", "user", "title", "description", "price", "category", "location", "date_posted", "status", "images"})
 
     def test_price_validation(self):
         """Test that price validation works."""
@@ -83,14 +83,14 @@ class ProductSerializerTest(TestCase):
 
 class ProductViewSetTest(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = "testuser"
         self.category = Category.objects.create(name="Books")
         self.client.login(username="testuser", password="testpass")
         self.product_data = {
             "title": "New Product",
             "description": "Product description",
             "price": "19.99",
-            "category": self.category.id,
+            "category": self.category.id, # This id is for serialization purposes
             "location": "Test Location",
             "status": "active"
         }
@@ -130,7 +130,7 @@ class ProductViewSetTest(APITestCase):
     def test_custom_view_my_products(self):
         """Test custom endpoint for listing user's products."""
         product = Product.objects.create(user=self.user, **self.product_data)
-        url = reverse("product-my_products")
+        url = reverse("product/my_products")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -142,7 +142,7 @@ class ProductViewSetTest(APITestCase):
 
 class ProductCustomMethodTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = "testuser"
         self.category = Category.objects.create(name="Sports")
         self.product = Product.objects.create(
             user=self.user,

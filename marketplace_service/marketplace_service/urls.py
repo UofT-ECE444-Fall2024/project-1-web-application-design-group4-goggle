@@ -17,21 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from marketplace.views import ProductViewSet, RatingViewSet
+from marketplace.views import ProductViewSet
 
 router = DefaultRouter()
 router.register(r'products', ProductViewSet)
-router.register(r'ratings', RatingViewSet)
 
 '''
-This setup will generate the following endpoints automatically:
+GET /products/ - List all products.
+POST /products/ - Create a new product (only available for authenticated users).
+GET /products/<id>/ - Retrieve a specific product by its ID.
+PUT /products/<id>/ - Update a specific product (only available for the product's owner).
+DELETE /products/<id>/ - Delete a specific product (only available for the product's owner).
+GET /products/my_products/ - Custom action to list products created by the authenticated user.
+POST /products/<id>/mark_as_sold/ - Custom action to mark a specific product as sold (only available for the product's owner).
+POST /products/<id>/mark_as_active/ - Custom action to mark a specific product as active (only available for the product's owner).
 
-GET /products/: List all products.
-POST /products/: Create a new product (only available for authenticated users).
-GET /products/<id>/: Retrieve a specific product by its ID.
-PUT /products/<id>/: Update a specific product (only available for the product's owner).
-DELETE /products/<id>/: Delete a specific product (only available for the product's owner).
-GET /products/my_products/: Custom action to list products created by the authenticated user.
 '''
 
 urlpatterns = [

@@ -1,64 +1,93 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from PIL import Image
+from django.utils.text import slugify
 
-# Due to microservice architecture, we cannot import the User model from identity_service directly
-# from identity_service.identity.models import UofTUser as User
-#
+def validate_image(image):
+    # Validate file type
+    valid_mime_types = ['image/jpeg', 'image/png']
+    file_mime_type = image.file.content_type
+    if file_mime_type not in valid_mime_types:
+        raise ValidationError(f'Unsupported file type: {file_mime_type}. Allowed types: JPEG, PNG.')
+
+    # Validate file size
+    max_file_size = 5 * 1024 * 1024  # 5 MB limit
+    if image.file.size > max_file_size:
+        raise ValidationError(f'File size exceeds {max_file_size / (1024 * 1024)} MB.')
+
+    # Validate image dimensions (including error handling)
+    try:
+        image_file = Image.open(image.file)
+        image.verify()  # Verify the image format
+        max_width, max_height, min_width, min_height = 2000, 2000, 100, 100
+        if image_file.width > max_width or image_file.height > max_height:
+            raise ValidationError(f'Image dimensions exceed {max_width}x{max_height}px.')
+        if image_file.width < min_width or image_file.height < min_height:
+            raise ValidationError('Image dimensions must be at least 100x100px.')
+    except Exception as e:
+        raise ValidationError('Invalid image file.')
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'categories'
+        verbose_name = 'category'
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 class Product(models.Model):
-    user = models.CharField(max_length=255) # Needs to be updated to fit the microservice architecture
+    user_id = models.IntegerField()
     title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
     location = models.CharField(max_length=255)
     date_posted = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('active', 'Active'), ('sold', 'Sold')])
+    is_active = models.BooleanField(default=True)
+    is_sold = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        ordering = ['-date_posted']
+        verbose_name_plural = 'products'
+        verbose_name = 'product'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Product.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
     
-    def is_active(self):
-        return self.status == 'active'
-    
-    def is_sold(self):
-        return self.status == 'sold'
-    
-    def mark_as_sold(self):
-        self.status = 'sold'
-        self.save()
-    
-    def mark_as_active(self):
-        self.status = 'active'
-        self.save()
-    
-    def get_price(self):
-        return self.price
-    
-    def get_title(self):
-        return self.title
-    
-    def get_description(self):
-        return self.description
-    
-    def get_category(self):
-        return self.category
-    
-    def get_location(self):
-        return self.location
-    
-    def get_date_posted(self):
-        return self.date_posted
+    def clean(self):
+        super().clean()
+        if self.price < 0:
+            raise ValidationError('Price must be a positive number.')
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/')
+    image = models.ImageField(upload_to='product_images/', validators=[validate_image])
+    alt_text = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Image for {self.product.title}"
@@ -66,22 +95,10 @@ class ProductImage(models.Model):
     def get_image_url(self):
         return self.image.url
     
-    def get_product(self):
-        return self.product
-    
-    def get_image(self):
-        return self.image
-    
     def set_image(self, image):
         self.image = image
         self.save()
-
-class Rating(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
-    user = models.CharField(max_length=255)  # Needs to be updated to fit the microservice architecture
-    score = models.PositiveSmallIntegerField()  # Rating from 1 to 5
-    review = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('product', 'user')
+    
+    def clean(self):
+        super().clean()
+        validate_image(self.image)
