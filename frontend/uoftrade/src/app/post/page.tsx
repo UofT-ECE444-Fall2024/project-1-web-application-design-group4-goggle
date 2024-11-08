@@ -40,7 +40,6 @@ const PostListingPage = () => {
 
   return (
     <div>
-      <Image src="/images/logo/UTrade_logo.svg" alt="logo" width={140} height={30} className="m-5" />
       <NavBar title="Create a Post!" />
       <section className="w-full flex flex-col items-center p-4 gap-8">
         <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
