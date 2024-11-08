@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import Image from "next/image";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
 import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const PostListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
@@ -39,10 +40,10 @@ const PostListingPage = () => {
   };
 
   return (
-    <div>
-      <Image src="/images/logo/UTrade_logo.svg" alt="logo" width={140} height={30} className="m-5" />
-      <NavBar title="Create a Post!" />
-      <section className="w-full flex flex-col items-center p-4 gap-8">
+    <div className="flex flex-col min-h-screen w-full">
+      <NavBar />
+      <Header title="Create a Post!" />
+      <div className="w-full flex flex-col items-center p-4 gap-8 flex-grow">
         <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
           <div className="xl:w-[40%] lg:w-[40%] w-full">
             <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
@@ -51,7 +52,8 @@ const PostListingPage = () => {
             <CreatePostTextBoxes onPublish={handlePublish} />
           </div>
         </div>
-      </section>
+      </div>
+      <Footer />
     </div>
   );
 };
