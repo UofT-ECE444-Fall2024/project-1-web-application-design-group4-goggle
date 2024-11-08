@@ -6,6 +6,7 @@ import Image from "next/image";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
 import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
+import Header from "@/components/Header/Header";
 
 const PostListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
@@ -40,7 +41,8 @@ const PostListingPage = () => {
 
   return (
     <div>
-      <NavBar title="Create a Post!" />
+      <NavBar />
+      <Header title="Create a Post!" />
       <section className="w-full flex flex-col items-center p-4 gap-8">
         <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
           <div className="xl:w-[40%] lg:w-[40%] w-full">
