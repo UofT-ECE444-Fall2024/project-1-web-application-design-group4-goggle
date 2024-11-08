@@ -23,6 +23,38 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def is_active(self):
+        return self.status == 'active'
+    
+    def is_sold(self):
+        return self.status == 'sold'
+    
+    def mark_as_sold(self):
+        self.status = 'sold'
+        self.save()
+    
+    def mark_as_active(self):
+        self.status = 'active'
+        self.save()
+    
+    def get_price(self):
+        return self.price
+    
+    def get_title(self):
+        return self.title
+    
+    def get_description(self):
+        return self.description
+    
+    def get_category(self):
+        return self.category
+    
+    def get_location(self):
+        return self.location
+    
+    def get_date_posted(self):
+        return self.date_posted
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
@@ -30,3 +62,26 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.title}"
+    
+    def get_image_url(self):
+        return self.image.url
+    
+    def get_product(self):
+        return self.product
+    
+    def get_image(self):
+        return self.image
+    
+    def set_image(self, image):
+        self.image = image
+        self.save()
+
+class Rating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField()  # Rating from 1 to 5
+    review = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('product', 'user')

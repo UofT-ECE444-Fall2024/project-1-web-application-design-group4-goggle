@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from marketplace.views import ProductViewSet
+from marketplace.views import ProductViewSet, RatingViewSet
 
 router = DefaultRouter()
 router.register(r'products', ProductViewSet)
+router.register(r'ratings', RatingViewSet)
 
 '''
 This setup will generate the following endpoints automatically:
