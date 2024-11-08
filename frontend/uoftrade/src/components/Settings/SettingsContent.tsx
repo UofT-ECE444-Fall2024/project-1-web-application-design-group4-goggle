@@ -21,7 +21,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <NavBar title="Settings"/>
+      <NavBar/>
       <div className="flex flex-col flex-grow md:flex-row">
         <SettingSidebar highlightIndex={highlightIndex} />
         {!isMobile && (
