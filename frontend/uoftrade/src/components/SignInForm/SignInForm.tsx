@@ -31,13 +31,15 @@ const SignInForm = () => {
             
             const response = await axios.post("http://localhost/identity/login", payload);
       
-            if (response.status === 200) {
+            if (response.status === 200 ) {
               // Successfully signed in, handle redirection or show success message
               console.log("Signed in successfully!");
               const token = response.data.token;
                 if (token) {
                     localStorage.setItem("token", token);
                 }
+                //log the token from local storage
+                console.log(localStorage.getItem("token"));
                 router.push('/home');
             }
           } catch (error: any) {

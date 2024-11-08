@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState } from "react";
-
+import {useRouter} from "next/navigation";
 import SidebarMenuItem from "./SidebarMenuItem";
 
 import '../../types/settingsMenuItem'
 
 
 const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
+    const router = useRouter();
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => {
@@ -20,6 +21,12 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
         { text: 'Notifications', link: '/notifications' },
         { text: 'Appearance', link: '/appearance' },
     ];
+
+    const handleSignout = () => {
+        localStorage.removeItem('token');
+        router.push('/signin');
+
+    };
 
     return (
     <>
@@ -50,7 +57,7 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
                     </div>
                     <div className="flex justify-center py-10">
                         <a
-                            href="/signout" // Change this to your sign out URL or function
+                            onClick={handleSignout}
                             className="text-heading-1 text-xl font-bold hover:underline"
                         >
                             Sign Out
