@@ -64,12 +64,20 @@ class Product(models.Model):
         ('Other', 'Other')
     ]
 
+    CATEGORY_CHOICES = [
+        ('Books', 'Books'),
+        ('Electronics', 'Electronics'),
+        ('Furniture', 'Furniture'),
+        ('Clothing', 'Clothing'),
+        ('Miscellaneous', 'Miscellaneous')
+    ]
+
     user_id         = models.IntegerField()
     id              = models.AutoField(primary_key=True)
     title           = models.CharField(max_length=255)
     description     = models.TextField(blank=True)
-    price           = models.DecimalField(max_digits=10, decimal_places=2)
-    category        = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
+    price           = models.DecimalField(max_digits=10, decimal_places=2, required=True)
+    category        = models.ManyToManyField(Category, related_name='products', required=True, choices=CATEGORY_CHOICES)
     location        = models.CharField(max_length=16, choices=LOCATION_CHOICES, default='Myhal')
     date_posted     = models.DateTimeField(auto_now_add=True)
     is_active       = models.BooleanField(default=True)
