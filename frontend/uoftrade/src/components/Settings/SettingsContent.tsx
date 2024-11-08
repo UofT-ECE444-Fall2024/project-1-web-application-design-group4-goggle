@@ -22,7 +22,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
     <div className="flex flex-col md:flex-row">
       <SettingSidebar highlightIndex={highlightIndex} />
       {!isMobile && (
-        <div className="flex-grow transition-all duration-300">
+        <div className="flex-grow z-50 transition-all duration-300">
           <ContentComponent />
         </div>
       )}
