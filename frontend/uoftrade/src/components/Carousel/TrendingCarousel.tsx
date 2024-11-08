@@ -135,11 +135,11 @@ const TrendingCarousel = () => {
         className="carousel"
         style={{
           cursor: isDragging ? 'grabbing' : 'grab',
-          animationPlayState: animationPaused ? 'paused' : 'running', // Control the animation state
+          animationPlayState: animationPaused ? 'paused' : 'paused', // Control the animation state
         }}
       >
         {scrollingItems.map((listing) => (
-            <div key={listing.id} className="w-full mx-6">
+            <div key={listing.id} className="mx-6 w-[25rem]">
                 <ListingCard listing={listing} />
             </div>
         ))}
