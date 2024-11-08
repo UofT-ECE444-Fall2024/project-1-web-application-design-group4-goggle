@@ -17,11 +17,10 @@ class ProductSerializer(serializers.ModelSerializer):
     location = serializers.CharField(max_length=255, required=True)
     date_posted = serializers.DateTimeField(read_only=True)
     status = serializers.ChoiceField(choices=[('active', 'Active'), ('sold', 'Sold')], default='active')
-    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ['id', 'user', 'title', 'description', 'price', 'category', 'location', 'date_posted', 'status', 'images', 'rating']
+        fields = ['id', 'user', 'title', 'description', 'price', 'category', 'location', 'date_posted', 'status', 'images', 'rating' ]
         read_only_fields = ['user', 'date_posted', 'status']
     
     def create(self, validated_data):
