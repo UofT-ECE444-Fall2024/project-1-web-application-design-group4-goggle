@@ -58,6 +58,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         product.is_active = True
         product.save()
         return Response({'status': 'Product marked as active'})
+    
+    @action(detail=False, methods=['get'], url_path='by-category/(?P<slug>[^/.]+)')
+    # Custom endpoint to retrieve products by category slug.
+    def by_category_slug(self, request, slug=None):
+        products = Product.objects.filter(category__slug=slug, is_active=True)
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
+
 
 
 # ProductImage ViewSet
@@ -72,5 +80,8 @@ class ProductImageViewSet(viewsets.ModelViewSet):
         if not product_id:
             return Response({'error': 'Product ID is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        product = Product.objects.get(id=product_id)
-        serializer.save(product=product)
+        try:
+            product = Product.objects.get(id=product_id)
+            serializer.save(product=product)
+        except Product.DoesNotExist:
+            return Response({'error': 'Invalid product ID'}, status=status.HTTP_404_NOT_FOUND)
