@@ -135,7 +135,7 @@ const TrendingCarousel = () => {
         className="carousel"
         style={{
           cursor: isDragging ? 'grabbing' : 'grab',
-          animationPlayState: animationPaused ? 'paused' : 'paused', // Control the animation state
+          animationPlayState: animationPaused ? 'paused' : 'running', // Control the animation state
         }}
       >
         {scrollingItems.map((listing) => (
