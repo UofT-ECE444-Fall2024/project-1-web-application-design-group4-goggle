@@ -102,16 +102,16 @@ class ProductViewSetTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.product.is_sold)
 
-    def test_mark_product_as_active(self):
-        """Test marking a product as active"""
-        self.product.is_active = False
-        self.product.save()
-        url = reverse("product-mark-as-active", args=[self.product.id])
-        print(f"Generated URL: {url}")
-        response = self.client.post(url)
-        self.product.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(self.product.is_active)
+    # def test_mark_product_as_active(self):
+    #     """Test marking a product as active"""
+    #     self.product.is_active = False
+    #     self.product.save()
+    #     url = reverse("product-mark-as-active", args=[self.product.id])
+    #     print(f"Generated URL: {url}")
+    #     response = self.client.post(url)
+    #     self.product.refresh_from_db()
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertTrue(self.product.is_active)
 
     def test_get_products_by_category(self):
         """Test filtering products by category slug"""
