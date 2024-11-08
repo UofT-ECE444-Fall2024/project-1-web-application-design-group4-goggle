@@ -26,7 +26,7 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
         <div className="flex">
             {/* Sidebar */}
             <div
-                className={`fixed top-0 left-0 w-full h-full transition-transform duration-300 transform z-10 ${
+                className={`left-0 w-full h-full min-w-[500px] transition-transform duration-300 transform z-10 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -63,7 +63,7 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
             <button 
                 className="h-12 ml-4 mt-4 z-50 px-6 bg-primary text-white-bg transition-all duration-300 shadow-three" 
                 onClick={toggleSidebar}
-                style={{ marginLeft: isOpen ? '500px' : '0' }} // Adjust position based on sidebar state
+                style={{ marginLeft: isOpen ? '0' : '-500px' }} // Adjust position based on sidebar state
             >
                 {/* Toggle icon based on isOpen state */}
                 {isOpen ? (
