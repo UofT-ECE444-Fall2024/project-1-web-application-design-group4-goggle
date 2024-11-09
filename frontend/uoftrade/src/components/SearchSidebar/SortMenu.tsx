@@ -17,7 +17,7 @@ const SortMenu: React.FC<SortMenuProps> = ({
     options,
     selectedIndex,
 }) => (
-    <div className="p-3 pl-8 w-full hover:bg-dark-grey">
+    <div className="p-3 pl-8 w-full hover:bg-light-grey">
         <button onClick={onToggle} className="flex justify-between w-full text-left">
             {title}
             <span>{isOpen ? '▲' : '▼'}</span>
