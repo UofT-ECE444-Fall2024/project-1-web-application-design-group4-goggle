@@ -1,5 +1,5 @@
 'use client';
-import Image from 'next/image';
+
 import { useState, useRef, useEffect } from 'react';
 
 import { Listing } from "@/types/listing";
@@ -138,11 +138,14 @@ const TrendingCarousel = () => {
           animationPlayState: animationPaused ? 'paused' : 'running', // Control the animation state
         }}
       >
-        {scrollingItems.map((listing) => (
-            <div key={listing.id} className="mx-6 w-[25rem]">
+        {scrollingItems.map((listing,index) => {
+          const uniqueKey = listing.id + (index >= listingData.length ? '-duplicate' : '');
+          return (
+            <div key={uniqueKey} className="mx-6 w-[25rem]">
                 <ListingCard listing={listing} />
             </div>
-        ))}
+          );
+        })}
       </div>
 
       <style jsx>{`

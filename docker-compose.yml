@@ -10,9 +10,12 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     volumes:
       - ./frontend/uoftrade:/app
     command: npm run dev
+    env_file:
+      - .env
 
   identity-service:
     build:

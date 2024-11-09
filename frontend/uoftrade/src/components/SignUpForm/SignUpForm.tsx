@@ -7,17 +7,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TextBox from "../TextBox/TextBox";
-
 import "../../types/inputs"
 
 const SignUpForm = () => {
-
     const router = useRouter();
 
     const {
         register,
         watch,
         handleSubmit,
+        setError,
         formState: { errors },
       } = useForm<RegistrationInputs>()
 
@@ -25,28 +24,43 @@ const SignUpForm = () => {
     password.current = watch("password", "");
     
     const onSubmit: SubmitHandler<RegistrationInputs> = async (data:RegistrationInputs) => {
-        console.log(data)
         let registered; 
-
         try {
 
             const payload:Object = {
                 first_name: data.first_name, 
                 last_name: data.last_name,
                 email: data.email, 
-                user_name: data.first_name,
-                phone_number: 1231231234,
+                user_name: data.user_name,
+                phone_number: "",
                 password: data.password,
-                password_confirmation: data.password
+                password_confirmation: data.password_confirmation
             };
-
-            registered = await axios.post("http://localhost/identity/register", payload);
+            const api = axios.create({
+                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
+                headers: { 'Content-Type': 'application/json' },
+              });
+            registered = await api.post("identity/register", payload, {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            const token = registered.data.token;
+            if (token) {
+                localStorage.setItem("token", token);
+            }
+            console.log(registered.status);
         }
         catch(e:unknown) {
-            console.error(e);
+            
+            if (axios.isAxiosError(e) && e.response && e.response.status === 400) {
+                const errorDetail = e.response.data?.detail || "Email already in use. Please Login or use a different email.";
+                setError("email", { type: "manual", message: errorDetail });
+            } else {
+                console.error(e);
+                setError("email", { type: "manual", message: "An unexpected error occurred. Please try again." });
+            }
         }
         finally {
-            if (registered?.status == 200) {
+            if (registered?.status === 201) {
                 router.push('/home');
             }
         }
@@ -91,6 +105,21 @@ const SignUpForm = () => {
                                         />                             
                                     </div>
                                     <TextBox<RegistrationInputs>
+                                        placeholder="Username"
+                                        type="text"
+                                        name="user_name"
+                                        register={register}
+                                        options={{
+                                            pattern: {
+                                                value: /^[a-zA-Z0-9_]+$/,
+                                                message: "Username can only contain letters, numbers, and underscores"
+                                                } 
+                                            }}
+                                        divClassNames={"mt-3"}
+                                        errors={errors}
+                                        topText="Username"
+                                    />
+                                    <TextBox<RegistrationInputs>
                                         placeholder="UofT Email Address"
                                         type="email"
                                         name="email"
@@ -99,6 +128,7 @@ const SignUpForm = () => {
                                             pattern: {
                                                 value: /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*utoronto\.ca$/i,
                                                 message: "Please use a UofT email address containing 'utoronto.ca'"
+
                                                 } 
                                             }}
                                         divClassNames={"mt-3"}
@@ -137,6 +167,7 @@ const SignUpForm = () => {
                                 text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 ">
                                     Create Account
                                 </button>
+                                
                             </form>
                             <p className="text-center text-base text-xs font-medium text-body-color">
                                 Already have an account?{" "}

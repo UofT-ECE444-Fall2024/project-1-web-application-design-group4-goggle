@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { categories } from "@/data/categories"; 
 import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
 import { useRouter } from "next/navigation";
+import { Chat } from "@mui/icons-material";
+
 
 const NavBar = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -107,6 +109,12 @@ const NavBar = () => {
         <Link href="/post">
           <button className="bg-primary text-white px-6 py-3 rounded-md mr-4"  style={{color: "white"}}>
             Post
+          </button>
+        </Link>
+        {/* Post Button */}
+        <Link href="/messages" className="">
+          <button className="bg-primary text-white px-6 py-2 rounded-md mr-4"  style={{color: "white"}}>
+            <Chat fontSize="large"/>
           </button>
         </Link>
         {/* User Profile Image */}

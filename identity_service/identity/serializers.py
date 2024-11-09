@@ -46,8 +46,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         if not CHECK_PASSWORD(attrs['password']):
             raise serializers.ValidationError({"password": "Invalid password."})
-        
         validate_password(attrs['password'])
+        if not attrs['email'].endswith('@mail.utoronto.ca'):
+            raise serializers.ValidationError({"email": "Not a valid UofT email"})
+        
         return attrs
 
     def create(self, validated_data):            

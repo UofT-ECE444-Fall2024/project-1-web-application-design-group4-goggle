@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 class UserDetailViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="test@example.com", first_name="Test", last_name="User")
+        self.user = UofTUser.objects.create(email="test@mail.utoronto.ca", first_name="Test", last_name="User")
     
     def test_get_user_detail(self):
         """Test retrieving user details by email"""
@@ -18,8 +18,8 @@ class UserDetailViewTest(APITestCase):
 
 class UserListViewTest(APITestCase):
     def setUp(self):
-        UofTUser.objects.create(email="test1@example.com", first_name="Alice", last_name="Smith")
-        UofTUser.objects.create(email="test2@example.com", first_name="Bob", last_name="Jones")
+        UofTUser.objects.create(email="test1@mail.utoronto.ca", first_name="Alice", last_name="Smith")
+        UofTUser.objects.create(email="test2@mail.utoronto.ca", first_name="Bob", last_name="Jones")
     
     def test_list_users(self):
         """Test listing all users"""
@@ -38,7 +38,7 @@ class UserListViewTest(APITestCase):
 
 class UserNameViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="user@example.com", first_name="Test", last_name="User", password="password123")
+        self.user = UofTUser.objects.create(email="user@mail.utoronto.ca", first_name="Test", last_name="User", password="password123")
 
     def test_get_user_name(self):
         """Test retrieving user's full name and registration status by email"""
@@ -49,7 +49,7 @@ class UserNameViewTest(APITestCase):
 
 class AuthenticateTokenViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="auth@example.com", first_name="Auth", last_name="User")
+        self.user = UofTUser.objects.create(email="auth@mail.utoronto.ca", first_name="Auth", last_name="User")
         self.client.force_authenticate(user=self.user)
 
     def test_authenticate_token(self):
@@ -64,7 +64,7 @@ class RegisterUserViewTest(APITestCase):
         """Test successful registration with valid data"""
         url = reverse("register")
         data = {
-            "email": "newuser@example.com",
+            "email": "newuser@mail.utoronto.ca",
             "first_name": "New",
             "last_name": "User",
             "user_name": "newuser",
@@ -79,7 +79,7 @@ class RegisterUserViewTest(APITestCase):
         """Test registration failure when passwords do not match"""
         url = reverse("register")
         data = {
-            "email": "newuser@example.com",
+            "email": "newuser@mail.utoronto.ca",
             "first_name": "New",
             "last_name": "User",
             "user_name": "newuser",
@@ -94,7 +94,7 @@ class RegisterUserViewTest(APITestCase):
         """Test registration failure when required fields are missing"""
         url = reverse("register")
         data = {
-            "email": "newuser@example.com",
+            "email": "newuser@mail.utoronto.ca",
             "password": "Password1!!!",
             "password_confirmation": "Password1!!!"
         }
@@ -108,7 +108,7 @@ class RegisterUserViewTest(APITestCase):
         """Test registration failure with an invalid password format"""
         url = reverse("register")
         data = {
-            "email": "newuser@example.com",
+            "email": "newuser@mail.utoronto.ca",
             "first_name": "New",
             "last_name": "User",
             "user_name": "newuser",
@@ -123,7 +123,7 @@ class RegisterUserViewTest(APITestCase):
         """Test registration failure when email is already registered"""
         url = reverse("register")
         data = {
-            "email": "duplicate@example.com",
+            "email": "duplicate@mail.utoronto.ca",
             "first_name": "Existing",
             "last_name": "User",
             "user_name": "existinguser",
@@ -139,14 +139,14 @@ class RegisterUserViewTest(APITestCase):
 
 class LoginViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="login@example.com", first_name="Login", last_name="User")
+        self.user = UofTUser.objects.create(email="login@mail.utoronto.ca", first_name="Login", last_name="User")
         self.user.set_password("password123")
         self.user.save()
 
     def test_login_user_success(self):
         """Test login with correct credentials"""
         url = reverse("login")
-        data = {"email": "login@example.com", "password": "password123"}
+        data = {"email": "login@mail.utoronto.ca", "password": "password123"}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("token", response.data)
@@ -154,7 +154,7 @@ class LoginViewTest(APITestCase):
     def test_login_user_fail(self):
         """Test login with incorrect credentials"""
         url = reverse("login")
-        data = {"email": "login@example.com", "password": "wrongpassword"}
+        data = {"email": "login@mail.utoronto.ca", "password": "wrongpassword"}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -162,7 +162,7 @@ class ResetCodeViewTest(APITestCase):
     @patch("identity.utils.SEND_EMAIL")
     def test_send_reset_code(self, mock_send_email):
         """Test sending a reset code via email"""
-        user = UofTUser.objects.create(email="reset@example.com", password="password")
+        user = UofTUser.objects.create(email="reset@mail.utoronto.ca", password="password")
         url = reverse("reset-code", args=[user.email])
         mock_send_email.return_value = (None, status.HTTP_200_OK)
         
@@ -171,7 +171,7 @@ class ResetCodeViewTest(APITestCase):
 
 class PasswordResetViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="reset@example.com", password="Password1!!!", reset_code="reset123")
+        self.user = UofTUser.objects.create(email="reset@mail.utoronto.ca", password="Password1!!!", reset_code="reset123")
         self.url = reverse("password-reset", args=[self.user.email])
 
     def test_reset_password_success(self):
@@ -196,7 +196,7 @@ class PasswordResetViewTest(APITestCase):
 
 class ChangePasswordViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="changepass@example.com")
+        self.user = UofTUser.objects.create(email="changepass@mail.utoronto.ca")
         self.user.set_password("Password1!!!")
         self.user.save()
         self.client.force_authenticate(user=self.user)
