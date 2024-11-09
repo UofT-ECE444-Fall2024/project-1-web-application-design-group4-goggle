@@ -25,7 +25,7 @@ const CategoryPage = () => {
   if (!loading) {
     return (
       <div className="flex flex-col min-h-screen w-full">
-        <NavBar title="" />
+        <NavBar/>
 
         <div className="flex-grow mx-auto w-full text-2xl font-bold mb-4">
           <h2>Category: {category}</h2>

@@ -28,7 +28,7 @@ const HomePage = () => {
     return(
     <div className="flex flex-col min-h-screen w-full">
       {/* Header at the top */}
-      <NavBar title="" />
+      <NavBar />
 
       {/* Main content */}
       <div className="flex-grow w-full flex flex-col justify-between">
