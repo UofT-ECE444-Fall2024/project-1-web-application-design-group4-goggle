@@ -21,7 +21,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
   return (
     <FormProvider {...methods}>
       <div className="w-full">
-        <div className="bg-white-bg rounded-3xl px-6 py-10 dark:bg-dark w-full">
+        <div className="bg-white-bg rounded-3xl px-6 dark:bg-dark w-full">
           <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full">
             <div className="mt-5 flex flex-col gap-2 sm:flex-row w-full">
               <TextBox<CreatePostInputs>
@@ -85,7 +85,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               />    
             </div>
 
-            <div className="mt-2 flex flex-col gap-2 sm:flex-row w-full">
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row w-full items-end mb-10">
               {/* Location Field */}
               <TextBox<CreatePostInputs>
                 placeholder="Location (optional)"
@@ -100,7 +100,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               <button
                 type="submit"
                 className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
-                          text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12"
+                          text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 xs:h-16 xs:mt-5 mt-0"
               >
                 Publish
               </button>
