@@ -15,13 +15,11 @@ cache = redis.StrictRedis(host="redis",
 class UofT_JWTAuthentication(authentication.BaseAuthentication):
     
     def authenticate(self, request):
-        
         # Extract the JWT from the Authorization header
         jwt_token = request.META.get('HTTP_AUTHORIZATION')
         if jwt_token is None:
             raise AuthenticationFailed("Missing Authorization header")
         jwt_token = UofT_JWTAuthentication.get_the_token_from_header(jwt_token)  # clean the token
-
         # Decode the JWT and verify its signature
         try:
             payload = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])

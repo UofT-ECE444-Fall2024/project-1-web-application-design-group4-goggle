@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react';
-
 import { Listing } from '@/types/listing';
 import ListingCard from '../Listing/ListingCard';
 

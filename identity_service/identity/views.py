@@ -79,11 +79,9 @@ class AuthenticateToken(generics.RetrieveAPIView):
     authentication_classes = [UofT_JWTAuthentication]
     
     def get(self, request, *args, **kwargs):
-        
         caller = request.user
         serializer = self.get_serializer(caller)      
-        serialized_data = json.loads(json.dumps(serializer.data)) # convert the OrderedDict to a dict
-        
+        serialized_data = json.loads(json.dumps(serializer.data)) # convert the OrderedDict to a 
         response = Response(
             status=status.HTTP_200_OK,
             data="A man's flesh is his own; the water belongs to the tribe."
