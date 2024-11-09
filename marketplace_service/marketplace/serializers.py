@@ -43,7 +43,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
         return None
 
 class ProductSerializer(serializers.ModelSerializer):
-    user_profile = serializers.SerializerMethodField('get_user_profile')
 
     class Meta:
         model = Product
@@ -59,7 +58,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_active', 
             'is_sold', 
             'slug',
-            'user_profile',
             ]
         extra_kwargs = {
             'id': {'read_only': True},
@@ -69,25 +67,3 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_active': {'read_only': True},
             'is_sold': {'read_only': True},
         }
-
-    # Get user profile from the identity service given the user_id
-    def get_user_profile(self, obj):
-        user_id = obj.user_id
-
-        if user_id is None:
-            return None
-
-        url = f'http://localhost:12000/users/{user_id}/' # store in env variable
-
-        try:
-            response = requests.get(url, timeout=5)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.HTTPError as errh:
-            return {'error': f"HTTP Error: {str(errh)}"}
-        except requests.exceptions.ConnectionError as errc:
-            return {'error': f"Error Connecting: {str(errc)}"}
-        except requests.exceptions.Timeout as errt:
-            return {'error': f"Timeout Error: {str(errt)}"}
-        except requests.exceptions.RequestException as err:
-            return {'error': f"Request Exception: {str(err)}"}

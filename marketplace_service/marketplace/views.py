@@ -23,11 +23,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'date_posted']
 
-    def perform_create(self, serializer):
-        # Automatically set the user_id to the currently logged-in user's ID.
-        user_id = self.request.user.id
-        serializer.save(user_id=user_id)
-
     def get_queryset(self):
         # Limit the queryset to only products that are active by default.
         queryset = Product.objects.filter(is_active=True)
@@ -36,7 +31,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_products(self, request):
         # Custom endpoint to retrieve products for the authenticated user.
-        user_id = request.user.id
+        user_id = request.query_params.get('user_id')
         user_products = Product.objects.filter(user_id=user_id)
         serializer = self.get_serializer(user_products, many=True)
         return Response(serializer.data)
