@@ -11,7 +11,6 @@ from .serializers import ProductSerializer, CategorySerializer, ProductImageSeri
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'  # Allows lookup by slug instead of ID
 
 
@@ -19,7 +18,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'price', 'location', 'is_active', 'is_sold']
     search_fields = ['title', 'description']
@@ -72,7 +70,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ProductImageViewSet(viewsets.ModelViewSet):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         # Set the product context for the image being uploaded
