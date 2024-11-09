@@ -11,6 +11,7 @@ const SearchSidebar: React.FC = () => {
     const [campusOpen, setCampusOpen] = useState(true);
     const [sortByOpen, setSortByOpen] = useState(true);
     const [priceSortOpen, setPriceSortOpen] = useState(true);
+    const [dateSortOpen, setDateSortOpen] = useState(true);
 
     const [checkboxes, setCheckboxes] = useState<Record<string, boolean>>({
         utsg: false,
@@ -18,10 +19,25 @@ const SearchSidebar: React.FC = () => {
         utsc: false,
     });
 
+    // Store the selected options
+    const [selectedPriceSort, setSelectedPriceSort] = useState("Lowest to Highest");
+    const [selectedDateSort, setSelectedDateSort] = useState("Most Recent");
+    const priceSortOptions = ["Lowest to Highest", "Highest to Lowest"];
+    const dateSortOptions = ["Most Recent", "Least Recent"];
+
     const toggleSidebar = () => setIsOpen(!isOpen);
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
         setCheckboxes((prev) => ({ ...prev, [name]: checked }));
+    };
+
+    // Handler functions to capture the selected sort option
+    const handlePriceSortSelect = (selectedOption: string) => {
+        setSelectedPriceSort(selectedOption);
+    };
+
+    const handleDateSortSelect = (selectedOption: string) => {
+        setSelectedDateSort(selectedOption);
     };
 
     return (
@@ -36,14 +52,23 @@ const SearchSidebar: React.FC = () => {
                     </ParentDropDown>
 
                     <ParentDropDown isOpen={sortByOpen} onToggle={() => setSortByOpen(!sortByOpen)} text={"Sort by"}>
-                        <SortMenu isOpen={priceSortOpen} onToggle={() => setPriceSortOpen(!priceSortOpen)} title={"Price"} options={["Lowest to Highest", "Highest to Lowest"]} onSelect={function (): void {
-                            throw new Error("Function not implemented.");
-                        } } />
-                        <SortMenu isOpen={priceSortOpen} onToggle={() => setPriceSortOpen(!priceSortOpen)} title={"Date Listed"} options={["Most Recent", "Least Recent"]} onSelect={function (): void {
-                            throw new Error("Function not implemented.");
-                        } } />
+                        <SortMenu
+                            isOpen={priceSortOpen}
+                            onToggle={() => setPriceSortOpen(!priceSortOpen)}
+                            title={"Price"}
+                            options={priceSortOptions}
+                            onSelect={handlePriceSortSelect}
+                            selectedIndex={priceSortOptions.indexOf(selectedPriceSort)}
+                        />
+                        <SortMenu
+                            isOpen={dateSortOpen}
+                            onToggle={() => setDateSortOpen(!dateSortOpen)}
+                            title={"Date Listed"}
+                            options={dateSortOptions}
+                            onSelect={handleDateSortSelect}
+                            selectedIndex={dateSortOptions.indexOf(selectedDateSort)}
+                        />
                     </ParentDropDown>
- 
                 </div>
             </div>
 

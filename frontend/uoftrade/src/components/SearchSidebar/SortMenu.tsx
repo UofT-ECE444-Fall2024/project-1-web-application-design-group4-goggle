@@ -5,21 +5,37 @@ interface SortMenuProps {
     title: string;
     options: string[];
     onToggle: () => void;
-    onSelect: () => void;
+    onSelect: (selectedOption: string) => void;
+    selectedIndex: number;
 }
 
-const SortMenu: React.FC<SortMenuProps> = ({ isOpen, onToggle, onSelect, title, options }) => (
+const SortMenu: React.FC<SortMenuProps> = ({
+    isOpen,
+    onToggle,
+    onSelect,
+    title,
+    options,
+    selectedIndex,
+}) => (
     <div className="p-3 pl-8 w-full hover:bg-dark-grey">
         <button onClick={onToggle} className="flex justify-between w-full text-left">
-           {title}
+            {title}
             <span>{isOpen ? '▲' : '▼'}</span>
         </button>
         {isOpen && (
             <div className="pl-4">
                 <div className="my-2">
-                    {options.map((label) => (
-                    <button onClick={onSelect} className="block mt-1 text-sm">{label}</button>
-                ))}
+                    {options.map((label, index) => (
+                        <button
+                            key={index}
+                            onClick={() => onSelect(label)} // Pass the selected option label
+                            className={`block mt-1 text-sm ${
+                                selectedIndex === index ? "underline" : ""
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
                 </div>
             </div>
         )}
