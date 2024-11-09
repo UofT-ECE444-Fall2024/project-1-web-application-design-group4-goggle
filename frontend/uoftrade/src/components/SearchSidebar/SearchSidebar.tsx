@@ -14,12 +14,11 @@ const SearchSidebar: React.FC = () => {
     const [dateSortOpen, setDateSortOpen] = useState(true);
 
     const [checkboxes, setCheckboxes] = useState<Record<string, boolean>>({
-        utsg: false,
+        utsg: true,
         utm: false,
         utsc: false,
     });
 
-    // Store the selected options
     const [selectedPriceSort, setSelectedPriceSort] = useState("Lowest to Highest");
     const [selectedDateSort, setSelectedDateSort] = useState("Most Recent");
     const priceSortOptions = ["Lowest to Highest", "Highest to Lowest"];
@@ -31,7 +30,6 @@ const SearchSidebar: React.FC = () => {
         setCheckboxes((prev) => ({ ...prev, [name]: checked }));
     };
 
-    // Handler functions to capture the selected sort option
     const handlePriceSortSelect = (selectedOption: string) => {
         setSelectedPriceSort(selectedOption);
     };
@@ -42,7 +40,9 @@ const SearchSidebar: React.FC = () => {
 
     return (
         <div className="flex">
-            <div className={`left-0 w-full min-w-[300px] ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div
+                className={`left-0 min-w-[25rem] max-w-[25rem] ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300`}
+            >
                 <div className="flex flex-col border border-solid border-gray-300 bg-white shadow-lg h-full">
                     <h3 className="p-5 pl-8 text-[1.65rem] font-bold">Filters</h3>
 
@@ -72,8 +72,37 @@ const SearchSidebar: React.FC = () => {
                 </div>
             </div>
 
-            <button onClick={toggleSidebar} className="h-12 ml-4 mt-4 px-6 bg-primary text-white">
-                {isOpen ? 'Close' : 'Open'}
+           <button 
+                className="h-12 ml-4 mt-4 z-40 px-6 bg-primary text-white-bg transition-all duration-300 shadow-three" 
+                onClick={toggleSidebar}
+                style={{ marginLeft: isOpen ? '0' : '-25rem' }} // Adjust position based on sidebar state
+            >
+                {/* Toggle icon based on isOpen state */}
+                {isOpen ? (
+                <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                ) : (
+                <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+                )}
             </button>
         </div>
     );
