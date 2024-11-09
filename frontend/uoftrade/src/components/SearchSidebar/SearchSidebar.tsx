@@ -1,19 +1,36 @@
 'use client'
 
 import React, { useState } from "react";
+import LabelledCheckbox from "../Checkbox/LabelledCheckbox";
 
 const SearchSidebar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [filterByOpen, setFilterByOpen] = useState(false);
-    const [priceOpen, setPriceOpen] = useState(false);
-    const [campusOpen, setCampusOpen] = useState(false);
-    const [sortByOpen, setSortByOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+    const [filterByOpen, setFilterByOpen] = useState(true);
+    const [priceOpen, setPriceOpen] = useState(true);
+    const [campusOpen, setCampusOpen] = useState(true);
+    const [sortByOpen, setSortByOpen] = useState(true);
 
     const toggleSidebar = () => setIsOpen(!isOpen);
     const toggleFilterBy = () => setFilterByOpen(!filterByOpen);
     const togglePrice = () => setPriceOpen(!priceOpen);
     const toggleCampus = () => setCampusOpen(!campusOpen);
     const toggleSortBy = () => setSortByOpen(!sortByOpen);
+
+    // State to manage checkbox values
+    const [checkboxes, setCheckboxes] = useState({
+        utsg: false,
+        utm: false,
+        utsc: false,
+    });
+
+    // Handle checkbox change
+    const handleCheckboxChange = (event:any) => {
+        const { name, checked } = event.target;
+        setCheckboxes((prev) => ({
+        ...prev,
+        [name]: checked,
+        }));
+    };
 
     return (
         <div className="flex">
@@ -55,8 +72,26 @@ const SearchSidebar = () => {
                                         <span>{campusOpen ? '▲' : '▼'}</span>
                                     </button>
                                     {campusOpen && (
-                                        <div className="pl-4 mt-2 space-y-2">
-                                            <label className="flex items-center">
+                                        <div className="pl-4 mt-2 space-y-1">
+                                            <LabelledCheckbox
+                                                label="UTSG - St. George"
+                                                name="utsg"
+                                                checked={checkboxes.utsg}
+                                                onChange={handleCheckboxChange}
+                                                />
+                                            <LabelledCheckbox
+                                                label="UTM - Mississauga"
+                                                name="utm"
+                                                checked={checkboxes.utm}
+                                                onChange={handleCheckboxChange}
+                                                />
+                                            <LabelledCheckbox
+                                                label="UTSC - Scarborough"
+                                                name="utsc"
+                                                checked={checkboxes.utsc}
+                                                onChange={handleCheckboxChange}
+                                                />
+                                            {/* <label className="flex items-center">
                                                 <input type="checkbox" className="mr-2" />
                                                 UTSG - St. George
                                             </label>
@@ -67,7 +102,7 @@ const SearchSidebar = () => {
                                             <label className="flex items-center">
                                                 <input type="checkbox" className="mr-2" />
                                                 UTSC - Scarborough
-                                            </label>
+                                            </label> */}
                                         </div>
                                     )}
                                 </div>
