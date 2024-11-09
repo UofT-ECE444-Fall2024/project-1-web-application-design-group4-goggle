@@ -7,7 +7,6 @@ import { categories } from "@/data/categories";
 import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
 import { useRouter } from "next/navigation";
 
-
 const NavBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [inputWidth, setInputWidth] = useState(0);
@@ -86,6 +85,9 @@ const NavBar = () => {
                 setSearchInput(newValue);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
             placeholder="Search Listings"
             className="p-2 pl-5 border border-gray-300 rounded-full py-3 w-9/12" // Adjust width as needed
           />
@@ -93,7 +95,6 @@ const NavBar = () => {
             Search
           </button>
         </div>
-
 
         <div className="relative inline-block"> 
           <CategoryDropdown />
