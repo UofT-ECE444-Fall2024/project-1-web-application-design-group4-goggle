@@ -5,12 +5,12 @@ import { Rating } from '@mui/material';
 import { Listing } from "@/types/listing";
 
 const ListingCard = ({ listing }: { listing: Listing }) => {
-  const { title, price, image, description, seller, tags, publishDate } = listing;
+  const { id, title, price, image, description, seller, tags, publishDate } = listing;
   return (
     <>
       <div className="group rounded-2xl border border-solid border-outline-grey relative overflow-hidden rounded-sm bg-white shadow-one duration-300 hover:shadow-two dark:bg-dark dark:hover:shadow-gray-dark">
         <Link
-          href="/listing-details" //to be changed
+          href={`/view-listing/${id}`} //to be changed
           className="relative block aspect-[37/22] w-full"
         >
           <span className="absolute right-6 top-6 z-20 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold capitalize text-white-bg">
@@ -22,7 +22,7 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
           <Link
               href="/listing-details" //to be changed
           >
-            <h3 className="block text-xl font-bold text-heading-1 hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl">        
+            <h3 className="block text-xl font-bold text-heading-1 hover:underline hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl">        
                 {title}
             </h3>
             <h4 className="mb-4 block text-l font-bold text-heading-1 hover:text-primary dark:text-white dark:hover:text-primary sm:text-xl">
