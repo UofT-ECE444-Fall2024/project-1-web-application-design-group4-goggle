@@ -149,3 +149,26 @@ class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     # permission_classes = [ChangePasswordPermission]
     lookup_field = "email"
+
+class UpdateRatingView(generics.UpdateAPIView):
+    queryset = UofTUser.objects.all()
+    serializer_class = UofTUserFeaturesSerializer
+    # permission_classes = [RatingPermission]
+    lookup_field = "email"
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        user.rating = (user.rating * user.rating_count + request.data["rating"]) / (user.rating_count + 1)
+        user.rating_count += 1
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    
+class GetRatingView(generics.RetrieveAPIView):
+    queryset = UofTUser.objects.all()
+    serializer_class = UofTUserFeaturesSerializer
+    lookup_field = "email"
+    
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        return Response(data=user.rating, status=status.HTTP_200_OK)
+    

@@ -29,4 +29,6 @@ urlpatterns = [
     path('reset-code/<str:email>', ResetCodeView.as_view(), name='reset-code'),
     path('password-reset/<str:email>', PasswordResetView.as_view(), name='password-reset'),
     path('change-password/<str:email>', ChangePasswordView.as_view(), name='change-password'),
+    path('rating/<str:email>', UpdateRatingView.as_view(), name='rating'),
+    path('get-rating/<str:email>', GetRatingView.as_view(), name='rating'),
 ]
