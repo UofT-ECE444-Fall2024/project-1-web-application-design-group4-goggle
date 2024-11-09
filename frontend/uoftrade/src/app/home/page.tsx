@@ -3,44 +3,29 @@ import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
 import TrendingCarousel from "@/components/Carousel/TrendingCarousel";
 import CategoriesSelection from "@/components/CategoriesSelection/CategoriesSelection";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {useRouter} from "next/navigation";
-import axios from "axios";
+import useTokenCheck from "@/api/TokenCheck";
 
 const HomePage = () => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
+  useTokenCheck(setAuthenticated);
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-    if (token) {
-      // Optionally verify the JWT by making an API call to the backend
-      axios.get("//localhost:12000/auth", { //this only works locally in this format, not sure why
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
-      
-      .then((response) => {
-        // If the token is valid, set authenticated to true
-        console.log("Token verified", response.data);
-        setAuthenticated(true);
-      })
-      .catch((error) => {
-        // Handle invalid or expired token
-        console.error("Token verification failed", error);
-        router.push("/signin"); // Invalid token, redirect to signin
-      });
-    } else {
-      console.log("Token invalid, redirecting to signin.1");
-      router.push("/signin"); // Redirect if no token
+    // Check the authentication status and stop loading once it's checked
+    if (authenticated !== null) {
+      setLoading(false); // Once the authentication check is done, stop the loading state
+      if (authenticated === false) {
+        router.push("/signin");
+      }
     }
-  }, [router]);
+  }, [authenticated, router]);
 
-
-  if (!authenticated) return null;
-
-  return (
+  // Show loading state until token check is complete
+  if (!loading) {
+    return(
     <div className="flex flex-col min-h-screen w-full">
       {/* Header at the top */}
       <NavBar title="" />
@@ -67,8 +52,8 @@ const HomePage = () => {
       {/* Footer pinned to the bottom */}
       <Footer />
     </div>
-
-  );
+    );
+  };
 };
 
 export default HomePage;

@@ -7,7 +7,6 @@ import TextBox from "../TextBox/TextBox";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form"
-
 import "../../types/inputs"
 
 const SignInForm = () => {
@@ -28,8 +27,11 @@ const SignInForm = () => {
                 password: data.password
             };
 
-            
-            const response = await axios.post("http://localhost/identity/login", payload);
+            const api = axios.create({
+                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
+                headers: { 'Content-Type': 'application/json' },
+              });
+            const response = await api.post('identity/login', payload);
       
             if (response.status === 200 ) {
               // Successfully signed in, handle redirection or show success message
@@ -38,8 +40,6 @@ const SignInForm = () => {
                 if (token) {
                     localStorage.setItem("token", token);
                 }
-                //log the token from local storage
-                console.log(localStorage.getItem("token"));
                 router.push('/home');
             }
           } catch (error: any) {

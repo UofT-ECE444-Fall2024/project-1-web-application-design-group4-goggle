@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useRef } from "react";
-import axios from "axios";
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import TextBox from "../TextBox/TextBox";
 
@@ -28,8 +27,6 @@ const ProfileEditForm = () => {
                 // user_name: data.first_name,
                 // phone_number: data.phone_number,
             };
-
-            // changeUserInfo = await axios.post("http://localhost/identity/register", payload);
         }
         catch(e:unknown) {
             console.error(e);

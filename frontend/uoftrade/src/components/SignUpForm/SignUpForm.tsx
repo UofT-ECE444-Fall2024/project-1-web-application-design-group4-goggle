@@ -24,10 +24,7 @@ const SignUpForm = () => {
     password.current = watch("password", "");
     
     const onSubmit: SubmitHandler<RegistrationInputs> = async (data:RegistrationInputs) => {
-        
         let registered; 
-        // Password!!!1
-
         try {
 
             const payload:Object = {
@@ -39,8 +36,11 @@ const SignUpForm = () => {
                 password: data.password,
                 password_confirmation: data.password_confirmation
             };
-            
-            registered = await axios.post("http://localhost/identity/register", payload, {
+            const api = axios.create({
+                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
+                headers: { 'Content-Type': 'application/json' },
+              });
+            registered = await api.post("identity/register", payload, {
                 headers: { 'Content-Type': 'application/json' }
               });
             const token = registered.data.token;
