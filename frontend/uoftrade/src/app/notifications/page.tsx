@@ -1,21 +1,15 @@
-import Image from "next/image";
 import { Metadata } from "next";
 import React from "react";
-import SettingSidebar from "@/components/SettingSidebar/SettingSidebar";
+import NotificationsSettings from "@/components/Notifications/NotificationsSettings";
+import SettingsContent from "@/components/Settings/SettingsContent";
 
 export const metadata: Metadata = {
-    title: "UofTrade Notifications",
-    description: "This is the Notifications Page for UofTrade",
-    // other metadata
-  };
-  
-  const NotificationsPage = () => {
-  
-      return (
-        <>
-           <SettingSidebar highlightIndex={2}/>
-        </>
-      );
-  }
-  
-  export default NotificationsPage
+  title: "UofTrade User Listings",
+  description: "This is the User Listings Page for UofTrade",
+};
+
+const NotificationsPage = () => {
+  return <SettingsContent ContentComponent={NotificationsSettings} highlightIndex={2}/>
+};
+
+export default NotificationsPage;

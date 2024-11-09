@@ -1,21 +1,15 @@
-import Image from "next/image";
 import { Metadata } from "next";
 import React from "react";
-import SettingSidebar from "@/components/SettingSidebar/SettingSidebar";
+import AppearanceEdit from "@/components/Appearance/AppearanceEdit";
+import SettingsContent from "@/components/Settings/SettingsContent";
 
 export const metadata: Metadata = {
-    title: "UofTrade Appearance",
-    description: "This is the Appearance Page for UofTrade",
-    // other metadata
-  };
-  
-  const AppearancePage = () => {
-  
-      return (
-        <>
-            <SettingSidebar highlightIndex={3}/>
-        </>
-      );
-  }
-  
-  export default AppearancePage
+  title: "UofTrade User Listings",
+  description: "This is the User Listings Page for UofTrade",
+};
+
+const AppearancePage = () => {
+  return <SettingsContent ContentComponent={AppearanceEdit} highlightIndex={3}/>
+};
+
+export default AppearancePage;
