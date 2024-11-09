@@ -26,21 +26,20 @@ const ConversationsList: React.FC<ConversationsListProps> = ({ conversations, ac
           return (
             <div
               key={index}
-              className={`flex items-center p-4 cursor-pointer ${isActive ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}
+              className={`flex items-center p-4 cursor-pointer ${isActive ? 'bg-primary text-white-bg' : 'hover:bg-gray-100'}`}
               onClick={() => onSelectConversation(conversation.userName)}
             >
               <div className="flex-1">
-                <p className={`font-medium ${isActive ? 'text-white' : 'text-gray-800'}`}>{conversation.userName}</p>
-                <p className={`text-sm ${isActive ? 'text-white' : 'text-gray-500'}`}>{conversation.lastMessage}</p>
+                <p className={`font-medium ${isActive ? 'text-white-bg' : 'text-gray-800'}`}>{conversation.userName}</p>
+                <p className={`text-sm ${isActive ? 'text-white-bg' : 'text-gray-500'}`}>{conversation.lastMessage}</p>
               </div>
               <div className="text-xs text-gray-400">
                 <p>{conversation.lastMessageTime}</p>
               </div>
-              {conversation.unreadCount > 0 && (
-                <div className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-2">
-                  {conversation.unreadCount}
-                </div>
-              )}
+              <div className={`${(isActive) ? 'bg-white-bg text-heading-1' : 'bg-primary text-white-bg'}  rounded-full px-2 py-1 text-xs ml-2`}>
+                {conversation.unreadCount}
+              </div>
+              
             </div>
           );
         })}
