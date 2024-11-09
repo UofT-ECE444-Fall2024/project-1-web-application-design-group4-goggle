@@ -28,9 +28,16 @@ def validate_image(image):
         raise ValidationError('Invalid image file.')
 
 class Category(models.Model):
+    CATEGORY_CHOICES = [
+        ('Electronics', 'Electronics'),
+        ('Books', 'Books'),
+        ('Clothing', 'Clothing'),
+        ('Furniture', 'Furniture'),
+        ('Miscellaneous', 'Miscellaneous'),
+    ]
+
     id              = models.AutoField(primary_key=True)
-    name            = models.CharField(max_length=255, unique=True)
-    parent          = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
+    name            = models.CharField(max_length=16, choices=CATEGORY_CHOICES, default='Miscellaneous')
     slug            = models.SlugField(max_length=255, unique=True, blank=True) # Unique slug for SEO-friendly URLs
 
     class Meta:

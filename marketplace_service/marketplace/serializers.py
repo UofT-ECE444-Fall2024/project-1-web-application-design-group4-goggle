@@ -1,48 +1,28 @@
 # serializers.py
 from rest_framework import serializers
 from .models import Product, ProductImage, Category
-import requests
 
 class CategorySerializer(serializers.ModelSerializer):
-    subcategories = serializers.SerializerMethodField('get_subcategories')
-
     class Meta:
         model = Category
-        fields = ['id', 'name', 'parent', 'slug', 'subcategories']
+        fields = ['id', 'name','slug']
         extra_kwargs = {
-            'parent': {'required': False},
             'slug': {'read_only': True},
             'id': {'read_only': True},
         }
 
-    def get_subcategories(self, obj):
-        children = obj.subcategories.all()
-        if children.exists():
-            serializer = CategorySerializer(children, many=True)
-            return serializer.data
-        return None
-
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField('get_image_url')
-
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'alt_text', 'image_url']
+        fields = ['id', 'image', 'alt_text']
         extra_kwargs = {
             'id': {'read_only': True},
         }
 
-    def get_image_url(self, obj):
-        if obj.image:
-            request = self.context.get('request')
-            image_url = obj.image_url
-            if request is not None:
-                return request.build_absolute_uri(image_url)
-            return image_url
-        return None
-
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+    category = CategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -58,6 +38,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_active', 
             'is_sold', 
             'slug',
+            'images'
             ]
         extra_kwargs = {
             'id': {'read_only': True},
