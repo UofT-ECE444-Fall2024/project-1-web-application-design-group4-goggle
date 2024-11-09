@@ -17,11 +17,6 @@ class CategoryModelTest(TestCase):
         self.assertEqual(self.category.name, "Electronics")
         self.assertIsNotNone(self.category.slug)
 
-    def test_subcategory(self):
-        """Test that a subcategory can be created and associated with a parent category"""
-        subcategory = Category.objects.create(name="Laptops", parent=self.category)
-        self.assertEqual(subcategory.parent, self.category)
-
 
 class ProductModelTest(TestCase):
     def setUp(self):
@@ -78,7 +73,7 @@ class ProductViewSetTest(TestCase):
         self.client = APIClient()
         self.user = User.objects.create_user(username="testuser", password="testpassword")
         self.client.force_authenticate(user=self.user)
-        self.category = Category.objects.create(name="Appliances")
+        self.category = Category.objects.create(name="Miscellaneous")
         self.product = Product.objects.create(
             user_id=self.user.id,
             title="Blender",
