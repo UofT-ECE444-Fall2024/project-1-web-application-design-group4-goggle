@@ -64,6 +64,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
             {/* Campus Dropdown */}
             <SelectDropdown
               label="Choose Campus"
+              topText="Choose Campus"
               options={["UTSG", "UTM", "UTSC"]}
               onSelect={(selected) => setValue("campus", selected)}
             />
@@ -87,6 +88,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
             /> */}
             {/* Category Dropdown */}
             <SelectDropdown
+              topText="Choose Category"
               label="Choose Category"
               options={categories.map(category => category.name)}
               onSelect={(selected) => setValue("category", selected)}
