@@ -81,11 +81,9 @@ class AuthenticateToken(generics.RetrieveAPIView):
     authentication_classes = [UofT_JWTAuthentication]
     
     def get(self, request, *args, **kwargs):
-        
         caller = request.user
         serializer = self.get_serializer(caller)      
-        serialized_data = json.loads(json.dumps(serializer.data)) # convert the OrderedDict to a dict
-        
+        serialized_data = json.loads(json.dumps(serializer.data)) # convert the OrderedDict to a 
         response = Response(
             status=status.HTTP_200_OK,
             data="A man's flesh is his own; the water belongs to the tribe."
@@ -220,3 +218,25 @@ class MarkMessagesAsReadView(APIView):
         conversation = Conversation.objects.get(id=conversation_id)
         conversation.messages.filter(is_read=False).exclude(sender=user).update(is_read=True)
         return Response({"status": "success"})
+      
+class UpdateRatingView(generics.UpdateAPIView):
+    queryset = UofTUser.objects.all()
+    serializer_class = UofTUserFeaturesSerializer
+    # permission_classes = [RatingPermission]
+    lookup_field = "email"
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        user.rating = (user.rating * user.rating_count + request.data["rating"]) / (user.rating_count + 1)
+        user.rating_count += 1
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    
+class GetRatingView(generics.RetrieveAPIView):
+    queryset = UofTUser.objects.all()
+    serializer_class = UofTUserFeaturesSerializer
+    lookup_field = "email"
+    
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        return Response(data=user.rating, status=status.HTTP_200_OK)

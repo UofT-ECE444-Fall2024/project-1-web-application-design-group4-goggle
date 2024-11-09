@@ -1,9 +1,7 @@
 import Image from "next/image";
 import { Metadata } from "next";
 import React from "react";
-
 import "../../types/inputs"
-
 import SignInForm from "@/components/SignInForm/SignInForm";
 
 export const metadata: Metadata = {

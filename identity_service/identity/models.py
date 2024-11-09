@@ -13,6 +13,8 @@ class UofTUser(AbstractBaseUser):
     user_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True, validators=[EmailValidator(message="Invalid email address")], primary_key=True)    
     phone_number = PhoneNumberField(blank=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    rating_count = models.IntegerField(default=0)
     
     # Meta fields
     reset_code = models.CharField(max_length=64, unique=True, blank=True, null=True)

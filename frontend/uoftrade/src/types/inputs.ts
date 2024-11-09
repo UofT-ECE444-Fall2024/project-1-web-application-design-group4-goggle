@@ -4,6 +4,7 @@ type RegistrationInputs = {
     password: string
     password_confirmation: string
     email: string
+    user_name: string
   }
 
 type LoginInputs = {

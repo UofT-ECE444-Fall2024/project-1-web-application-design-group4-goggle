@@ -1,7 +1,15 @@
 import React from 'react';
 import { Rating } from '@mui/material';
+import Link from 'next/link';
+import axios from 'axios';
 
 const ProfileEditHeader = () => {
+
+    const getUser = async () => {
+        const currentUser = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/user`);
+        return currentUser?.data?.username;
+    }
+
     return (
         <div className="container flex flex-row justify-between">
             <div className="flex items-center">
@@ -17,9 +25,9 @@ const ProfileEditHeader = () => {
                     className="text-yellow-500 text-3xl"
             />
             </div>
-            <button className="ml-6 bg-primary text-white-bg px-8 py-2 rounded-xl">
+            <Link href={`/view-profile/${getUser()}`} className="ml-6 bg-primary text-white-bg px-8 py-2 rounded-xl">
                 See What Others See
-            </button>     
+            </Link>     
         </div>
     );
 };

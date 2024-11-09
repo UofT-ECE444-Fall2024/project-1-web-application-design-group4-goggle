@@ -62,6 +62,7 @@ const TextBox = <T extends FieldValues>({
                 {error.type === "required" && <InlineErrorMessage message="This field is required" />}
                 {error.type === "pattern" && <InlineErrorMessage message={error.message as string} />}
                 {error.type === "validate" && <InlineErrorMessage message={error.message as string} />}
+                {error.type === "manual" && <InlineErrorMessage message={error.message as string} />}
                 {/* Add more error types as needed */}
                 </div>
             )}

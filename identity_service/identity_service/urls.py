@@ -34,4 +34,6 @@ urlpatterns = [
     path('conversations/messages/<int:conversation_id>', MessageHistoryView.as_view(), name='message-history'),
     path('conversations/send_message/<int:conversation_id>', SendMessageView.as_view(), name='send-message'),
     path('conversations/mark_read/<int:conversation_id>', MarkMessagesAsReadView.as_view(), name='mark-messages-read'),
+    path('rating/<str:email>', UpdateRatingView.as_view(), name='rating'),
+    path('get-rating/<str:email>', GetRatingView.as_view(), name='rating'),
 ]

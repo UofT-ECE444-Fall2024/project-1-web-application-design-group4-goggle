@@ -1,23 +1,66 @@
 'use client'
 
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import TextBox from "../TextBox/TextBox";
-
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form"
-
 import "../../types/inputs"
 
 const SignInForm = () => {
-
+    const [serverError, setServerError] = useState<string | null>(null); // State to hold server error
+    const router = useRouter();
     const {
         register,
         handleSubmit,
+        setError,
         formState: { errors },
       } = useForm<LoginInputs>()
     
-    const onSubmit: SubmitHandler<LoginInputs> = (data) => console.log(data)
+    const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+        try {
+
+            const payload:Object = {
+                email: data.email, 
+                password: data.password
+            };
+
+            const api = axios.create({
+                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
+                headers: { 'Content-Type': 'application/json' },
+              });
+            const response = await api.post('identity/login', payload);
+      
+            if (response.status === 200 ) {
+              // Successfully signed in, handle redirection or show success message
+              console.log("Signed in successfully!");
+              const token = response.data.token;
+                if (token) {
+                    localStorage.setItem("token", token);
+                }
+                router.push('/home');
+            }
+          } catch (error: any) {
+            // Handle server-side errors (invalid credentials)
+            if (error.response) {
+              // Server responded with an error
+              if (error.response.status === 400) {
+                setError("email", { type: "manual", message: error.response.data.message });; 
+              } 
+              else if (error.response.status === 401) {
+                const errorDetail = error.response.data?.detail || "The email or password is incorrect. Please try again.";
+                setError("email", { type: "manual", message: errorDetail });
+              }else {
+                setError("email", { type: "manual", message: "An unexpected error occurred. Please try again." });
+              }
+            } else {
+              // No response from server
+              setError("email", { type: "manual", message: "Error during sign-in. Please try again." });
+            }
+          }
+        };
 
     return (
         <section className="relative z-10 overflow-hidden pb-16 md:pb-20 lg:pb-28 lg:pt-16">
