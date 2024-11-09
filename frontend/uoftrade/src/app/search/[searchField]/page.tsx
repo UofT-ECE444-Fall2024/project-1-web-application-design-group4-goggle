@@ -31,7 +31,7 @@ const SearchPage = () => {
               image="/images/misc/textbook.jpg"
               title="Real Property Law Textbook"
               price={150.00}
-              description="This is my description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus curabitur accumsan semper accumsan primis lorem tortor rhoncus."
+              description="This is my description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus curabitur accumsan semper accumsan primis lorem tortor rhoncus.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus curabitur accumsan semper accumsan primis lorem tortor rhoncus."
             />
             <PostCard
               image="/images/misc/textbook.jpg"
