@@ -60,7 +60,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
             required={false}
           />
 
-          <div className="mt-5 flex flex-col justify-between items-end gap-2 sm:flex-row w-full">
+          <div className="flex flex-col justify-between items-end gap-2 sm:flex-row w-full">
             {/* Campus Dropdown */}
             <SelectDropdown
               label="Choose Campus"
@@ -87,21 +87,25 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               required={false}
             /> */}
             {/* Category Dropdown */}
-            <SelectDropdown
-              topText="Choose Category"
-              label="Choose Category"
-              options={categories.map(category => category.name)}
-              onSelect={(selected) => setValue("category", selected)}
-            />
+            
               
           </div>
-          <button
-            type="submit"
-            className="mt-5 mb-2 rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
-                      text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12"
-          >
-            Publish
-          </button>
+          <div className="mt-2 flex flex-col justify-between items-end gap-2 sm:flex-row w-full">
+              <SelectDropdown
+                topText="Choose Category"
+                label="Choose Category"
+                options={categories.map(category => category.name)}
+                onSelect={(selected) => setValue("category", selected)}
+              />
+              <button
+                type="submit"
+                className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
+                          text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12"
+              >
+              Publish
+            </button>
+          </div>
+          
         </form>
       </div>
     </div>

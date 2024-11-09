@@ -27,7 +27,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({ label, options, onSelec
       <div className="relative inline-block w-full">
         {topText && <span className="text-xs text-heading-1">{topText}</span>}
         <button
-          className="bg-primary border border-black w-full px-4 py-3 rounded-md text-white flex justify-between items-center"
+          className="bg-light-grey border border-black px-4 py-3 flex justify-between items-center rounded-xl w-full h-full border-black/[.08] dark:border-white/[.145] transition-colors text-heading-1 hover:bg-dark-grey hover:border-transparent text-l font-medium sm:h-12"
           onClick={toggleDropdown}
         >
           {selectedOption || label}
@@ -35,7 +35,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({ label, options, onSelec
         </button>
 
         {dropdownVisible && (
-          <div className="absolute left-0 z-50 mt-2 bg-white border border-gray-300 rounded-md shadow-lg min-w-full">
+          <div className="absolute left-0 z-50 mt-2 bg-white border border-dark-grey rounded-md shadow-lg min-w-full">
             {options.map((option) => (
               <div
                 key={option}
