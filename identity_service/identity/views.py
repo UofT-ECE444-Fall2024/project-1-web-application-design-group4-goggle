@@ -5,6 +5,8 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, BasePermission
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q, Value, CharField, F
 from django.db.models.functions import Concat
@@ -12,7 +14,7 @@ import redis
 import json
 import base64 
 from django.conf import settings
-from .models import UofTUser
+from .models import UofTUser, Conversation, Message
 from .serializers import *
 from .authentication import UofT_JWTAuthentication
 from .utils import SEND_EMAIL
@@ -150,6 +152,73 @@ class ChangePasswordView(generics.UpdateAPIView):
     # permission_classes = [ChangePasswordPermission]
     lookup_field = "email"
 
+class CreateConversationView(APIView):
+    def post(self, request):
+        user1_email = request.data.get('user1')
+        user2_email = request.data.get('user2')
+
+        user1 = UofTUser.objects.get(email=user1_email)
+        user2 = UofTUser.objects.get(email=user2_email)
+
+        conversation = Conversation.objects.filter(participants=user1).filter(participants=user2).first()
+        if not conversation:
+            conversation = Conversation.objects.create()
+            conversation.participants.add(user1, user2)
+
+        return Response({"conversation_id": conversation.id}, status=status.HTTP_201_CREATED)
+
+class ConversationListView(APIView):
+    def get(self, request):
+        user = request.user
+        conversations = Conversation.objects.filter(participants=user).prefetch_related('messages')
+        
+        data = []
+        for convo in conversations:
+            last_message = convo.messages.order_by('-timestamp').first()
+            unread_count = convo.messages.filter(is_read=False).exclude(sender=user).count()
+            other_participants = convo.participants.exclude(id=user.id)
+            
+            data.append({
+                "conversation_id": convo.id,
+                "last_message": last_message.content if last_message else "",
+                "last_message_timestamp": last_message.timestamp if last_message else None,
+                "unread_count": unread_count,
+                "participants": [{"email": p.email, "name": p.get_full_name()} for p in other_participants]
+            })
+
+        return Response(data)
+
+class MessagePagination(PageNumberPagination):
+    page_size = 20
+
+class MessageHistoryView(ListAPIView):
+    serializer_class = MessageSerializer
+    pagination_class = MessagePagination
+
+    def get_queryset(self):
+        conversation_id = self.kwargs['conversation_id']
+        return Message.objects.filter(conversation_id=conversation_id).order_by('-timestamp')
+
+class SendMessageView(APIView):
+    def post(self, request, conversation_id):
+        user = request.user
+        content = request.data.get('content')
+
+        conversation = Conversation.objects.get(id=conversation_id)
+        message = Message.objects.create(conversation=conversation, sender=user, content=content)
+
+        conversation.updated_at = message.timestamp
+        conversation.save()
+
+        return Response({"message_id": message.id, "timestamp": message.timestamp}, status=status.HTTP_201_CREATED)
+
+class MarkMessagesAsReadView(APIView):
+    def post(self, request, conversation_id):
+        user = request.user
+        conversation = Conversation.objects.get(id=conversation_id)
+        conversation.messages.filter(is_read=False).exclude(sender=user).update(is_read=True)
+        return Response({"status": "success"})
+      
 class UpdateRatingView(generics.UpdateAPIView):
     queryset = UofTUser.objects.all()
     serializer_class = UofTUserFeaturesSerializer
@@ -171,4 +240,3 @@ class GetRatingView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         user = self.get_object()
         return Response(data=user.rating, status=status.HTTP_200_OK)
-    

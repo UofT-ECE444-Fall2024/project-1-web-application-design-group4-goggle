@@ -29,6 +29,11 @@ urlpatterns = [
     path('reset-code/<str:email>', ResetCodeView.as_view(), name='reset-code'),
     path('password-reset/<str:email>', PasswordResetView.as_view(), name='password-reset'),
     path('change-password/<str:email>', ChangePasswordView.as_view(), name='change-password'),
+    path('conversations/create', CreateConversationView.as_view(), name='create-conversation'),
+    path('conversations', ConversationListView.as_view(), name='conversation-list'),
+    path('conversations/messages/<int:conversation_id>', MessageHistoryView.as_view(), name='message-history'),
+    path('conversations/send_message/<int:conversation_id>', SendMessageView.as_view(), name='send-message'),
+    path('conversations/mark_read/<int:conversation_id>', MarkMessagesAsReadView.as_view(), name='mark-messages-read'),
     path('rating/<str:email>', UpdateRatingView.as_view(), name='rating'),
     path('get-rating/<str:email>', GetRatingView.as_view(), name='rating'),
 ]

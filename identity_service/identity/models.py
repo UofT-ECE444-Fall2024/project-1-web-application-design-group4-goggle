@@ -39,3 +39,20 @@ class UofTUser(AbstractBaseUser):
         
     def update_last_reset(self):
         self.last_reset = now()
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(UofTUser)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Conversation between {', '.join([p.email for p in self.participants.all()])}"
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="messages")
+    sender = models.ForeignKey(UofTUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)  # For read receipts
+
+    def __str__(self):
+        return f"Message from {self.sender.email} at {self.timestamp}"

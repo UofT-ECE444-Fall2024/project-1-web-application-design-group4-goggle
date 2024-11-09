@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth.password_validation import validate_password
-from .models import UofTUser
+from .models import UofTUser, Conversation, Message
 from .utils import CHECK_PASSWORD, GEN_SECRET
 
 class UofTUserSerializer(serializers.ModelSerializer):
@@ -139,7 +139,17 @@ class AuthorizationUrlSerializer(serializers.Serializer):
     client_id = serializers.CharField()
     redirect_uri = serializers.URLField()
 
-class SignOnSerializer(serializers.ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
+    sender = serializers.EmailField(source='sender.email')
+    timestamp = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
-        model = UofTUser
-        fields = ['user_name', 'phone_number']
+        model = Message
+        fields = ['id', 'conversation', 'sender', 'content', 'timestamp', 'is_read']
+
+class ConversationSerializer(serializers.ModelSerializer):
+    participants = serializers.SlugRelatedField(slug_field="email", many=True, queryset=UofTUser.objects.all())
+
+    class Meta:
+        model = Conversation
+        fields = ['id', 'participants', 'updated_at']
