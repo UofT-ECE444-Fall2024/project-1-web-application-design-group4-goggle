@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import TextBox from "../TextBox/TextBox";
 import "../../types/inputs";
+import SelectDropdown from "./SelectDropdown";
+import { categories } from "@/data/categories";
 
 const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs) => Promise<void> }) => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<CreatePostInputs>();
+  const methods = useForm<CreatePostInputs>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<CreatePostInputs>();
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data:CreatePostInputs) => {
     await onPublish(data);
@@ -16,6 +19,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
   };
 
   return (
+    <FormProvider {...methods}>
     <div className="w-full">
       <div className="bg-white-bg rounded-3xl px-6 py-10 dark:bg-dark w-full">
         <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full">
@@ -56,7 +60,13 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
             required={false}
           />
 
-          <div className="mt-5 flex flex-col justify-between items-top gap-2 sm:flex-row w-full">
+          <div className="mt-5 flex flex-col justify-between items-end gap-2 sm:flex-row w-full">
+            {/* Campus Dropdown */}
+            <SelectDropdown
+              label="Choose Campus"
+              options={["UTSG", "UTM", "UTSC"]}
+              onSelect={(selected) => setValue("campus", selected)}
+            />
             <TextBox<CreatePostInputs>
               placeholder="Location (optional)"
               name="pickup_location"
@@ -66,7 +76,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               divClassNames="w-full"
               required={false}
             />
-            <TextBox<CreatePostInputs>
+            {/* <TextBox<CreatePostInputs>
               placeholder="Category (optional)"
               name="category"
               register={register}
@@ -74,7 +84,14 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               topText="Category"
               divClassNames="w-full"
               required={false}
+            /> */}
+            {/* Category Dropdown */}
+            <SelectDropdown
+              label="Choose Category"
+              options={categories.map(category => category.name)}
+              onSelect={(selected) => setValue("category", selected)}
             />
+              
           </div>
           <button
             type="submit"
@@ -86,6 +103,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
         </form>
       </div>
     </div>
+    </FormProvider>
   );
 };
 
