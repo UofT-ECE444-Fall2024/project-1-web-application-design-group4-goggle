@@ -4,13 +4,10 @@ import { useRouter } from 'next/navigation';
 
 const useTokenCheck = (setAuthenticated: (auth: boolean) => void) => {
     const router = useRouter();
-    const api = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
-        headers: { 'Content-Type': 'application/json' },
-      });
+   
     const verifyToken = async (token: string) => {
         try {
-            const response = await api.get('identity/auth', {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/auth`, {
             headers: { Authorization: `Bearer ${token}` },
             });
             console.log("Token verified", response.data);
