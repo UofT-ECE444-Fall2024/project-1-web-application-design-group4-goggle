@@ -9,7 +9,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Loading from "@/components/Loading/Loading";
 
-const PostListingPage = () => {
+const EditListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -42,10 +42,9 @@ const PostListingPage = () => {
 
   return (
     <>
-      {/* <Loading/> */}
       <div className="flex flex-col min-h-screen w-full">
         <NavBar />
-        <Header title="Create a Post!" />
+        <Header title="Edit Listing" />
         <div className="w-full flex flex-col items-center p-4 gap-8 flex-grow">
           <div className="container mx-auto px-4 sm:px-8 w-full flex flex-col lg:flex-row gap-8">
             <div className="xl:w-[40%] lg:w-[40%] w-full">
@@ -63,4 +62,4 @@ const PostListingPage = () => {
   );
 };
 
-export default PostListingPage;
+export default EditListingPage;
