@@ -16,9 +16,9 @@ const CategoryDropdown = () => {
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block w-full">
       <button
-        className="bg-primary border border-black px-4 py-3 rounded-md text-white flex items-center"
+        className="bg-primary border border-black w-full px-4 py-3 rounded-md text-white flex justify-between items-center"
         onClick={toggleDropdown}
         style={{ color: "white" }}
       >
