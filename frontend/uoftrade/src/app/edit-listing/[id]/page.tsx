@@ -15,6 +15,26 @@ const EditListingPage = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const { id } = useParams();
 
+  // make API call to get fields using id
+  const listing = {
+          id: 1,
+          title: "Microwave",
+          price: "$28",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+          image: "/images/misc/microwave.jpg",
+          seller: {
+            name: "Guy Dude",
+            image: "/images/logo/UTrade_small.svg",
+            rating: 4.5,
+          },
+          tags: ["Appliances"],
+          publishDate: "Nov 2th, 2024",
+        };
+
+  const { title, price, image, description, seller, tags, publishDate } = listing;
+
+
   const handleImagesChange = (newImages: File[]) => {
     // Update the uploaded images
     setUploadedImages((prevImages) => [...prevImages, ...newImages]); // Append new images to existing ones
@@ -31,8 +51,9 @@ const EditListingPage = () => {
     formData.append("title", textData.title);
     formData.append("price", textData.price);
     formData.append("description", textData.description);
-    formData.append("pickup_location", textData.pickup_location);
+    formData.append("campus", textData.campus);
     formData.append("category", textData.category);
+    formData.append("pickup_location", textData.pickup_location);
 
     try {
       const response = await axios.post("/api/upload", formData);
