@@ -51,7 +51,7 @@ const EditListingPage = () => {
               <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
             </div>
             <div className="xl:w-[60%] lg:w-[60%] w-full">
-              <CreatePostTextBoxes onPublish={handlePublish} />
+              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true}/>
             </div>
           </div>
         </div>

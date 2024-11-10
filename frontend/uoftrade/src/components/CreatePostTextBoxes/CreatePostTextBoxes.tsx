@@ -6,7 +6,7 @@ import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
 
-const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs) => Promise<void> }) => {
+const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; onPublish: (data: CreatePostInputs) => Promise<void> }) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
     mode: "onSubmit",
@@ -17,6 +17,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
     await onPublish(data);
     router.push("/home"); // success page
   };
+  const buttonText = isEdit ? "Save Changes" : "Publish";
 
   return (
     <FormProvider {...methods}>
@@ -102,7 +103,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
                           text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 xs:h-16 xs:mt-5 mt-0"
               >
-                Publish
+                {buttonText}
               </button>
             </div>
           </form>
