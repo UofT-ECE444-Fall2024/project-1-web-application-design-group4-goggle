@@ -16,7 +16,7 @@ type LoginInputs = {
 type ProfileEditInputs = {
     first_name: string
     last_name: string
-    email: string
+    user_name:string
   }
 
 type CreatePostInputs = {

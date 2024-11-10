@@ -8,11 +8,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loading from '@/components/Loading/Loading'; // Reusing Loading component
 import ViewProfile from '@/components/ViewProfile/ViewProfile';
+import { Seller } from '@/types/seller';
 
 const ViewProfilePage = () => {
   const { username } = useParams(); // Get the listing id from the URL
   const [sellerIsUser, setSellerIsUser] = useState<boolean>(false);
-  const [seller, setSeller] = useState<any>(null);
+  const [seller, setSeller] = useState<Seller>();
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
 
   // Fetch user details

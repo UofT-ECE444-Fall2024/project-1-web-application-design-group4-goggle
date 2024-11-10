@@ -6,17 +6,9 @@ import Link from 'next/link';
 import Image from 'next/image'; // Import Next.js Image component
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Seller } from '@/types/seller';
 
-// Define the interface for the single props object
-interface SellerInfoProps {
-    firstName: string;
-    lastName: string;
-    username: string;
-    rating: number;
-    profilePic: string;
-}
-
-const SellerInfo: React.FC<{ sellerInfo: any, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
+const SellerInfo: React.FC<{ sellerInfo: Seller | undefined, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
 
   const router = useRouter();
 
