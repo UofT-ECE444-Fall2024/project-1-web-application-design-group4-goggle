@@ -17,6 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from identity.views import *
+from identity_service import settings
+from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from identity.views import UserImageViewSet
+from django.urls import include
+
+router = DefaultRouter()
+router.register(r'UserImages', UserImageViewSet)
 
 urlpatterns = [
     path('user-list', UserList.as_view(), name='user-list'),
@@ -36,4 +44,5 @@ urlpatterns = [
     path('conversations/mark_read/<int:conversation_id>', MarkMessagesAsReadView.as_view(), name='mark-messages-read'),
     path('rating/<str:email>', UpdateRatingView.as_view(), name='rating'),
     path('get-rating/<str:email>', GetRatingView.as_view(), name='rating'),
-]
+    path('', include(router.urls)),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth.password_validation import validate_password
-from .models import UofTUser, Conversation, Message
+from .models import UofTUser, Conversation, Message, UserImage
 from .utils import CHECK_PASSWORD, GEN_SECRET
 
 class UofTUserSerializer(serializers.ModelSerializer):
@@ -20,6 +20,26 @@ class UofTUserSerializer(serializers.ModelSerializer):
             setattr(instance, k, v)
         instance.save()
         return instance
+
+class UserImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField('get_image_url')
+
+    class Meta:
+        model = UserImage
+        fields = ['id', 'image', 'alt_text', 'image_url']
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
+
+    def get_image_url(self, obj):
+        image_field = obj.get('image') if isinstance(obj, dict) else obj.image
+        if image_field:
+            request = self.context.get('request')
+            image_url = image_field.url if hasattr(image_field, 'url') else None
+            if request is not None and image_url:
+                return request.build_absolute_uri(image_url)
+            return image_url
+        return None
         
 
 class UofTUserFeaturesSerializer(serializers.ModelSerializer):

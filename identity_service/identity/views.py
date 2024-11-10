@@ -1,4 +1,4 @@
-from rest_framework import generics, status, pagination, filters, views, mixins
+from rest_framework import generics, status, pagination, filters, views, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.serializers import ValidationError
 from rest_framework.exceptions import PermissionDenied, NotFound
@@ -22,6 +22,7 @@ import json
 import requests
 import jwt
 import os
+from rest_framework.parsers import MultiPartParser, FormParser
 
 cache = redis.StrictRedis(host="redis",
                     port=6379,
@@ -55,6 +56,23 @@ class UserList(generics.ListAPIView):
                 Q(full_name__icontains=search_query)
             )
         return queryset.order_by("first_name")
+
+class UserImageViewSet(viewsets.ModelViewSet):
+    queryset = UserImage.objects.all()
+    serializer_class = UserImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def perform_create(self, serializer):
+        # Set the user context for the image being uploaded
+        user_id = self.request.data.get('user_name')
+        if not user_id:
+            raise serializers.ValidationError({'error': 'User ID is required'})
+
+        try:
+            user = UofTUser.objects.get(user_name=user_id)
+            serializer.save(user=user)
+        except UofTUser.DoesNotExist:
+            raise serializers.ValidationError({'error': 'Invalid User ID'})
     
 class UserName(generics.GenericAPIView):
     queryset = UofTUser.objects.all()

@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import EmailValidator
 from django.utils.timezone import now
 from phonenumber_field.modelfields import PhoneNumberField
+from .utils import validate_image
+from PIL import Image
 
 
 class UofTUser(AbstractBaseUser):
@@ -56,3 +58,20 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.sender.email} at {self.timestamp}"
+
+class UserImage(models.Model):
+    id              = models.AutoField(primary_key=True)
+    user            = models.ForeignKey(UofTUser, related_name='images', on_delete=models.CASCADE)
+    image           = models.ImageField(upload_to='profile_images/', validators=[validate_image])
+    alt_text        = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'profile image'
+        verbose_name_plural = 'profile images'
+
+    def __str__(self):
+        return f"Image for {self.user.user_name}"
+
+    @property
+    def image_url(self):
+        return self.image.url
