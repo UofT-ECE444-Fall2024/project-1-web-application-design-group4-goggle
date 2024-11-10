@@ -21,9 +21,9 @@ class CategoryModelTest(TestCase):
 class ProductModelTest(TestCase):
     def setUp(self):
         self.category = Category.objects.create(name="Furniture")
-        self.user_id = 1  # assuming user_id from an external service
+        self.user_name = "testuser"  # assuming user_id from an external service
         self.product = Product.objects.create(
-            user_id=self.user_id,
+            user_name=self.user_name,
             title="Desk",
             description="Wooden office desk",
             price=150.00,
@@ -48,7 +48,7 @@ class ProductImageModelTest(TestCase):
     def setUp(self):
         self.category = Category.objects.create(name="Books")
         self.product = Product.objects.create(
-            user_id=1,
+            user_name="testuser",
             title="Novel",
             price=10.00,
             location="Bahen"
@@ -75,7 +75,7 @@ class ProductViewSetTest(TestCase):
         self.client.force_authenticate(user=self.user)
         self.category = Category.objects.create(name="Miscellaneous")
         self.product = Product.objects.create(
-            user_id=self.user.id,
+            user_name=self.user.username,
             title="Blender",
             description="High-speed blender",
             price=50.00,

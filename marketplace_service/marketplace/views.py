@@ -32,8 +32,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_products(self, request):
         # Custom endpoint to retrieve products for the authenticated user.
-        user_id = request.query_params.get('user_id')
-        user_products = Product.objects.filter(user_id=user_id)
+        user_name = request.query_params.get('user_name')
+        user_products = Product.objects.filter(user_name=user_name)
         serializer = self.get_serializer(user_products, many=True)
         return Response(serializer.data)
 
