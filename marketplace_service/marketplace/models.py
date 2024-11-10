@@ -73,7 +73,7 @@ class Product(models.Model):
         ('Other', 'Other')
     ]
 
-    user_id         = models.IntegerField()
+    user_name         = models.CharField(max_length=100)
     id              = models.AutoField(primary_key=True)
     title           = models.CharField(max_length=255)
     description     = models.TextField(blank=True)
