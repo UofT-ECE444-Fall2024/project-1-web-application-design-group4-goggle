@@ -66,6 +66,7 @@ const EditListingPage = () => {
 
   return (
     <>
+      <Loading/>
       <div className="flex flex-col min-h-screen w-full">
         <NavBar />
         <Header title="Edit Listing" />
