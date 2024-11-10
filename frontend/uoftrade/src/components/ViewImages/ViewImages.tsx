@@ -38,6 +38,21 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        goToPreviousImage();
+      } else if (event.key === "ArrowRight") {
+        goToNextImage();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
       <button
@@ -50,7 +65,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
         onClick={goToPreviousImage}
       >
-         <ArrowForwardIosIcon className="rotate-180" />
+        <ArrowForwardIosIcon className="rotate-180" />
       </button>
       <div className="relative w-3/4 h-3/4">
         <Image
