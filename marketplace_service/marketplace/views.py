@@ -12,7 +12,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = 'slug'  # Allows lookup by slug instead of ID
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
 
 # Product ViewSet
 class ProductViewSet(viewsets.ModelViewSet):
@@ -68,7 +69,7 @@ class ProductImageViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Set the product context for the image being uploaded
-        product_id = self.request.query_params.get('product')
+        product_id = self.request.data.get('product')
         if not product_id:
             return Response({'error': 'Product ID is required'}, status=status.HTTP_400_BAD_REQUEST)
 
