@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'marketplace',
     'rest_framework',
     'django_filters',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
+]
+
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',  # The default port for create-next-app
 ]
 
 ROOT_URLCONF = 'marketplace_service.urls'
