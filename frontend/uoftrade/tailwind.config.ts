@@ -19,6 +19,7 @@ const config: Config = {
       'black-fg': '#0e0e0e',
       'outline-grey': 'rgba(0, 0, 0, 0.1)',
       'heading-1': '#212B27',
+      'off-white': '#FCFCFC',
       'subheading': '#32403B',
       'dark-red': '#9c0000',
       'grey-bg-opaque': 'rgba(247, 247, 247, 1)',

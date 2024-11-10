@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { categories } from "@/data/categories"; 
 import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
+import { useRouter } from "next/navigation";
 import { Chat } from "@mui/icons-material";
 
 
@@ -12,12 +13,20 @@ const NavBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [inputWidth, setInputWidth] = useState(0);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const router = useRouter();
   const buttonWidth = 80; // Approximate width of the search button in pixels
 
   // Function to calculate the character limit based on current input width
   const calculateCharacterLimit = (width: number) => {
     const adjustedWidth = width - buttonWidth; // 20 for padding/margin
     return Math.floor(adjustedWidth / 8); // Average character width (adjust as needed)
+  };
+
+  const handleSearch = () => {
+    if (searchInput.trim()) {
+      // Navigate to the search page with the user input
+      router.push(`/search/${encodeURIComponent(searchInput)}`);
+    }
   };
 
   // Effect to update the input width and trim input on resize
@@ -78,14 +87,16 @@ const NavBar = () => {
                 setSearchInput(newValue);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
             placeholder="Search Listings"
             className="p-2 pl-5 border border-gray-300 rounded-full py-3 w-9/12" // Adjust width as needed
           />
-          <button className="bg-primary border border-primary text-white px-10 py-3 rounded-full -ml-12"  style={{color: "white"}}>
+          <button onClick={handleSearch} className="bg-primary border border-primary text-white px-10 py-3 rounded-full -ml-12" style={{color: "white"}}>
             Search
           </button>
         </div>
-
 
         <div className="relative inline-block"> 
           <CategoryDropdown />
