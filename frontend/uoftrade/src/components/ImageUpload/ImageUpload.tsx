@@ -1,31 +1,40 @@
 "use client";
 
 import * as React from "react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from "next/image";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import InlineErrorMessage from '../InlineErrorMessage/InlineErrorMessage'; // Assuming this component is in the same directory
 
 interface ImageUploadProps {
   onImagesChange: (images: File[]) => void;
-  imagePreviews: string[];
+  imagePreviews: string[]; // This prop contains the initial image previews (URLs)
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews: initialPreviews }) => {
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>(initialPreviews);
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // Holds the new files selected by the user
+  const [imagePreviews, setImagePreviews] = useState<string[]>(initialPreviews); // Holds the image preview URLs
   const [isCarouselOpen, setIsCarouselOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [totalImagesCount, settotalImagesCount] = useState(initialPreviews.length);
+  const MAX_IMAGES = 10;
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
+
+    if (totalImagesCount >= MAX_IMAGES) {
+      setErrorMessage(`You can only upload a maximum of ${MAX_IMAGES} images.`);
+    } else {
+      setErrorMessage(null); // Clear error message if valid
       const newPreviews = files.map(file => URL.createObjectURL(file));
       setImageFiles(prevFiles => [...prevFiles, ...files]);
       setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
       onImagesChange([...imageFiles, ...files]); // Send updated files to parent
+      settotalImagesCount(totalImagesCount+1);
     }
   };
 
@@ -36,6 +45,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
     setImageFiles(updatedFiles);
     setImagePreviews(updatedPreviews);
     onImagesChange(updatedFiles); // Update parent with new file array
+    settotalImagesCount(totalImagesCount-1); // Decrement image count
+    setErrorMessage(null); // Remove error message if there is one
   };
 
   const openCarousel = (index: number) => {
@@ -72,6 +83,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
           className="hidden"
         />
       </div>
+
+      {errorMessage && <InlineErrorMessage message={errorMessage} />} {/* Display error message if applicable */}
 
       <div className="grid grid-cols-3 gap-2 mt-4 w-full">
         {imagePreviews.slice(0, 5).map((src, index) => (
