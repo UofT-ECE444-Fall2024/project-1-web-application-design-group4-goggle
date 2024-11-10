@@ -6,7 +6,23 @@ import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
 
-const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs) => Promise<void> }) => {
+const CreatePostTextBoxes = ({ 
+  onPublish, 
+  isEdit=false, 
+  titleValue='', 
+  priceValue='', 
+  descriptionValue='', 
+  pickup_locationValue='',
+  campusValue=null,
+  categoryValue=null,}: { 
+    isEdit?: boolean; 
+    titleValue?: string; 
+    priceValue?: string; 
+    descriptionValue?: string;
+    pickup_locationValue?: string;
+    campusValue?: string|null;
+    categoryValue?: string|null;
+    onPublish: (data: CreatePostInputs) => Promise<void> }) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
     mode: "onSubmit",
@@ -17,6 +33,8 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
     await onPublish(data);
     router.push("/home"); // success page
   };
+  const buttonText = isEdit ? "Save Changes" : "Publish";
+  const campuses = ["UTSG", "UTM", "UTSC"];
 
   return (
     <FormProvider {...methods}>
@@ -29,6 +47,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 name="title"
                 register={register}
                 errors={errors}
+                value={titleValue}
                 topText="Title"
                 divClassNames="w-full"
                 required={true}
@@ -38,6 +57,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 name="price"
                 register={register}
                 errors={errors}
+                value={priceValue}
                 topText="Price"
                 options={{
                   pattern: {
@@ -55,6 +75,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
               name="description"
               register={register}
               errors={errors}
+              value={descriptionValue}
               topText="Description"
               textArea={true}
               required={false}
@@ -69,7 +90,15 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 errors={errors}
                 register={register}
                 required={true}
-                menuItems={["UTSG", "UTM", "UTSC"]}
+                options={{
+                  validate: value => {
+                    return campuses.find((item) => item === value) 
+                      ? true 
+                      : "Not a valid campus.";
+                  }
+                }}
+                selectedItem={campusValue}
+                menuItems={campuses}
                 onSelect={(selected) => setValue("campus", selected, { shouldValidate: true })}
               />
               {/* Category Dropdown */}
@@ -79,7 +108,15 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 name="category"
                 register={register}
                 errors={errors}
+                options={{
+                  validate: value => {
+                    return categories.find((item) => item.name === value) 
+                      ? true 
+                      : "Not a valid category.";
+                  }
+                }}
                 required={true}
+                selectedItem={categoryValue}
                 menuItems={categories.map(category => category.name)}
                 onSelect={(selected) => setValue("category", selected, { shouldValidate: true })}
               />    
@@ -92,6 +129,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 name="pickup_location"
                 register={register}
                 errors={errors}
+                value={pickup_locationValue}
                 topText="Pickup Location"
                 divClassNames="w-full"
                 required={false}
@@ -102,7 +140,7 @@ const CreatePostTextBoxes = ({ onPublish }: { onPublish: (data: CreatePostInputs
                 className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
                           text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 xs:h-16 xs:mt-5 mt-0"
               >
-                Publish
+                {buttonText}
               </button>
             </div>
           </form>
