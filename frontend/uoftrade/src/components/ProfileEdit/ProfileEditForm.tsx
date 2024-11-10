@@ -3,11 +3,12 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import TextBox from "../TextBox/TextBox";
+import axios from "axios";
 
 import "../../types/inputs"
 
 const ProfileEditForm = () => {
-
+    
     const {
         register,
         handleSubmit,
@@ -15,17 +16,15 @@ const ProfileEditForm = () => {
       } = useForm<ProfileEditInputs>()
     
     const onSubmit: SubmitHandler<ProfileEditInputs> = async (data:ProfileEditInputs) => {
-        console.log(data)
-        let changeUserInfo; 
+
+        const token = localStorage.getItem('token');
 
         try {
 
             const payload:Object = {
                 first_name: data.first_name, 
                 last_name: data.last_name,
-                email: data.email, 
-                // user_name: data.first_name,
-                // phone_number: data.phone_number,
+                user_name: data.first_name,
             };
         }
         catch(e:unknown) {
@@ -58,19 +57,19 @@ const ProfileEditForm = () => {
                     />                             
                 </div>
                 <TextBox<ProfileEditInputs>
-                    placeholder="UofT Email Address"
-                    type="email"
-                    name="email"
+                    placeholder="Username"
+                    type="text"
+                    name="user_name"
                     register={register}
                     options={{
                         pattern: {
-                            value: /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*utoronto\.ca$/i,
-                            message: "Please use a UofT email address containing 'utoronto.ca'"
+                            value: /^[a-zA-Z0-9_]+$/,
+                            message: "Username can only contain letters, numbers, and underscores"
                             } 
                         }}
                     divClassNames={"mt-3"}
                     errors={errors}
-                    topText="Email"
+                    topText="Username"
                 />
                 <button type="submit" className="mt-5 mb-2 rounded-xl w-2/5 h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
                 text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 ">

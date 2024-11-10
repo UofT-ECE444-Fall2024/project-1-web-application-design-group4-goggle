@@ -5,7 +5,7 @@ import ProfileEdit from "@/components/ProfileEdit/ProfileEdit";
 import SettingsContent from "@/components/Settings/SettingsContent";
 
 const ProfilePage = () => {
-    return <SettingsContent ContentComponent={ProfileEdit} highlightIndex={0} />;
+    return <SettingsContent ContentComponent={ProfileEdit} highlightIndex={0} requiresData={true}/>;
 };
 
 export default ProfilePage;

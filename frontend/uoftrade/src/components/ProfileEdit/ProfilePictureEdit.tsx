@@ -1,12 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
+import { Seller } from "@/types/seller";
 
-const ProfilePictureEdit = () => {
+const ProfilePictureEdit:React.FC<{ seller: Seller | undefined }> = ({ seller }) => {
     return (
         <div className="container my-8 flex flex-row">
             <div className="w-40 h-40 rounded-full flex items-center justify-center">
                 <Image
-                    src="/images/logo/UTrade_small.svg" 
+                    src={(seller?.profilePic) ? seller.profilePic : '/images/logo/UTrade_small.svg'}
                     alt="logo"
                     width={0}
                     height={0}
