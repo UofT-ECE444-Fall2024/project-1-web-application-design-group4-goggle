@@ -1,45 +1,53 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import useTokenCheck from '@/api/TokenCheck';
+import useTokenCheck from '@/api/TokenCheck'; // Assuming this checks token status
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
 import Image from 'next/image';
 
-const Loading = () => {
+type LoadingProps = {
+  loading?: boolean;  // Allow external loading state (e.g., data fetching)
+};
 
+const Loading = ({ loading = false }: LoadingProps) => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [authLoading, setAuthLoading] = useState<boolean>(true);  // Track the authentication loading state
   const router = useRouter();
 
+  // Check authentication status on mount
   useTokenCheck(setAuthenticated);
+
   useEffect(() => {
-    // Check the authentication status and stop loading once it's checked
+    // Once the authentication status is known, stop the loading state
     if (authenticated !== null) {
-      setLoading(false); // Once the authentication check is done, stop the loading state
+      setAuthLoading(false);  // Stop loading after authentication check is complete
       if (authenticated === false) {
-        router.push("/signin");
+        router.push("/signin");  // Redirect to sign-in if not authenticated
       }
     }
   }, [authenticated, router]);
 
-  return (
-    (loading) ? 
-        <div className="absolute w-screen h-screen flex items-center justify-center bg-primary z-50">
-            <main className="flex flex-col gap-8 items-center">
-                <Image
-                  className="self-center"
-                  src="/images/logo/UofTrade_logo_white.svg"
-                  alt="logo"
-                  width={180}
-                  height={38}
-                />
-                {/* CircularProgress with white color */}
-                <CircularProgress sx={{ color: 'white' }} />
-            </main>
-        </div> :
-        <></>
-  );
+  // Show loading screen if either auth check or external loading state is true
+  if (authLoading || loading) {
+    return (
+      <div className="absolute w-screen h-screen flex items-center justify-center bg-primary z-50">
+        <main className="flex flex-col gap-8 items-center">
+          <Image
+            className="self-center"
+            src="/images/logo/UofTrade_logo_white.svg"
+            alt="logo"
+            width={180}
+            height={38}
+          />
+          {/* CircularProgress with white color */}
+          <CircularProgress sx={{ color: 'white' }} />
+        </main>
+      </div>
+    );
+  }
+
+  return null;  // Return null if not loading
 };
 
 export default Loading;

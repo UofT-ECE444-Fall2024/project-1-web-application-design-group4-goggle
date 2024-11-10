@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 class UserDetailViewTest(APITestCase):
     def setUp(self):
-        self.user = UofTUser.objects.create(email="test@mail.utoronto.ca", first_name="Test", last_name="User")
+        self.user = UofTUser.objects.create(email="test@mail.utoronto.ca", first_name="Test", last_name="User", user_name="testuser")
     
     def test_get_user_detail(self):
         """Test retrieving user details by email"""
-        url = reverse("info", args=[self.user.email])
+        url = reverse("info", args=[self.user.user_name])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["email"], self.user.email)
+        self.assertEqual(response.data["user_name"], self.user.user_name)
 
 class UserListViewTest(APITestCase):
     def setUp(self):

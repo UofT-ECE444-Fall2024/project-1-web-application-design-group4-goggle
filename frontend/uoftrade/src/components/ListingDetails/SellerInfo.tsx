@@ -5,7 +5,7 @@ import { Rating } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image'; // Import Next.js Image component
 import axios from 'axios';
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 // Define the interface for the single props object
 interface SellerInfoProps {
@@ -16,14 +16,18 @@ interface SellerInfoProps {
     profilePic: string;
 }
 
-const SellerInfo: React.FC<{ sellerInfo: SellerInfoProps, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
+const SellerInfo: React.FC<{ sellerInfo: any, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
+
+  const router = useRouter();
+
+  console.log(sellerInfo);
 
   return (
     <div className="h-full flex flex-col items-center p-4 bg-white-bg rounded-lg shadow-lg">
       {/* Profile Picture - Using Next.js Image component */}
       <div className="w-1/2 aspect-square rounded-full overflow-hidden border-2 border-primary shadow-lg">
         <Image 
-          src={sellerInfo.profilePic} 
+          src={(sellerInfo?.profilePic) ? sellerInfo.profilePic : ''} 
           alt="Seller Profile" 
           width={160} // Equivalent to w-40
           height={160} // Equivalent to h-40
@@ -32,17 +36,17 @@ const SellerInfo: React.FC<{ sellerInfo: SellerInfoProps, buttonLink: string, bu
       </div>
 
       {/* Link to Seller's Profile */}
-      <Link className="mt-8 mb-2 hover:underline" href={`/view-profile/${sellerInfo.username}`}>
+      <button className="mt-8 mb-2 hover:underline" onClick={() => {router.push(`/view-profile/${sellerInfo?.username}`)}}>
         {/* Seller's Name and Username */}
         <h2 className="text-3xl font-semibold text-heading-1 hover:text-primary text-center">
-          {`${sellerInfo.firstName} ${sellerInfo.lastName}`}
+          {`${sellerInfo?.firstName} ${sellerInfo?.lastName}`}
         </h2>
-        <p className="text-lg text-gray-500 text-center">@{sellerInfo.username}</p>
-      </Link>
+        <p className="text-lg text-gray-500 text-center">@{sellerInfo?.username}</p>
+      </button>
 
       {/* Rating */}
       <div className="mb-8">
-        <Rating name="seller-rating" value={sellerInfo.rating} precision={0.5} readOnly />
+        <Rating name="seller-rating" value={sellerInfo?.rating} precision={0.5} readOnly />
       </div>
 
       {/* Edit Listing or Message Seller Button */}
