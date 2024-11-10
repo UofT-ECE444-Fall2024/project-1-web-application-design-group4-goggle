@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -52,7 +51,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
         onClick={goToPreviousImage}
       >
-        <ArrowBackIosIcon />
+         <ArrowForwardIosIcon className="flex align-items rotate-180"/>
       </button>
       <div className="relative w-3/4 h-3/4">
         <Image
@@ -66,7 +65,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
         onClick={goToNextImage}
       >
-        <ArrowForwardIosIcon />
+        <ArrowForwardIosIcon className="flex align-items"/>
       </button>
       <div className="absolute bottom-4 flex space-x-2">
         {images.map((src, index) => (
