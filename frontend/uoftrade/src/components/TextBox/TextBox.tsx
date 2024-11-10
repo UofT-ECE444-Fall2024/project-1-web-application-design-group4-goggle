@@ -7,10 +7,11 @@ interface TextBoxProps<T extends FieldValues> {
   name: Path<T>;
   register: UseFormRegister<T>;
   errors: FieldErrors<T>;  // Update this to FieldErrors<T> instead of Record<string, FieldError | undefined>
-  topText: string;
+  topText?: string;
   value?: string;
+  type?: string;
   divClassNames?: string;
-  required: boolean;
+  required?: boolean;
   options?: object; // For additional validation rules like pattern
   textArea?: boolean;
   inputClassNames?: string;
@@ -21,13 +22,14 @@ function TextBox<T extends FieldValues>({
   name,
   register,
   errors,
-  topText,
+  topText="",
+  type="text",
   value,
   divClassNames,
-  required,
+  required=true,
   options,
   textArea,
-  inputClassNames = ''
+  inputClassNames=""
 }: TextBoxProps<T>) {
   return (
     <div className={`mb-0 leading-none ${divClassNames}`}>
@@ -44,7 +46,7 @@ function TextBox<T extends FieldValues>({
         />
       ) : (
         <input
-          type="text"
+          type={type}
           {...register(name, { required, ...options })}
           placeholder={placeholder}
           defaultValue={value}
