@@ -161,7 +161,7 @@ const SignUpForm = () => {
                                         name="password_confirmation"
                                         register={register}
                                         options={{
-                                            validate: value => 
+                                            validate: (value: {}) => 
                                                 value === password.current || "The passwords do not match"
                                         }}
                                         divClassNames={"mt-3"}
