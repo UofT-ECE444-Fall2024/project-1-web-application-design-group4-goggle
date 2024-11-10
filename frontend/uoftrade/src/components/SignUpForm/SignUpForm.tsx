@@ -36,11 +36,8 @@ const SignUpForm = () => {
                 password: data.password,
                 password_confirmation: data.password_confirmation
             };
-            const api = axios.create({
-                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
-                headers: { 'Content-Type': 'application/json' },
-              });
-            registered = await api.post("identity/register", payload, {
+ 
+            registered = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/register`, payload, {
                 headers: { 'Content-Type': 'application/json' }
               });
             const token = registered.data.token;
