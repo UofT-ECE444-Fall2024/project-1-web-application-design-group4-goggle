@@ -2,29 +2,30 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from PIL import Image
 from django.utils.text import slugify
+import os
 
 def validate_image(image):
-    # Validate file type
-    valid_mime_types = ['image/jpeg', 'image/png']
-    file_mime_type = image.file.content_type
-    if file_mime_type not in valid_mime_types:
-        raise ValidationError(f'Unsupported file type: {file_mime_type}. Allowed types: JPEG, PNG.')
+    # Validate file type based on the file extension
+    valid_extensions = ['.jpg', '.jpeg', '.png']
+    file_extension = os.path.splitext(image.name)[1].lower()
+    if file_extension not in valid_extensions:
+        raise ValidationError(f'Unsupported file type: {file_extension}. Allowed types: JPEG, PNG.')
 
     # Validate file size
     max_file_size = 5 * 1024 * 1024  # 5 MB limit
-    if image.file.size > max_file_size:
+    if image.size > max_file_size:
         raise ValidationError(f'File size exceeds {max_file_size / (1024 * 1024)} MB.')
 
-    # Validate image dimensions (including error handling)
+    # Validate image dimensions
     try:
-        image_file = Image.open(image.file)
-        image_file.verify()  # Verify the image format
-        max_width, max_height, min_width, min_height = 2000, 2000, 100, 100
-        if image_file.width > max_width or image_file.height > max_height:
-            raise ValidationError(f'Image dimensions exceed {max_width}x{max_height}px.')
-        if image_file.width < min_width or image_file.height < min_height:
-            raise ValidationError('Image dimensions must be at least 100x100px.')
-    except Exception as e:
+        with Image.open(image) as img:
+            img.verify()  # Verify that it’s a valid image format
+            max_width, max_height, min_width, min_height = 5000, 5000, 500, 500
+            if img.width > max_width or img.height > max_height:
+                raise ValidationError(f'Image dimensions exceed {max_width}x{max_height}px.')
+            if img.width < min_width or img.height < min_height:
+                raise ValidationError(f'Image dimensions must be at least {min_width}x{min_height}px.')
+    except Exception:
         raise ValidationError('Invalid image file.')
 
 class Category(models.Model):

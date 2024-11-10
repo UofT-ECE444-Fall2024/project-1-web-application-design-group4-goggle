@@ -7,6 +7,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 from .tasks import sendEmail as sendEmailTask
+import os
+from PIL import Image
 
 def GEN_SECRET(length=32):
     return secrets.token_hex(length)
@@ -64,3 +66,27 @@ def SEND_EMAIL(to:str, subject:str, html:str):
         return ({}, 200)
     except:
         return ({}, 424)
+    
+def validate_image(image):
+    # Validate file type based on the file extension
+    valid_extensions = ['.jpg', '.jpeg', '.png']
+    file_extension = os.path.splitext(image.name)[1].lower()
+    if file_extension not in valid_extensions:
+        raise ValidationError(f'Unsupported file type: {file_extension}. Allowed types: JPEG, PNG.')
+
+    # Validate file size
+    max_file_size = 5 * 1024 * 1024  # 5 MB limit
+    if image.size > max_file_size:
+        raise ValidationError(f'File size exceeds {max_file_size / (1024 * 1024)} MB.')
+
+    # Validate image dimensions
+    try:
+        with Image.open(image) as img:
+            img.verify()  # Verify that it’s a valid image format
+            max_width, max_height, min_width, min_height = 5000, 5000, 500, 500
+            if img.width > max_width or img.height > max_height:
+                raise ValidationError(f'Image dimensions exceed {max_width}x{max_height}px.')
+            if img.width < min_width or img.height < min_height:
+                raise ValidationError(f'Image dimensions must be at least {min_width}x{min_height}px.')
+    except Exception:
+        raise ValidationError('Invalid image file.')

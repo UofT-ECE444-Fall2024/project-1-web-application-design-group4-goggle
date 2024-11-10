@@ -11,14 +11,25 @@ class CategorySerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
         }
 
-
 class ProductImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField('get_image_url')
+
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'alt_text']
+        fields = ['id', 'image', 'alt_text', 'image_url']
         extra_kwargs = {
             'id': {'read_only': True},
         }
+
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            image_url = obj.image_url
+            if request is not None:
+                return request.build_absolute_uri(image_url)
+            return image_url
+        return None
+
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
