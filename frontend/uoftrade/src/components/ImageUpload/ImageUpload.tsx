@@ -4,6 +4,9 @@ import * as React from "react";
 import { ChangeEvent, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from "next/image";
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface ImageUploadProps {
   onImagesChange: (images: File[]) => void;
@@ -13,6 +16,8 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews: initialPreviews }) => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>(initialPreviews);
+  const [isCarouselOpen, setIsCarouselOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -31,6 +36,23 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
     setImageFiles(updatedFiles);
     setImagePreviews(updatedPreviews);
     onImagesChange(updatedFiles); // Update parent with new file array
+  };
+
+  const openCarousel = (index: number) => {
+    setCurrentImageIndex(index);
+    setIsCarouselOpen(true);
+  };
+
+  const closeCarousel = () => {
+    setIsCarouselOpen(false);
+  };
+
+  const goToPreviousImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? imagePreviews.length - 1 : prevIndex - 1));
+  };
+
+  const goToNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === imagePreviews.length - 1 ? 0 : prevIndex + 1));
   };
 
   return (
@@ -63,15 +85,58 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
             >
               <DeleteIcon className="text-primary" />
             </span>
-            <Image className="object-cover w-full h-full" src={src} alt={`Preview ${index}`} fill />
+            <Image className="object-cover w-full h-full" src={src} alt={`Preview ${index}`} fill onClick={() => openCarousel(index)} />
           </div>
         ))}
         {imagePreviews.length > 5 && (
-          <div className="w-full aspect-square bg-light-grey border-outline-grey rounded-md flex items-center justify-center">
+          <div className="w-full aspect-square bg-light-grey border-outline-grey rounded-md flex items-center justify-center cursor-pointer" onClick={() => openCarousel(0)}>
             <span className="text-heading-1 font-bold">View More</span>
           </div>
         )}
       </div>
+
+      {/* Fullscreen Carousel Modal */}
+      {isCarouselOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+          <button
+            className="absolute top-4 right-4 p-2 bg-white rounded-full"
+            onClick={closeCarousel}
+          >
+            <CloseIcon />
+          </button>
+          <button
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
+            onClick={goToPreviousImage}
+          >
+            <ArrowBackIosIcon />
+          </button>
+          <div className="relative w-3/4 h-3/4">
+            <Image
+              src={imagePreviews[currentImageIndex]}
+              alt={`Image ${currentImageIndex}`}
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <button
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
+            onClick={goToNextImage}
+          >
+            <ArrowForwardIosIcon />
+          </button>
+          <div className="absolute bottom-4 flex space-x-2">
+            {imagePreviews.map((src, index) => (
+              <div
+                key={index}
+                className={`w-16 h-16 border-2 rounded-md overflow-hidden cursor-pointer ${index === currentImageIndex ? "border-primary" : "border-gray-400"}`}
+                onClick={() => setCurrentImageIndex(index)}
+              >
+                <Image src={src} alt={`Thumbnail ${index}`} width={64} height={64} objectFit="cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
