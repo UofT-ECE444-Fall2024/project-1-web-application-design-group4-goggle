@@ -28,11 +28,12 @@ const EditListingPage = () => {
             image: "/images/logo/UTrade_small.svg",
             rating: 4.5,
           },
-          tags: ["Appliances"],
+          category: ["Appliances"],
           publishDate: "Nov 2th, 2024",
+          pickup_location: "Bahen",
         };
 
-  const { title, price, image, description, seller, tags, publishDate } = listing;
+  const { title, price, image, description, seller, category, publishDate, pickup_location } = listing;
 
 
   const handleImagesChange = (newImages: File[]) => {
@@ -74,7 +75,7 @@ const EditListingPage = () => {
               <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
             </div>
             <div className="xl:w-[60%] lg:w-[60%] w-full">
-              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true}/>
+              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true} titleValue={title} priceValue={price} descriptionValue={description} pickup_locationValue={pickup_location} />
             </div>
           </div>
         </div>

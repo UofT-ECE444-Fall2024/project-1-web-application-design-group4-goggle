@@ -6,7 +6,19 @@ import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
 
-const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; onPublish: (data: CreatePostInputs) => Promise<void> }) => {
+const CreatePostTextBoxes = ({ 
+  onPublish, 
+  isEdit=false, 
+  titleValue='', 
+  priceValue='', 
+  descriptionValue='', 
+  pickup_locationValue=''}: { 
+    isEdit?: boolean; 
+    titleValue?: string; 
+    priceValue?: string; 
+    descriptionValue?: string;
+    pickup_locationValue?: string;
+    onPublish: (data: CreatePostInputs) => Promise<void> }) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
     mode: "onSubmit",
@@ -30,6 +42,7 @@ const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; on
                 name="title"
                 register={register}
                 errors={errors}
+                value={titleValue}
                 topText="Title"
                 divClassNames="w-full"
                 required={true}
@@ -39,6 +52,7 @@ const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; on
                 name="price"
                 register={register}
                 errors={errors}
+                value={priceValue}
                 topText="Price"
                 options={{
                   pattern: {
@@ -56,6 +70,7 @@ const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; on
               name="description"
               register={register}
               errors={errors}
+              value={descriptionValue}
               topText="Description"
               textArea={true}
               required={false}
@@ -93,6 +108,7 @@ const CreatePostTextBoxes = ({ onPublish, isEdit=false }: { isEdit?: boolean; on
                 name="pickup_location"
                 register={register}
                 errors={errors}
+                value={pickup_locationValue}
                 topText="Pickup Location"
                 divClassNames="w-full"
                 required={false}
