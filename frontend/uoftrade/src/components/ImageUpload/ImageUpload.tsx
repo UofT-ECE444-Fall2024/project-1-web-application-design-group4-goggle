@@ -34,8 +34,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
       setImageFiles(prevFiles => [...prevFiles, ...files]);
       setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
       onImagesChange([...imageFiles, ...files]); // Send updated files to parent
-      settotalImagesCount(totalImagesCount+1);
+      settotalImagesCount(totalImagesCount + files.length);
     }
+
+    // Reset the file input so users can upload the same image again
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    if (fileInput) fileInput.value = "";  // Reset the file input field
   };
 
   const handleDeleteImage = (index: number) => {
@@ -45,7 +49,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
     setImageFiles(updatedFiles);
     setImagePreviews(updatedPreviews);
     onImagesChange(updatedFiles); // Update parent with new file array
-    settotalImagesCount(totalImagesCount-1); // Decrement image count
+
+    // Check if we deleted the last image
+    if (updatedPreviews.length === 0) {
+      // If no images are left, close the carousel
+      setIsCarouselOpen(false);
+    } else if (index === currentImageIndex && updatedPreviews.length > 0) {
+      // If we deleted the current image, set the index to the previous image
+      setCurrentImageIndex(prevIndex => (prevIndex === 0 ? updatedPreviews.length - 1 : prevIndex - 1));
+    } else if (index < currentImageIndex) {
+      // If we deleted an image before the current index, shift the index back by 1
+      setCurrentImageIndex(currentImageIndex - 1);
+    }
+
+    settotalImagesCount(totalImagesCount - 1); // Decrement image count
     setErrorMessage(null); // Remove error message if there is one
   };
 
@@ -130,6 +147,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
               layout="fill"
               objectFit="contain"
             />
+            {/* Delete icon inside the carousel */}
+            <span
+              onClick={() => handleDeleteImage(currentImageIndex)}
+              className="absolute bottom-2 right-2 z-20 flex items-center justify-center p-1 bg-white rounded-full shadow-md transition-transform hover:scale-125 cursor-pointer"
+            >
+              <DeleteIcon className="text-primary" />
+            </span>
           </div>
           <button
             className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
