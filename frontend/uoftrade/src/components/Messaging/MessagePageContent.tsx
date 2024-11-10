@@ -1,19 +1,52 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatBox from './ChatBox';
 import ConversationsList from './ConversationsList';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
+
+import { Conversation } from '@/types/conversation';
 
 const MessagePageContent = () => {
-  const [activeUser, setActiveUser] = useState<string>('John Doe'); // Default active user
-  const [conversations, setConversations] = useState([
-    { userName: 'John Doe', lastMessage: 'Hey, how are you?', lastMessageTime: '10:30 AM', unreadCount: 1 },
-    { userName: 'Jane Smith', lastMessage: 'See you later!', lastMessageTime: '10:32 AM', unreadCount: 0 },
-    { userName: 'Alice', lastMessage: 'Got it, thanks!', lastMessageTime: '10:35 AM', unreadCount: 3 },
-  ]);
 
-  const handleSelectConversation = (userName: string) => {
-    setActiveUser(userName);
+  const { username } = useParams();
+
+  const [activeConvoID, setActiveConvoID] = useState<number>(0); // Default active user
+  const [conversations, setConversations] = useState<Array<Conversation>>([]);
+  const [activeConversation, setActiveConversation] = useState<Conversation>();
+
+  const getConversions = async () => {
+  
+    //get all conversations
+    const token = localStorage.getItem('token');
+    const conversationsData = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/conversations`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setConversations(conversationsData?.data);
+
+    console.log(conversations)
+
+    //see if the user got here by clicking a listing or profile and set the active convo id
+    if (username) {
+      const activeConversation = conversations.find((convo:Conversation) => {convo.participants.user_name === username})
+      setActiveConvoID(activeConversation?.conversation_id as number)
+    }
+
+    //set the active conversation to whatever the id is, 0 default
+    setActiveConversation(conversations.find((convo:Conversation) => convo.conversation_id === activeConvoID));
+  }
+
+  useEffect(() => {
+    getConversions();
+  }, [])
+
+
+  const handleSelectConversation = (convoID: number) => {
+    setActiveConvoID(convoID);
   };
 
   return (
@@ -21,12 +54,12 @@ const MessagePageContent = () => {
       <div className="w-80 p-4 mr-8">
         <ConversationsList
           conversations={conversations}
-          activeUser={activeUser}
+          activeConvoID={activeConvoID}
           onSelectConversation={handleSelectConversation}
         />
       </div>
       <div className="flex-1 p-4">
-        <ChatBox activeUser={activeUser} />
+        <ChatBox convoID={activeConvoID} participant={activeConversation?.participants?.name as string} />
       </div>
     </div>
   );

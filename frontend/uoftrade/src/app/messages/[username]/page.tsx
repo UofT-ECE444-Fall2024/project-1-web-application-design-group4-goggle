@@ -18,9 +18,9 @@ const MessagePage = () => {
         <Loading/>
         <div className="flex flex-col justify-between h-screen">
             <NavBar/>
-                <div className="flex-grow">
+              <div className="flex-grow">
                     <MessagePageContent/>
-                </div>
+              </div>
             <Footer/>
         </div>
     </>
