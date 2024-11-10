@@ -183,7 +183,7 @@ class ConversationListView(APIView):
                 "last_message": last_message.content if last_message else "",
                 "last_message_timestamp": last_message.timestamp if last_message else None,
                 "unread_count": unread_count,
-                "participants": [{"email": p.email, "name": p.get_full_name()} for p in other_participants]
+                "participants": [{"user_name": p.user_name, "name": p.get_full_name()} for p in other_participants]
             })
 
         return Response(data)
