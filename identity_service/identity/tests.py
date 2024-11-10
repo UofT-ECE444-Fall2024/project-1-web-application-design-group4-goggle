@@ -18,8 +18,8 @@ class UserDetailViewTest(APITestCase):
 
 class UserListViewTest(APITestCase):
     def setUp(self):
-        UofTUser.objects.create(email="test1@mail.utoronto.ca", first_name="Alice", last_name="Smith")
-        UofTUser.objects.create(email="test2@mail.utoronto.ca", first_name="Bob", last_name="Jones")
+        UofTUser.objects.create(email="test1@mail.utoronto.ca", user_name="Alice", first_name="Alice", last_name="Smith")
+        UofTUser.objects.create(email="test2@mail.utoronto.ca", user_name="Bob", first_name="Bob", last_name="Jones")
     
     def test_list_users(self):
         """Test listing all users"""

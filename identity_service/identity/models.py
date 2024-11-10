@@ -10,7 +10,7 @@ class UofTUser(AbstractBaseUser):
     # Essential fields
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    user_name = models.CharField(max_length=100)
+    user_name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True, validators=[EmailValidator(message="Invalid email address")], primary_key=True)    
     phone_number = PhoneNumberField(blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
