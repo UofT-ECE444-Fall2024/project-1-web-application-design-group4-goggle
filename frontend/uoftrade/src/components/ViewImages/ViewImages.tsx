@@ -101,7 +101,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
       {onDeleteImage && (
         <span
           onClick={handleDeleteImage}
-          className="absolute bottom-4 right-4 z-20 flex items-center justify-center p-1 bg-white rounded-full shadow-md transition-transform hover:scale-125 cursor-pointer"
+          className="absolute bottom-[125px] right-4 z-20 flex items-center justify-center p-1 bg-white rounded-full shadow-md transition-transform hover:scale-125 cursor-pointer"
         >
           <DeleteIcon className="text-primary" />
         </span>
