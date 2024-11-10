@@ -47,7 +47,16 @@ class UofTUserFeaturesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UofTUser
         fields = ['first_name', 'last_name', 'email', 'user_name', 'phone_number', 'rating', 'rating_count', 'images']
+
+class UofTUserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UofTUser
+        fields = ['first_name', 'last_name', 'user_name']
         
+    def validate_user_name(self, value):
+        if UofTUser.objects.filter(user_name=value).exclude(email=self.instance.email).exists():
+            raise serializers.ValidationError("This username is already taken.")
+        return value
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
