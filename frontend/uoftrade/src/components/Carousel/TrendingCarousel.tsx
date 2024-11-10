@@ -14,7 +14,7 @@ const TrendingCarousel = () => {
       price: "$28",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      image: "/images/misc/microwave.jpg",
+      images: ["/images/misc/microwave.jpg"],
       seller: {
         name: "Guy Dude",
         image: "/images/logo/UTrade_small.svg",
@@ -29,7 +29,7 @@ const TrendingCarousel = () => {
       price: "$25",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      image: "/images/misc/textbook.jpg",
+      images: ["/images/misc/textbook.jpg"],
       seller: {
         name: "Guy Dude",
         image: "/images/logo/UTrade_small.svg",
@@ -44,7 +44,7 @@ const TrendingCarousel = () => {
       price: "$32",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      image: "/images/misc/chair.jpg",
+      images: ["/images/misc/chair.jpg"],
       seller: {
         name: "Guy Dude",
         image: "/images/logo/UTrade_small.svg",

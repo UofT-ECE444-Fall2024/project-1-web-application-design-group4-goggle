@@ -1,5 +1,6 @@
 type Seller = {
     name: string;
+    username?: string;
     image: string;
     rating: number;
 };
@@ -9,7 +10,7 @@ export type Listing = {
     title: string;
     price: string;
     description: string;
-    image: string;
+    images: Array<any>;
     seller: Seller;
     tags: string[];
     publishDate: string;
