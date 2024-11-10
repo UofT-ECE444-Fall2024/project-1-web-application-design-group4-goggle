@@ -8,13 +8,16 @@ import React from "react";
 import SearchSidebar from "@/components/SearchSidebar/SearchSidebar"
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PostCard from '@/components/PostCard/PostCard';
+import Loading from '@/components/Loading/Loading';
 
 const SearchPage = () => {
   const { searchField } = useParams(); // Get the dynamic category from the URL
   const decodedURI = Array.isArray(searchField) ? decodeURIComponent(searchField[0]) : decodeURIComponent(searchField || '');
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <>
+      <Loading />
+      <div className="flex flex-col min-h-screen w-full">
       <NavBar/>
       <Header title={`Search Results for "${decodedURI}"`} />
       <div className="flex flex-row flex-grow">
@@ -44,6 +47,8 @@ const SearchPage = () => {
       </div>
       <Footer/>
     </div>
+    </>
+    
   );
 };
 
