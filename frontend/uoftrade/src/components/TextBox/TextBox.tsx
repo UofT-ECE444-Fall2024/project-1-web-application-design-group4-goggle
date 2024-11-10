@@ -1,12 +1,12 @@
 import React from "react";
-import { FieldValues, UseFormRegister, FieldError, Path } from "react-hook-form";
-import InlineErrorMessage from "../InlineErrorMessage/InlineErrorMessage";
+import { FieldValues, UseFormRegister, FieldError, FieldErrors, Path } from "react-hook-form";
+import InlineErrorMessage from "../InlineErrorMessage/InlineErrorMessage"; // Ensure this import is correct
 
 interface TextBoxProps<T extends FieldValues> {
   placeholder: string;
   name: Path<T>;
   register: UseFormRegister<T>;
-  errors: Record<string, FieldError | undefined>;
+  errors: FieldErrors<T>;  // Update this to FieldErrors<T> instead of Record<string, FieldError | undefined>
   topText: string;
   value?: string;
   divClassNames?: string;
@@ -27,9 +27,8 @@ function TextBox<T extends FieldValues>({
   required,
   options,
   textArea,
-  inputClassNames= '',
+  inputClassNames = ''
 }: TextBoxProps<T>) {
-  const error = errors?.[name];
   return (
     <div className={`mb-0 leading-none ${divClassNames}`}>
       <label htmlFor={name} className="text-xs text-heading-1">{topText}</label>
@@ -55,15 +54,10 @@ function TextBox<T extends FieldValues>({
         />
       )}
 
-      {required && <span className={`asterisk`}></span>}
-        {error && (
-          <div>
-            {error.type === "required" && <InlineErrorMessage message="This field is required" />}
-            {error.type === "pattern" && <InlineErrorMessage message={error.message as string} />}
-            {error.type === "validate" && <InlineErrorMessage message={error.message as string} />}
-            {error.type === "manual" && <InlineErrorMessage message={error.message as string} />}
-          </div>
-        )}
+      {/* Check for error messages and display them */}
+      {errors[name] && (
+        <InlineErrorMessage message={errors[name]?.message as string} />
+      )}
     </div>
   );
 }
