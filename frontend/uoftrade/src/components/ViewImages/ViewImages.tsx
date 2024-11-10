@@ -32,7 +32,6 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
 
   const handleDeleteImage = () => {
     if (onDeleteImage) {
-      // If the deleted image is the one currently being viewed, adjust the index
       const newIndex = currentImageIndex === images.length - 1 ? currentImageIndex - 1 : currentImageIndex;
       setCurrentImageIndex(newIndex);
       onDeleteImage(currentImageIndex);
@@ -51,7 +50,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
         onClick={goToPreviousImage}
       >
-         <ArrowForwardIosIcon className="flex align-items rotate-180"/>
+         <ArrowForwardIosIcon className="rotate-180" />
       </button>
       <div className="relative w-3/4 h-3/4">
         <Image
@@ -65,16 +64,22 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full"
         onClick={goToNextImage}
       >
-        <ArrowForwardIosIcon className="flex align-items"/>
+        <ArrowForwardIosIcon />
       </button>
       <div className="absolute bottom-4 flex space-x-2">
         {images.map((src, index) => (
           <div
             key={index}
-            className={`w-16 h-16 border-2 rounded-md overflow-hidden cursor-pointer ${index === currentImageIndex ? "border-primary" : "border-gray-400"}`}
+            className={`w-[90px] h-[90px] border-2 rounded-md overflow-hidden cursor-pointer ${index === currentImageIndex ? "border-white" : "border-black"}`}
             onClick={() => setCurrentImageIndex(index)}
           >
-            <Image src={src} alt={`Thumbnail ${index}`} width={64} height={64} objectFit="cover" />
+            <Image
+              src={src}
+              alt={`Thumbnail ${index}`}
+              className="object-cover w-full h-full"
+              width={90}
+              height={90}
+            />
           </div>
         ))}
       </div>
