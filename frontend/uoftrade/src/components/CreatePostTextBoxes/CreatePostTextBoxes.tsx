@@ -12,12 +12,16 @@ const CreatePostTextBoxes = ({
   titleValue='', 
   priceValue='', 
   descriptionValue='', 
-  pickup_locationValue=''}: { 
+  pickup_locationValue='',
+  campusValue=null,
+  categoryValue=null,}: { 
     isEdit?: boolean; 
     titleValue?: string; 
     priceValue?: string; 
     descriptionValue?: string;
     pickup_locationValue?: string;
+    campusValue?: string|null;
+    categoryValue?: string|null;
     onPublish: (data: CreatePostInputs) => Promise<void> }) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
@@ -30,6 +34,7 @@ const CreatePostTextBoxes = ({
     router.push("/home"); // success page
   };
   const buttonText = isEdit ? "Save Changes" : "Publish";
+  const campuses = ["UTSG", "UTM", "UTSC"];
 
   return (
     <FormProvider {...methods}>
@@ -85,7 +90,15 @@ const CreatePostTextBoxes = ({
                 errors={errors}
                 register={register}
                 required={true}
-                menuItems={["UTSG", "UTM", "UTSC"]}
+                options={{
+                  validate: value => {
+                    return campuses.find((item) => item === value) 
+                      ? true 
+                      : "Not a valid campus.";
+                  }
+                }}
+                selectedItem={campusValue}
+                menuItems={campuses}
                 onSelect={(selected) => setValue("campus", selected, { shouldValidate: true })}
               />
               {/* Category Dropdown */}
@@ -95,7 +108,15 @@ const CreatePostTextBoxes = ({
                 name="category"
                 register={register}
                 errors={errors}
+                options={{
+                  validate: value => {
+                    return categories.find((item) => item.name === value) 
+                      ? true 
+                      : "Not a valid category.";
+                  }
+                }}
                 required={true}
+                selectedItem={categoryValue}
                 menuItems={categories.map(category => category.name)}
                 onSelect={(selected) => setValue("category", selected, { shouldValidate: true })}
               />    

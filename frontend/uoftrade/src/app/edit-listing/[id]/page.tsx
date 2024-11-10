@@ -12,7 +12,6 @@ import { useParams } from "next/navigation";
 
 const EditListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const { id } = useParams();
 
   // make API call to get fields using id
@@ -22,19 +21,20 @@ const EditListingPage = () => {
           price: "$28",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-          image: "/images/misc/microwave.jpg",
+          images: ["/images/misc/microwave.jpg", "/images/misc/chair.jpg"],
           seller: {
             name: "Guy Dude",
             image: "/images/logo/UTrade_small.svg",
             rating: 4.5,
           },
-          category: ["Appliances"],
+          campus: "UTSG",
+          category: "Appliances",
           publishDate: "Nov 2th, 2024",
           pickup_location: "Bahen",
         };
 
-  const { title, price, image, description, seller, category, publishDate, pickup_location } = listing;
-
+  const { title, price, images, description, category, pickup_location, campus } = listing;
+  const [imagePreviews, setImagePreviews] = useState<string[]>(images);
 
   const handleImagesChange = (newImages: File[]) => {
     // Update the uploaded images
@@ -75,7 +75,7 @@ const EditListingPage = () => {
               <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
             </div>
             <div className="xl:w-[60%] lg:w-[60%] w-full">
-              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true} titleValue={title} priceValue={price} descriptionValue={description} pickup_locationValue={pickup_location} />
+              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true} titleValue={title} priceValue={price} descriptionValue={description} pickup_locationValue={pickup_location} campusValue={campus} categoryValue={category}/>
             </div>
           </div>
         </div>

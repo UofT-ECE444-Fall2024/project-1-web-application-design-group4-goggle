@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InlineErrorMessage from "../InlineErrorMessage/InlineErrorMessage";
 import { FieldErrors, FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
 
@@ -9,9 +9,10 @@ interface SelectDropdownProps<T extends FieldValues> {
   register?: UseFormRegister<T>;
   options?: RegisterOptions<T>;
   required?: boolean;
-  name: Path<T>; // The name of the field to link to form validation
-  errors?: FieldErrors<T>; // Validation errors from react-hook-form
+  name: Path<T>;
+  errors?: FieldErrors<T>;
   onSelect: (selectedOption: string) => void;
+  selectedItem?: string | null;
 }
 
 const SelectDropdown = <T extends FieldValues>({
@@ -24,10 +25,19 @@ const SelectDropdown = <T extends FieldValues>({
   options,
   required,
   onSelect,
+  selectedItem = null,
 }: SelectDropdownProps<T>) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(selectedItem);
   const error = errors?.[name];
+
+  // Set selectedOption only if selectedItem exists in menuItems
+  useEffect(() => {
+    if (selectedItem) {
+      handleOptionSelect(selectedItem);
+    }
+    // Run only once on mount
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
@@ -48,7 +58,7 @@ const SelectDropdown = <T extends FieldValues>({
         {...(register ? register(name, { required, ...options }) : { name })}
       >
         {selectedOption || label}
-        <span className="ml-2">&#9660;</span> {/* Dropdown arrow */}
+        <span className="ml-2">&#9660;</span>
       </button>
 
       {dropdownVisible && (
@@ -64,7 +74,6 @@ const SelectDropdown = <T extends FieldValues>({
           ))}
         </div>
       )}
-      
 
       {/* Inline error message for validation */}
       {error && (
