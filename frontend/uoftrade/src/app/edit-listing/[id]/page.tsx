@@ -8,10 +8,12 @@ import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostText
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Loading from "@/components/Loading/Loading";
+import { useParams } from "next/navigation";
 
 const EditListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const { id } = useParams();
 
   const handleImagesChange = (newImages: File[]) => {
     // Update the uploaded images
