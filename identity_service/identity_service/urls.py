@@ -20,7 +20,7 @@ from identity.views import *
 
 urlpatterns = [
     path('user-list', UserList.as_view(), name='user-list'),
-    path('info/<str:email>', UserDetail.as_view(), name='info'),
+    path('info/<str:user_name>', UserDetail.as_view(), name='info'),
     path('name/<str:email>', UserName.as_view(), name='name'),
     path('admin/', admin.site.urls),
     path('auth', AuthenticateToken.as_view(), name='auth'),

@@ -31,7 +31,7 @@ cache = redis.StrictRedis(host="redis",
 class UserDetail(generics.RetrieveAPIView):
     queryset = UofTUser.objects.all()
     serializer_class = UofTUserFeaturesSerializer
-    lookup_field = "email"
+    lookup_field = "user_name"
 
 class UserList(generics.ListAPIView):
     queryset = UofTUser.objects.all()
@@ -154,11 +154,11 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class CreateConversationView(APIView):
     def post(self, request):
-        user1_email = request.data.get('user1')
-        user2_email = request.data.get('user2')
+        user1_name = request.data.get('user1')
+        user2_name = request.data.get('user2')
 
-        user1 = UofTUser.objects.get(email=user1_email)
-        user2 = UofTUser.objects.get(email=user2_email)
+        user1 = UofTUser.objects.get(user_name=user1_name)
+        user2 = UofTUser.objects.get(user_name=user2_name)
 
         conversation = Conversation.objects.filter(participants=user1).filter(participants=user2).first()
         if not conversation:
@@ -168,15 +168,16 @@ class CreateConversationView(APIView):
         return Response({"conversation_id": conversation.id}, status=status.HTTP_201_CREATED)
 
 class ConversationListView(APIView):
-    def get(self, request):
-        user = request.user
+    def post(self, request):
+        user1 = request.data.get('user1')
+        user = UofTUser.objects.get(user_name=user1)
         conversations = Conversation.objects.filter(participants=user).prefetch_related('messages')
         
         data = []
         for convo in conversations:
             last_message = convo.messages.order_by('-timestamp').first()
             unread_count = convo.messages.filter(is_read=False).exclude(sender=user).count()
-            other_participants = convo.participants.exclude(id=user.id)
+            other_participants = convo.participants.exclude(email=user.email)
             
             data.append({
                 "conversation_id": convo.id,

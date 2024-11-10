@@ -43,10 +43,15 @@ const SignUpForm = () => {
             registered = await api.post("identity/register", payload, {
                 headers: { 'Content-Type': 'application/json' }
               });
-            const token = registered.data.token;
+            const token = registered.data?.token;
             if (token) {
                 localStorage.setItem("token", token);
             }
+            const currentUser = registered.data?.user_name;
+            if (currentUser) {
+                localStorage.setItem("currentUser", currentUser);
+            }
+
             console.log(registered.status);
         }
         catch(e:unknown) {
