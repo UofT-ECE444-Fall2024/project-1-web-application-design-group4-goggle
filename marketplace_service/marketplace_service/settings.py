@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_g2sc8rld%*(3(v+fq_wf&wr%$u+ce7^o%wih=wfu+!ny$sin8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1']
 

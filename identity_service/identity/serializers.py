@@ -46,7 +46,7 @@ class UofTUserFeaturesSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UofTUser
-        fields = ['first_name', 'last_name', 'email', 'user_name', 'phone_number', 'rating', 'rating_count']
+        fields = ['first_name', 'last_name', 'email', 'user_name', 'phone_number', 'rating', 'rating_count', 'images']
         
 
 class RegistrationSerializer(serializers.ModelSerializer):
