@@ -17,7 +17,7 @@ const ViewProfilePage = () => {
   const [seller, setSeller] = useState<Seller>();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
-
+  const [sellerEmail, setSellerEmail] = useState<string>('')
   /** This function gets the current users data and optionally gets their listings if the parameter is true 
    * then it sets the appropriate states
   */
@@ -52,6 +52,7 @@ const ViewProfilePage = () => {
         profilePic: userImages.data[0]?.image || '', // Add profilePic if available
       });
 
+      setSellerEmail(userDetails?.data?.email)
       setSellerIsUser(seller?.username === currentUser);
 
       const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
@@ -110,7 +111,7 @@ const ViewProfilePage = () => {
         {/** Main Content */}
         <div className="w-full h-full flex-grow flex gap-4 flex-row justify-between">
           <div className="flex-grow my-4 ml-4 w-4/5">
-            <ViewProfile sellerIsUser={sellerIsUser} listings={listings}  />
+            <ViewProfile sellerIsUser={sellerIsUser} listings={listings} sellerEmail={sellerEmail}/>
           </div>
 
           <div className="flex-grow my-4 mr-4 w-1/5">

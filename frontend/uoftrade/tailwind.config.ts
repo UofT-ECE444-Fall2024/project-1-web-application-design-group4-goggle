@@ -25,6 +25,7 @@ const config: Config = {
       'grey-bg-opaque': 'rgba(247, 247, 247, 1)',
       'light-grey': 'rgba(217, 217, 217, 0.46)',
       'dark-grey': 'rgba(121, 121, 121, 0.4)',
+      'light-green': '#bde39f',
     },
     container: {
       center: true,
