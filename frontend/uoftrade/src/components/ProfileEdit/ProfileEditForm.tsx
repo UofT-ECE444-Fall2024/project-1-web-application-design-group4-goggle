@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import TextBox from "../TextBox/TextBox";
 import axios from "axios";
@@ -8,27 +8,57 @@ import axios from "axios";
 import "../../types/inputs"
 
 const ProfileEditForm = () => {
-    
+    const [showNotif, setShowNotif] = useState<boolean>(false);
+    const [notifMessage, setNotifMessage] = useState<string>("");
+    const [fadeOut, setFadeOut] = useState<boolean>(false);
+
+    //fade out the notification
+    useEffect(() => {
+        if (showNotif) {
+            const timer = setTimeout(() => {
+                setFadeOut(true); // Start fade-out after 5 seconds
+                setTimeout(() => {
+                    setShowNotif(false); // Hide the notification after fade-out
+                    setFadeOut(false)
+                }, 500); // Wait for the fade transition to complete
+            }, 5000); // Set timeout for 5 seconds
+            return () => clearTimeout(timer); // Cleanup the timer if the component is unmounted
+        }
+    }, [showNotif]);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-      } = useForm<ProfileEditInputs>()
-    
-    const onSubmit: SubmitHandler<ProfileEditInputs> = async (data:ProfileEditInputs) => {
+    } = useForm<ProfileEditInputs>();
 
+    const onSubmit: SubmitHandler<ProfileEditInputs> = async (data: ProfileEditInputs) => {
+        setShowNotif(false);
         const token = localStorage.getItem('token');
+        const currentUser = localStorage.getItem('currentUser');
+
+        let updateUser;
 
         try {
+            
+            updateUser = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}identity/user-update/${currentUser}`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-            const payload:Object = {
-                first_name: data.first_name, 
-                last_name: data.last_name,
-                user_name: data.first_name,
-            };
-        }
-        catch(e:unknown) {
+            if (updateUser?.status && updateUser.status < 300) {
+                setNotifMessage("Profile updated successfully!");
+                setShowNotif(true);
+                localStorage.setItem('currentUser', data.user_name);
+            } else {
+                setNotifMessage("Failed to update profile. Please try again.");
+                setShowNotif(true);
+            }
+        } catch (e: unknown) {
             console.error(e);
+            setNotifMessage("An error occurred while updating your profile.");
+            setShowNotif(true);
         }
     }
 
@@ -54,7 +84,7 @@ const ProfileEditForm = () => {
                         errors={errors}
                         topText="Last Name"
                         divClassNames="flex-grow"
-                    />                             
+                    />
                 </div>
                 <TextBox<ProfileEditInputs>
                     placeholder="Username"
@@ -65,8 +95,8 @@ const ProfileEditForm = () => {
                         pattern: {
                             value: /^[a-zA-Z0-9_]+$/,
                             message: "Username can only contain letters, numbers, and underscores"
-                            } 
-                        }}
+                        }
+                    }}
                     divClassNames={"mt-3"}
                     errors={errors}
                     topText="Username"
@@ -76,10 +106,18 @@ const ProfileEditForm = () => {
                     Save Changes
                 </button>
             </form>
-        </div>
-    )
 
+            {/* Notification */}
+            {showNotif && (
+                <div
+                    className={`mt-4 p-3 rounded-md ${notifMessage.includes("successfully") ? 'bg-light-green' : 'bg-dark-red'} text-white-bg text-center 
+                        ${fadeOut ? 'opacity-0 transition-opacity duration-500' : 'opacity-100'}`}
+                >
+                    {notifMessage}
+                </div>
+            )}
+        </div>
+    );
 }
 
-export default ProfileEditForm
-
+export default ProfileEditForm;
