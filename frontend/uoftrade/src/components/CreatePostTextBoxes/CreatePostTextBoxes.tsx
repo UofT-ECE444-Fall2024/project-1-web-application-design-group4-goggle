@@ -6,23 +6,25 @@ import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
 
-const CreatePostTextBoxes = ({ 
-  onPublish, 
-  isEdit=false, 
-  titleValue='', 
-  priceValue='', 
-  descriptionValue='', 
-  pickup_locationValue='',
-  campusValue=null,
-  categoryValue=null,}: { 
-    isEdit?: boolean; 
-    titleValue?: string; 
-    priceValue?: string; 
-    descriptionValue?: string;
-    pickup_locationValue?: string;
-    campusValue?: string|null;
-    categoryValue?: string|null;
-    onPublish: (data: CreatePostInputs) => Promise<void> }) => {
+const CreatePostTextBoxes = ({
+  onPublish,
+  isEdit = false,
+  titleValue = '',
+  priceValue = '',
+  descriptionValue = '',
+  pickup_locationValue = '', // Default empty string if undefined
+  campusValue = '',          // Default empty string if undefined
+  categoryValue = '',         // Default empty string if undefined
+}: {
+  isEdit?: boolean;
+  titleValue?: string;
+  priceValue?: string;
+  descriptionValue?: string;
+  pickup_locationValue?: string | null;
+  campusValue?: string | null;
+  categoryValue?: string | null;
+  onPublish: (data: CreatePostInputs) => Promise<void>
+}) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
     mode: "onSubmit",
@@ -31,8 +33,9 @@ const CreatePostTextBoxes = ({
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
     await onPublish(data);
-    router.push("/home"); // success page
+    router.push("/home"); // Redirect to success page
   };
+
   const buttonText = isEdit ? "Save Changes" : "Publish";
   const locations = ["Myhal", "Bahen", "Gerstein", "Robarts", "Sidney Smith", "Medical Science", "Other"];
 
@@ -91,13 +94,9 @@ const CreatePostTextBoxes = ({
                 register={register}
                 required={true}
                 options={{
-                  validate: value => {
-                    return locations.find((item) => item === value) 
-                      ? true 
-                      : "Not a valid location.";
-                  }
+                  validate: value => locations.includes(value as string) || "Not a valid location."
                 }}
-                selectedItem={campusValue}
+                selectedItem={pickup_locationValue || ''} // Fallback to empty string
                 menuItems={locations}
                 onSelect={(selected) => setValue("location", selected, { shouldValidate: true })}
               />
@@ -109,17 +108,13 @@ const CreatePostTextBoxes = ({
                 register={register}
                 errors={errors}
                 options={{
-                  validate: value => {
-                    return categories.find((item) => item.name === value) 
-                      ? true 
-                      : "Not a valid category.";
-                  }
+                  validate: value => categories.some((item) => item.name === (value as string)) || "Not a valid category."
                 }}
                 required={true}
-                selectedItem={categoryValue}
+                selectedItem={categoryValue || ''} // Fallback to empty string
                 menuItems={categories.map(category => category.name)}
                 onSelect={(selected) => setValue("category", selected, { shouldValidate: true })}
-              />    
+              />
             </div>
 
             {/* Submit Button */}

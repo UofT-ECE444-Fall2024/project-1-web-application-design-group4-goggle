@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
@@ -9,64 +9,167 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Loading from "@/components/Loading/Loading";
 import { useParams } from "next/navigation";
+import LabelledCheckbox from "@/components/Checkbox/LabelledCheckbox";
+import { Listing } from "@/types/listing";
+import { Seller } from "@/types/seller";
 
 const EditListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [sold, setSold] = useState(false); // State for "Mark as Sold" checkbox
   const { id } = useParams();
+  const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
+  const [listing, setListing] = useState<Listing>();
+  const [seller, setSeller] = useState<Seller>();
 
-  // make API call to get fields using id
-  const listing = {
-          id: 1,
-          title: "Microwave",
-          price: "$28",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-          images: ["/images/misc/microwave.jpg", "/images/misc/chair.jpg"],
+  /** This function gets the current users data and optionally gets their listings if the parameter is true 
+  * then it sets the appropriate states
+ */
+  const getData = async () => {
+    const currentUser = localStorage.getItem('currentUser');
+    const token = localStorage.getItem('token');
+
+    setLoading(true); // Start loading before the request
+    try {
+      // get current user details
+      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          user_name: currentUser,
+        }
+      });
+
+      setSeller({
+        firstName: userDetails.data?.first_name,
+        lastName: userDetails.data?.last_name,
+        username: userDetails.data?.user_name,
+        rating: userDetails.data?.rating,
+        profilePic: userImages.data[0]?.image || '',
+      });
+
+      const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          user_name: currentUser,
+        }
+      });
+
+      const listingsArr: Listing[] = userListings.data?.map((product: any) => {
+        let sellerName = `${seller?.firstName} ${seller?.lastName}`;
+        return {
+          id: product?.id,
+          title: product?.title,
+          price: product?.price,
+          description: product?.description,
+          images: product?.images || '',
+          location: product?.location,
           seller: {
-            name: "Guy Dude",
-            image: "/images/logo/UTrade_small.svg",
-            rating: 4.5,
+            name: sellerName || 'Unknown Seller',
+            username: seller?.username || '',
+            image: seller?.profilePic || '',
+            rating: seller?.rating || 0,
           },
-          campus: "UTSG",
-          category: "Appliances",
-          publishDate: "Nov 2th, 2024",
-          pickup_location: "Bahen",
+          tags: product?.category ? [product.category] : [],
+          publishDate: product?.date_posted,
         };
+      });
 
-  const { title, price, images, description, category, pickup_location, campus } = listing;
-  const [imagePreviews, setImagePreviews] = useState<string[]>(images);
+      // Convert `id` to a number for comparison if it's a string
+      const listingId = typeof id === 'string' ? parseInt(id, 10) : id;
+
+      const matchedListing = listingsArr.find((listing) => listing.id === listingId);
+
+      // Update the listing state with the matched listing
+      if (matchedListing) {
+        setListing(matchedListing);
+      } else {
+        throw new Error("Listing not found");
+      }
+
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    } finally {
+      setLoading(false); // Stop loading after the request is done
+    }
+  };
+
+  // Fetch user details once the component mounts if requiredData is true
+  useEffect(() => {
+    getData();
+  }, []);
+
+
+  // const { title, price, images, description, category, location, campus } = listing;
 
   const handleImagesChange = (newImages: File[]) => {
-    // Update the uploaded images
-    setUploadedImages((prevImages) => [...prevImages, ...newImages]); // Append new images to existing ones
+    setUploadedImages((prevImages) => {
+      const uniqueNewImages = newImages.filter(
+        (newImage) =>
+          !prevImages.some(
+            (existingImage) =>
+              existingImage.name === newImage.name &&
+              existingImage.lastModified === newImage.lastModified
+          )
+      );
+      return [...prevImages, ...uniqueNewImages];
+    });
 
-    // Create new previews and append them to existing previews
-    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
-    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]); // Append new previews
+    setImagePreviews((prevPreviews) => {
+      const uniquePreviews = newImages
+        .filter(
+          (newImage) =>
+            !uploadedImages.some(
+              (existingImage) =>
+                existingImage.name === newImage.name &&
+                existingImage.lastModified === newImage.lastModified
+            )
+        )
+        .map((file) => URL.createObjectURL(file));
+
+      return [...prevPreviews, ...uniquePreviews];
+    });
   };
 
   const handlePublish = async (textData: any) => {
-    const formData = new FormData();
-    uploadedImages.forEach((image, index) => formData.append(`image${index}`, image));
-
-    formData.append("title", textData.title);
-    formData.append("price", textData.price);
-    formData.append("description", textData.description);
-    formData.append("campus", textData.campus);
-    formData.append("category", textData.category);
-    formData.append("pickup_location", textData.pickup_location);
+    const imageFormData = new FormData();
+    uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
 
     try {
-      const response = await axios.post("/api/upload", formData);
-      alert(response.data.message || "Upload successful!");
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}product-images`, imageFormData);
+      alert(response.data.message || "Image upload successful!");
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error("Image upload failed:", error);
+    }
+
+    const textFormData = new FormData();
+    textFormData.append("title", textData.title);
+    textFormData.append("price", textData.price);
+    textFormData.append("description", textData.description);
+    textFormData.append("location", textData.location.replace(/\s+/g, ''));
+    textFormData.append("category", textData.category);
+    textFormData.append("sold", String(sold)); // Include the "sold" status
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}products`, textFormData);
+      alert(response.data.message || "Text upload successful!");
+    } catch (error) {
+      console.error("Text upload failed:", error);
     }
   };
 
   return (
     <>
-      <Loading/>
+      <Loading loading={loading} />
       <div className="flex flex-col min-h-screen w-full">
         <NavBar />
         <Header title="Edit Listing" />
@@ -76,14 +179,27 @@ const EditListingPage = () => {
               <ImageUpload onImagesChange={handleImagesChange} imagePreviews={imagePreviews} />
             </div>
             <div className="xl:w-[60%] lg:w-[60%] w-full">
-              <CreatePostTextBoxes onPublish={handlePublish} isEdit={true} titleValue={title} priceValue={price} descriptionValue={description} pickup_locationValue={pickup_location} campusValue={campus} categoryValue={category}/>
+              <LabelledCheckbox
+                label="Mark as Sold"
+                name="sold"
+                checked={sold}
+                onChange={(e) => setSold(e.target.checked)}
+              />
+              <CreatePostTextBoxes
+                onPublish={handlePublish}
+                isEdit={true}
+                titleValue={listing?.title || ''}
+                priceValue={listing?.price || ''}
+                descriptionValue={listing?.description || ''}
+                pickup_locationValue={listing?.location || ''}
+                categoryValue={listing?.tags[0] || ''}
+              />
             </div>
           </div>
         </div>
         <Footer />
-      </div> 
+      </div>
     </>
-    
   );
 };
 

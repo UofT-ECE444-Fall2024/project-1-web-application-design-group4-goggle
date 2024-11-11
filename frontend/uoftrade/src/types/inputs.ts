@@ -25,5 +25,6 @@ type CreatePostInputs = {
   description: string
   location: string
   category: string
+  sold: boolean
 }
 
