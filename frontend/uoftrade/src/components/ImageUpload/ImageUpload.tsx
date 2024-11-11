@@ -25,21 +25,37 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    if (totalImagesCount >= MAX_IMAGES) {
-      setErrorMessage(`You can only upload a maximum of ${MAX_IMAGES} images.`);
-    } else {
-      setErrorMessage(null); // Clear error message if valid
-      const newPreviews = files.map(file => URL.createObjectURL(file));
-      setImageFiles(prevFiles => [...prevFiles, ...files]);
-      setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
-      onImagesChange([...imageFiles, ...files]); // Send updated files to parent
-      setTotalImagesCount(totalImagesCount + files.length);
+    // Filter valid image types
+    const validFiles = files.filter(file =>
+      ["image/png", "image/jpeg", "image/jpg"].includes(file.type)
+    );
+
+    // If any files are invalid, set an error message
+    if (validFiles.length !== files.length) {
+      setErrorMessage("Only .png, .jpg, and .jpeg files are allowed.");
+      return;
     }
 
-    // Reset the file input so users can upload the same image again
+    // Check if maximum image count would be exceeded
+    if (totalImagesCount + validFiles.length > MAX_IMAGES) {
+      setErrorMessage(`You can only upload a maximum of ${MAX_IMAGES} images.`);
+      return;
+    }
+
+    // Clear any previous error message if valid files are selected
+    setErrorMessage(null);
+
+    const newPreviews = validFiles.map(file => URL.createObjectURL(file));
+    setImageFiles(prevFiles => [...prevFiles, ...validFiles]);
+    setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
+    onImagesChange([...imageFiles, ...validFiles]); // Update parent with new file array
+    setTotalImagesCount(totalImagesCount + validFiles.length);
+
+    // Reset the file input field
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    if (fileInput) fileInput.value = "";  // Reset the file input field
+    if (fileInput) fileInput.value = "";
   };
+
 
   const handleDeleteImage = (index: number) => {
     const updatedFiles = imageFiles.filter((_, i) => i !== index);

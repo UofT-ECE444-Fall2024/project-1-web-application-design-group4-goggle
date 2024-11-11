@@ -23,8 +23,7 @@ type CreatePostInputs = {
   title: string
   price: number
   description: string
-  campus: string
-  pickup_location: string
+  location: string
   category: string
 }
 
