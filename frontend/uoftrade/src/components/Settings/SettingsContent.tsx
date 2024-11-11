@@ -68,10 +68,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
       });
 
       if (requiresListingData) {
-        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/my_products`, {
+        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: {
+            user_name: currentUser,
+          }
         });
 
         const listingsArr:Listing[] = userListings.data?.map((product: any) => {
@@ -84,6 +87,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
             price: product?.price,
             description: product?.description,
             images: product?.images || '', // Assuming the product has an image
+            location: product?.location,
             seller: {
               name: sellerName || 'Unknown Seller', // Use the seller name from state
               username: seller?.username || '',
