@@ -2,12 +2,12 @@ import React from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 interface ListingDetailsProps {
-  title: string;
-  price: number;
-  description: string;
-  pickupLocation: string;
-  category: string;
-  date: string
+  title: string | undefined;
+  price: string | undefined;
+  description: string | undefined;
+  pickupLocation: string | undefined;
+  category: string | undefined;
+  date: string | undefined;
 }
 
 const ListingDetails: React.FC<ListingDetailsProps> = ({
@@ -23,7 +23,7 @@ const ListingDetails: React.FC<ListingDetailsProps> = ({
       {/* Title and Price */}
       <div className="flex justify-between items-baseline">
         <h1 className="text-3xl font-semibold text-heading-1">{title}</h1>
-        <p className="text-3xl font-bold text-heading1">${price.toFixed(2)}</p>
+        <p className="text-3xl font-bold text-heading1">${price}</p>
       </div>
 
       {/* Date */}
