@@ -1,5 +1,5 @@
 # views.py
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import viewsets, permissions, filters, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -23,6 +23,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'price', 'location', 'is_active', 'is_sold']
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'date_posted']
+    lookup_field = 'user_name'  # Allows lookup by slug instead of ID
 
     def get_queryset(self):
         # Limit the queryset to only products that are active by default.
@@ -78,3 +79,8 @@ class ProductImageViewSet(viewsets.ModelViewSet):
             serializer.save(product=product)
         except Product.DoesNotExist:
             return Response({'error': 'Invalid product ID'}, status=status.HTTP_404_NOT_FOUND)
+
+class ProductDetail(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = "id"

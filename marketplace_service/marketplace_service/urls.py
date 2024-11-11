@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from marketplace.views import ProductViewSet, CategoryViewSet, ProductImageViewSet
+from marketplace.views import ProductViewSet, CategoryViewSet, ProductImageViewSet, ProductDetail
 from django.conf.urls.static import static
 from marketplace_service import settings
 
@@ -37,4 +37,5 @@ POST /products/<id>/mark_as_active/ - Custom action to mark a specific product a
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('product-detail/<int:id>', ProductDetail.as_view(), name='product-detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
