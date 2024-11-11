@@ -7,6 +7,8 @@ import { categories } from "@/data/categories";
 import CategoryDropdown from "@/components/Dropdown_Nav/DropDown";
 import { useRouter } from "next/navigation";
 import { Chat } from "@mui/icons-material";
+import axios from "axios";
+import { Seller } from "@/types/seller";
 
 
 const NavBar = () => {
@@ -15,6 +17,8 @@ const NavBar = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const router = useRouter();
   const buttonWidth = 80; // Approximate width of the search button in pixels
+  const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
+  const [seller, setSeller] = useState<Seller>();
 
   // Function to calculate the character limit based on current input width
   const calculateCharacterLimit = (width: number) => {
@@ -28,6 +32,50 @@ const NavBar = () => {
       router.push(`/search/${encodeURIComponent(searchInput)}`);
     }
   };
+
+  const getData = async () => {
+    const currentUser = localStorage.getItem('currentUser');
+    const token = localStorage.getItem('token');
+
+    setLoading(true); // Start loading before the request
+    try {
+      //get current user details
+      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          user_name: currentUser,
+        }
+      });
+      console.log("User image: ", userImages.data);
+
+      // Set the seller data once the API response is received
+      setSeller({
+        firstName: userDetails.data?.first_name,
+        lastName: userDetails.data?.last_name,
+        username: userDetails.data?.user_name,
+        rating: userDetails.data?.rating,
+        profilePic: userImages.data[0]?.image || '', // Add profilePic if available
+      });
+
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    } finally {
+      setLoading(false); // Stop loading after the request is done
+    }
+  };
+
+  // Fetch user details once the component mounts if requiredData is true
+  useEffect(() => {
+      getData();
+  }, []);
 
   // Effect to update the input width and trim input on resize
   useEffect(() => {
@@ -121,7 +169,8 @@ const NavBar = () => {
         <div className="w-16 h-16 border-2 border-black rounded-full overflow-hidden flex items-center justify-center">
           <Link href="/profile">
             <Image
-              src="/images/logo/UTrade_logo.svg" // Replace with profile image
+              // src="/images/logo/UTrade_logo.svg" // Replace with profile image
+              src={seller?.profilePic || '/images/logo/UTrade_small.svg'}
               alt="User Profile"
               width={40}
               height={40}

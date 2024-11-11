@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const [profilePicUrl, setProfilePicUrl] = useState<string>(
         seller?.profilePic || '/images/logo/UTrade_small.svg'
     );
@@ -16,26 +17,35 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
         }
     };
 
+    const postUserImage = async (image: File) => {
+        const token = localStorage.getItem('token');
+        const currentUser = localStorage.getItem('currentUser');
+        console.log("current user",currentUser);
+        const payload: Object = {
+            image: image,
+            user_name: currentUser
+        };
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, payload, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("response data:",response.data);
+        setProfilePicUrl(response.data.image);
+    }
+
     // Function to handle file selection
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
-            // Update profile picture locally
-            const newProfilePicUrl = URL.createObjectURL(file);
-            setProfilePicUrl(newProfilePicUrl);
-
-            const formData = new FormData();
-            formData.append('profilePic', file);
-
+            setLoading(true); // Start loading before the request
             try {
-                // Send file to server
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/identity/UserImages/`, formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-
-                console.log(response.data.message);  // Log success message from server
+                postUserImage(file);
             } catch (error) {
-                console.error('Error uploading profile picture:', error);
+                console.error('Error posting image', error);
+            } finally {
+                setLoading(false); // Stop loading after the request is done
             }
         }
     };
@@ -47,7 +57,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
 
         // Send a delete request to the server to reset the profile picture
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/identity/UserImages/`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
                 profilePic: '/images/logo/UTrade_small.svg',
             });
 
