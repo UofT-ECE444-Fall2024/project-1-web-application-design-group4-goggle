@@ -19,10 +19,10 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timeSent, isRead
         <p className={`${sender === 'user' ? 'text-white-bg' : 'text-heading-1'}`}>{message}</p>
 
         <Tooltip title={`Sent at ${timeSent}`} arrow>
-          <div className="pt-2 bottom-1 left-2 text-xs text-heading-1">
+          <div className={`pt-2 bottom-1 left-2 text-xs ${sender === 'user' ? 'text-white-bg' : 'text-heading-1'}`}>
             <span>{timeSent}</span>
             <div
-             className={`text-xs ${isRead ? 'text-primary' : 'text-heading-1'}`}
+             className={`text-xs ${sender === 'user' ? 'text-white-bg' : 'text-heading-1'}`}
              >
               {isRead ? 'Read' : 'Unread'}
               </div>

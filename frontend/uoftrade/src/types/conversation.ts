@@ -6,7 +6,7 @@ type Participant = {
 export type Conversation = {
     conversation_id: number;
     last_message: string;
-    last_message_timestamp: any,
+    last_message_timestamp: string,
     unread_count: number;
     participants: Participant[];
 };
