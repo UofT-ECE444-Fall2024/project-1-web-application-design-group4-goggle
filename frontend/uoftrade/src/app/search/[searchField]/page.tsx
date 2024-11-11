@@ -36,18 +36,24 @@ const SearchPage = () => {
 
   // Function to fetch posts based on filters and sorting
   const fetchPosts = async () => {
+    const { minPrice, maxPrice } = filters;
+
+    console.log("Min Price:", minPrice);  // Debugging log
+    console.log("Max Price:", maxPrice);  // Debugging log
+
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+      const response = await axios.get('/products/', {
         params: {
           search: decodedURI,
-          location: filters.location.join(','),  // Convert location array to a string
-          minPrice: filters.minPrice,
-          maxPrice: filters.maxPrice,
+          location: filters.location.join(','),
+          minPrice: minPrice ?? undefined,
+          maxPrice: maxPrice ?? undefined,
           sortPrice: sort.price,
           sortDate: sort.date,
         },
       });
+      console.log("Request URL:", response.config.url); // Log the full request URL for inspection
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -55,6 +61,7 @@ const SearchPage = () => {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchPosts();
@@ -82,7 +89,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <Loading loading={loading}/>
+      {loading && <Loading />}
       <div className="flex flex-col min-h-screen w-full">
         <NavBar />
         <Header title={`Search Results for "${decodedURI}"`} />

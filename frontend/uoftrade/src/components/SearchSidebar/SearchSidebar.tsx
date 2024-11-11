@@ -29,10 +29,15 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ filters, setFilters, sort
                     <h3 className="p-5 pl-8 text-[1.65rem] font-bold">Filters</h3>
 
                     <ParentDropDown isOpen={filterByOpen} onToggle={() => setFilterByOpen(!filterByOpen)} text={"Filter by"}>
-                        <PriceFilter
+                        {/* <PriceFilter
                             isOpen={priceFilterOpen}
                             onToggle={() => setPriceOpen(!priceFilterOpen)}
                             onPriceChange={(event) => onPriceChange(event, 'minPrice')} // Handle min price change
+                        /> */}
+                        <PriceFilter
+                            isOpen={priceFilterOpen}
+                            onToggle={() => setPriceOpen(!priceFilterOpen)}
+                            onPriceChange={onPriceChange} // Pass onPriceChange directly
                         />
                         <LocationFilter
                             isOpen={locationOpen}
