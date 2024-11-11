@@ -95,7 +95,7 @@ const ViewProfilePage = () => {
     }
   };
 
-  // Fetch user details once the component mounts if requiredData is true
+  // Fetch user details once the component mounts
   useEffect(() => {
     getData();
   }, []);
