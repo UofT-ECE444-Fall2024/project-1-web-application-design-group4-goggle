@@ -54,9 +54,15 @@ const PostListingPage = () => {
     uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
     console.log(imageFormData);
 
+    const token = localStorage.getItem('token');
+
     // Upload image text
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/product-images`, imageFormData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/product-images`, imageFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert(response.data.message || "Image upload successful!");
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -72,7 +78,11 @@ const PostListingPage = () => {
 
     // Upload form text
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/products`, textFormData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/products`, textFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert(response.data.message || "Text upload successful!");
     } catch (error) {
       console.error("Text upload failed:", error);
