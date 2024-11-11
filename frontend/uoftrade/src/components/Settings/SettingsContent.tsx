@@ -134,7 +134,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
 
   return (
     <>
-      {/* <Loading loading={loading}/> */}
+      <Loading loading={loading}/>
       <div className="flex flex-col min-h-screen w-full">
         <NavBar/>
         <div className="flex flex-col flex-grow md:flex-row">
