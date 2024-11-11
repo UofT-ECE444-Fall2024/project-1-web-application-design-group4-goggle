@@ -1,13 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
-import { CircularProgress } from '@mui/material';
 import { Message } from '@/types/message';
-import { Conversation } from '@/types/conversation';
-
-import axios from 'axios';
 
 
 const ChatBox: React.FC<{ name:string, messages:Message[], setMessages:Function, handleSendMessage:Function }> = ({ name, messages, setMessages, handleSendMessage }) => {
