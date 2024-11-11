@@ -1,10 +1,11 @@
 # views.py
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import viewsets, permissions, filters, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product, Category, ProductImage
 from .serializers import ProductSerializer, CategorySerializer, ProductImageSerializer
+from django.db.models import Q
 
 
 # Category ViewSet
@@ -23,6 +24,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'price', 'location', 'is_active', 'is_sold']
     search_fields = ['title', 'description']
     ordering_fields = ['price', 'date_posted']
+    lookup_field = 'user_name'  # Allows lookup by slug instead of ID
 
     def get_queryset(self):
         # Limit the queryset to only products that are active by default.
@@ -78,3 +80,44 @@ class ProductImageViewSet(viewsets.ModelViewSet):
             serializer.save(product=product)
         except Product.DoesNotExist:
             return Response({'error': 'Invalid product ID'}, status=status.HTTP_404_NOT_FOUND)
+
+class ProductDetail(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = "id"
+
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['user_name', 'title', 'description', 'price', 'location']
+    ordering_fields = ['user_name', 'price', 'date_posted']
+    filterset_fields = ['is_active', 'is_sold', 'date_posted']
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('q')
+        priority = self.request.query_params.get('priority')  # 'title', 'user_name', etc.
+
+        if search_query:
+            if priority == 'title' and queryset.filter(title__icontains=search_query).exists():
+                queryset = queryset.filter(title__icontains=search_query)
+            elif priority == 'user_name' and queryset.filter(user_name__icontains=search_query).exists():
+                queryset = queryset.filter(user_name__icontains=search_query)
+            elif priority == 'description' and queryset.filter(description__icontains=search_query).exists():
+                queryset = queryset.filter(description__icontains=search_query)
+            elif priority == 'price' and queryset.filter(price__icontains=search_query).exists():
+                queryset = queryset.filter(price__icontains=search_query)
+            elif priority == 'location' and queryset.filter(location__icontains=search_query).exists():
+                queryset = queryset.filter(location__icontains=search_query)
+            else:
+                # Fall back on general search if no specific priority match
+                queryset = queryset.filter(
+                    Q(title__icontains=search_query) |
+                    Q(user_name__icontains=search_query) |
+                    Q(description__icontains=search_query) |
+                    Q(price__icontains=search_query) |
+                    Q(location__icontains=search_query)
+                )
+
+        return queryset.order_by("user_name")
