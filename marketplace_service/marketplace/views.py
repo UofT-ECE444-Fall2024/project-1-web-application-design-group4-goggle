@@ -90,7 +90,7 @@ class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
-    search_fields = ['user_name', 'title', 'description', 'price', 'location', 'category']
+    search_fields = ['user_name', 'title', 'description', 'price', 'location']
     ordering_fields = ['user_name', 'price', 'date_posted']
     filterset_fields = ['is_active', 'is_sold', 'date_posted']
     
@@ -110,13 +110,14 @@ class ProductList(generics.ListAPIView):
         # Get price_order (ascending or descending)
         price_order = self.request.query_params.get('price_order', 'asc').lower()
 
+        # Get locations from the URL (comma-separated)
+        locations = self.request.query_params.get('locations')
+
         # Apply title search filter if query is provided
         if search_query:
             if priority == 'title' and queryset.filter(title__icontains=search_query).exists():
                 queryset = queryset.filter(title__icontains=search_query)
             elif priority == 'user_name' and queryset.filter(user_name__icontains=search_query).exists():
-                queryset = queryset.filter(user_name__icontains=search_query)
-            elif priority == 'category' and queryset.filter(user_name__icontains=search_query).exists():
                 queryset = queryset.filter(user_name__icontains=search_query)
             elif priority == 'description' and queryset.filter(description__icontains=search_query).exists():
                 queryset = queryset.filter(description__icontains=search_query)
@@ -129,7 +130,6 @@ class ProductList(generics.ListAPIView):
                 queryset = queryset.filter(
                     Q(title__icontains=search_query) |
                     Q(user_name__icontains=search_query) |
-                    Q(category__icontains=search_query) |
                     Q(description__icontains=search_query) |
                     Q(price__icontains=search_query) |
                     Q(location__icontains=search_query)
@@ -157,6 +157,11 @@ class ProductList(generics.ListAPIView):
         else:
             # Default sorting, in case price_order is invalid or not provided
             queryset = queryset.order_by("user_name")  # Default sort order
+
+        # Apply location filtering if 'locations' parameter is provided
+        if locations:
+            location_list = locations.split(',')
+            queryset = queryset.filter(location__in=location_list)
 
         return queryset
 
