@@ -15,9 +15,9 @@ const SellerInfo: React.FC<{ sellerInfo: Seller | undefined, buttonLink: string,
     <div className="h-full flex flex-col items-center p-4 bg-white-bg rounded-lg shadow-lg">
       {/* Profile Picture - Using Next.js Image component */}
       <div className="w-1/2 aspect-square rounded-full overflow-hidden border-2 border-primary shadow-lg">
-        <Image 
-          src={(sellerInfo?.profilePic) ? sellerInfo.profilePic : ''} 
-          alt="Seller Profile" 
+        <img
+          src={sellerInfo?.profilePic || '/images/logo/UTrade_small.svg'}
+          alt="Profile Picture"
           width={160} // Equivalent to w-40
           height={160} // Equivalent to h-40
           className="w-full h-full object-cover"
