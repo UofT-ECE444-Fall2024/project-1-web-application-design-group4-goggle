@@ -33,7 +33,7 @@ const CreatePostTextBoxes = ({
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
     await onPublish(data);
-    router.push("/home"); // Redirect to success page
+    // router.push("/home"); // Redirect to success page
   };
 
   const buttonText = isEdit ? "Save Changes" : "Publish";

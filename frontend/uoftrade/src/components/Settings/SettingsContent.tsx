@@ -33,42 +33,25 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
 
-  /** This function gets the current users data and optionally gets their listings if the parameter is true 
+  // Fetch user details once the component mounts if requiredData is true
+  useEffect(() => {
+    /** This function gets the current users data and optionally gets their listings if the parameter is true 
    * then it sets the appropriate states
   */
-  const getData = async () => {
-    const currentUser = localStorage.getItem('currentUser');
-    const token = localStorage.getItem('token');
-    
-    setLoading(true); // Start loading before the request
-    try {
-      //get current user details
-      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const getData = async () => {
+      const currentUser = localStorage.getItem('currentUser');
+      const token = localStorage.getItem('token');
 
-      const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          user_name: currentUser,
-        }
-      });
+      setLoading(true); // Start loading before the request
+      try {
+        //get current user details
+        const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      // Set the seller data once the API response is received
-      setSeller({
-        firstName: userDetails.data?.first_name,
-        lastName: userDetails.data?.last_name,
-        username: userDetails.data?.user_name,
-        rating: userDetails.data?.rating,
-        profilePic: userImages.data[0]?.image || '', // Add profilePic if available
-      });
-
-      if (requiresListingData) {
-        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+        const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -77,41 +60,58 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
           }
         });
 
-        const listingsArr:Listing[] = userListings.data?.map((product: any) => {
-
-          let sellerName = `${seller?.firstName} ${seller?.lastName}`
-
-          return {
-            id: product?.id,
-            title: product?.title,
-            price: product?.price,
-            description: product?.description,
-            images: product?.images || '', // Assuming the product has an image
-            location: product?.location,
-            seller: {
-              name: sellerName || 'Unknown Seller', // Use the seller name from state
-              username: seller?.username || '',
-              image: seller?.profilePic || '', // Use the seller image from state
-              rating: seller?.rating || 0, // Use the seller rating from state
-            },
-            tags: product?.category ? [product.category] : [], // Add category as a tag, if available
-            publishDate: product?.date_posted,
-          };
+        // Set the seller data once the API response is received
+        setSeller({
+          firstName: userDetails.data?.first_name,
+          lastName: userDetails.data?.last_name,
+          username: userDetails.data?.user_name,
+          rating: userDetails.data?.rating,
+          profilePic: userImages.data[userImages.data.length -1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '', // Add profilePic if available
         });
 
-        //update the listings state
-        setListings(listingsArr);
+        if (requiresListingData) {
+          const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              user_name: currentUser,
+            }
+          });
+
+          const listingsArr: Listing[] = userListings.data?.map((product: any) => {
+
+            let sellerName = `${seller?.firstName} ${seller?.lastName}`
+
+            return {
+              id: product?.id,
+              title: product?.title,
+              price: product?.price,
+              description: product?.description,
+              images: product?.images || '', // Assuming the product has an image
+              location: product?.location,
+              seller: {
+                name: sellerName || 'Unknown Seller', // Use the seller name from state
+                username: seller?.username || '',
+                image: seller?.profilePic || '', // Use the seller image from state
+                rating: seller?.rating || 0, // Use the seller rating from state
+              },
+              tags: product?.category ? [product.category] : [], // Add category as a tag, if available
+              publishDate: product?.date_posted,
+            };
+          });
+
+          //update the listings state
+          setListings(listingsArr);
+        }
+
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      } finally {
+        setLoading(false); // Stop loading after the request is done
       }
+    };
 
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    } finally {
-      setLoading(false); // Stop loading after the request is done
-    }
-  };
-
-  // Fetch user details once the component mounts if requiredData is true
-  useEffect(() => {
     if (requiresData) {
       getData();
     } else {
@@ -131,26 +131,27 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
       return <ContentComponent />;
     }
   };
-
-  return (
-    <>
-      <Loading loading={loading}/>
-      <div className="flex flex-col min-h-screen w-full">
-        <NavBar/>
-        <div className="flex flex-col flex-grow md:flex-row">
-          <SettingSidebar highlightIndex={highlightIndex} />
-          {!isMobile && (
-            <div className="flex-grow z-30 transition-all duration-300">
-              {getContentComponentWithProps()}
-            </div>
-          )}
-          {isMobile && getContentComponentWithProps()}
+  if (loading) { return <Loading loading={loading} /> }
+  else {
+    return (
+      <>
+        <div className="flex flex-col min-h-screen w-full">
+          <NavBar/>
+          <div className="flex flex-col flex-grow md:flex-row">
+            <SettingSidebar highlightIndex={highlightIndex} />
+            {!isMobile && (
+              <div className="flex-grow z-30 transition-all duration-300">
+                {getContentComponentWithProps()}
+              </div>
+            )}
+            {isMobile && getContentComponentWithProps()}
+          </div>
+          <Footer/>
         </div>
-        <Footer/>
-      </div>
-    </>
-    
-  );
-};
+      </>
+      
+    );
+  };
+}
 
 export default SettingsContent;

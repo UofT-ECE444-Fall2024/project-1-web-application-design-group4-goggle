@@ -146,7 +146,7 @@ const EditListingPage = () => {
     uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/product-images/`, imageFormData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, imageFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

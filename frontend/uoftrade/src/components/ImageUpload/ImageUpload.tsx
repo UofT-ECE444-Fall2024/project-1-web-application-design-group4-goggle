@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import Image from "next/image";
 import DeleteIcon from '@mui/icons-material/Delete';
 import InlineErrorMessage from '../InlineErrorMessage/InlineErrorMessage'; // Assuming this component is in the same directory
@@ -21,6 +21,26 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [totalImagesCount, setTotalImagesCount] = useState(initialPreviews.length);
   const MAX_IMAGES = 10;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Function to handle "Change Picture" button click
+  const handleImageUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();  // Open file input dialog
+    }
+  };
+
+  // Function to handle file selection
+  // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+  //     try {
+  //       postUserImage(file);
+  //     } catch (error) {
+  //       console.error('Error posting image', error);
+  //     }
+  //   }
+  // };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -81,17 +101,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
     <div className="w-full">
       <div
         className="aspect-square bg-light-grey rounded-lg flex flex-col items-center justify-center cursor-pointer border-[3px] border-outline-grey hover:border-primary transition w-full"
-        onClick={() => document.getElementById("fileInput")?.click()}
+        onClick={handleImageUpload}
       >
         <span className="text-4xl user-select-none font-bold text-heading-1">+</span>
         <span className="text-2xl user-select-none font-bold text-heading-1">Add photo</span>
-        <input
+        {/* <input
           id="fileInput"
           type="file"
           accept="image/*"
           multiple
           onChange={handleImageChange}
           className="hidden"
+        /> */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".png, .jpeg, .jpg"
+          multiple
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
         />
       </div>
 

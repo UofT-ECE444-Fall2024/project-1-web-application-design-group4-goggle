@@ -5,10 +5,6 @@ import axios from 'axios';
 
 const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [profilePicUrl, setProfilePicUrl] = useState<string>(
-        seller?.profilePic || '/images/logo/UTrade_small.svg'
-    );
 
     // Function to handle "Change Picture" button click
     const handleChangePictureClick = () => {
@@ -32,20 +28,18 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
             },
         });
         console.log("response data:",response.data);
-        setProfilePicUrl(response.data.image);
+
+        window.location.reload();
     }
 
     // Function to handle file selection
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
-            setLoading(true); // Start loading before the request
             try {
                 postUserImage(file);
             } catch (error) {
                 console.error('Error posting image', error);
-            } finally {
-                setLoading(false); // Stop loading after the request is done
             }
         }
     };
@@ -53,7 +47,6 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
     // Function to handle "Delete Picture" button click
     const handleDeletePicture = async () => {
         // Reset to the default image locally
-        setProfilePicUrl('/images/logo/UTrade_small.svg');
 
         // Send a delete request to the server to reset the profile picture
         try {
@@ -70,12 +63,12 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
     return (
         <div className="container my-8 flex flex-row">
             <div className="w-40 h-40 rounded-full flex items-center justify-center">
-                <Image
-                    src={profilePicUrl}
+                <img
+                    src={seller?.profilePic || '/images/logo/UTrade_small.svg'}
                     alt="Profile Picture"
                     width={0}
                     height={0}
-                    className={`my-5 w-full h-full ${profilePicUrl === '/images/logo/UTrade_small.svg' ? 'object-scale-down' : 'object-cover'} rounded-full border-4 border-primary flex `}
+                    className={`my-5 w-full h-full ${seller?.profilePic === '/images/logo/UTrade_small.svg' ? 'object-scale-down' : 'object-cover'} rounded-full border-4 border-primary flex `}
                 />
             </div>
             <div className="ml-16 flex flex-col justify-around">

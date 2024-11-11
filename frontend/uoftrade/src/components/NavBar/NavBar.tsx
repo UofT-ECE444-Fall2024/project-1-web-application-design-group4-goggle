@@ -62,7 +62,7 @@ const NavBar = () => {
         lastName: userDetails.data?.last_name,
         username: userDetails.data?.user_name,
         rating: userDetails.data?.rating,
-        profilePic: userImages.data[0]?.image || '', // Add profilePic if available
+        profilePic: userImages.data[userImages.data.length - 1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '', // Add profilePic if available
       });
 
     } catch (error) {
@@ -168,13 +168,12 @@ const NavBar = () => {
         {/* User Profile Image */}
         <div className="w-16 h-16 border-2 border-black rounded-full overflow-hidden flex items-center justify-center">
           <Link href="/profile">
-            <Image
-              // src="/images/logo/UTrade_logo.svg" // Replace with profile image
+            <img
               src={seller?.profilePic || '/images/logo/UTrade_small.svg'}
-              alt="User Profile"
+              alt="Profile Picture"
               width={40}
               height={40}
-              className="w-full h-full object-cover" // Ensure the image fills the container
+              className="w-full h-full object-cover"
             />
           </Link>
         </div>
