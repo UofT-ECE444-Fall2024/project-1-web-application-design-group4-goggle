@@ -43,9 +43,9 @@ const SearchPage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get('/products/', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list/`, {
         params: {
-          search: decodedURI,
+          q: decodedURI,
           location: filters.location.join(','),
           minPrice: minPrice ?? undefined,
           maxPrice: maxPrice ?? undefined,
