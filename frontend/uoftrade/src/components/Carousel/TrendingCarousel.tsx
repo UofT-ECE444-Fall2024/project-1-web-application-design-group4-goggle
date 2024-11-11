@@ -1,59 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { Listing } from "@/types/listing";
 import ListingCard from '../Listing/ListingCard';
 
-const TrendingCarousel = () => {
-
-  const listingData: Listing[] = [
-    {
-      id: 1,
-      title: "Microwave",
-      price: "$28",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      images: ["/images/misc/microwave.jpg"],
-      seller: {
-        name: "Guy Dude",
-        image: "/images/logo/UTrade_small.svg",
-        rating: 4.5,
-      },
-      tags: ["Appliances"],
-      publishDate: "Nov 2th, 2024",
-    },
-    {
-      id: 2,
-      title: "Textbook",
-      price: "$25",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      images: ["/images/misc/textbook.jpg"],
-      seller: {
-        name: "Guy Dude",
-        image: "/images/logo/UTrade_small.svg",
-        rating: 4.5,
-      },
-      tags: ["Textbooks"],
-      publishDate: "Nov 3th, 2024",
-    },
-    {
-      id: 3,
-      title: "Chair",
-      price: "$32",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
-      images: ["/images/misc/chair.jpg"],
-      seller: {
-        name: "Guy Dude",
-        image: "/images/logo/UTrade_small.svg",
-        rating: 4.5,
-      },
-      tags: ["Furniture"],
-      publishDate: "Nov 4th, 2024",
-    },
-  ];
+const TrendingCarousel: React.FC<{ listingData:Listing[] }> = ({ listingData }) => {
 
   // Duplicate items to create a seamless loop effect
   const scrollingItems = [...listingData, ...listingData]; // Duplicate the items

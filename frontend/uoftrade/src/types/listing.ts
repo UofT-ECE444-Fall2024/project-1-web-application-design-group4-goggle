@@ -10,6 +10,7 @@ export type Listing = {
     title: string;
     price: string;
     description: string;
+    location: string;
     images: Array<any>;
     seller: Seller;
     tags: string[];
