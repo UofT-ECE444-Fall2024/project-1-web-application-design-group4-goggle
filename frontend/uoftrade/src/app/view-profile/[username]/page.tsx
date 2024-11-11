@@ -28,7 +28,7 @@ const ViewProfilePage = () => {
     setLoading(true); // Start loading before the request
     try {
       //get current user details
-      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${username}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
