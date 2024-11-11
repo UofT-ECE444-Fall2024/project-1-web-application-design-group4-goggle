@@ -5,15 +5,15 @@ import React, { useState } from 'react';
 import { Send } from '@mui/icons-material';
 
 interface MessageInputProps {
-  onSendMessage: (message: string) => void;
+  handleSendMessage: Function
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ handleSendMessage }) => {
   const [message, setMessage] = useState('');
 
-  const handleSendMessage = () => {
+  const onSendMessage = () => {
     if (message.trim()) {
-      onSendMessage(message);
+      handleSendMessage(message);
       setMessage('');
     }
   };
@@ -24,12 +24,12 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+        onKeyDown={(e) => e.key === 'Enter' && onSendMessage()}
         placeholder="Type a message..."
         className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
       />
       <button
-        onClick={handleSendMessage}
+        onClick={onSendMessage}
         className="ml-3 p-2 bg-primary text-white rounded-lg hover:bg-primary-dark focus:outline-none"
       >
         <Send/>
