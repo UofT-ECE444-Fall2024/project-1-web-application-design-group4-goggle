@@ -14,6 +14,7 @@ import redis
 import json
 import base64 
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from .models import UofTUser, Conversation, Message
 from .serializers import *
 from .authentication import UofT_JWTAuthentication
@@ -56,6 +57,17 @@ class UserList(generics.ListAPIView):
                 Q(full_name__icontains=search_query)
             )
         return queryset.order_by("first_name")
+    
+class UpdateUserView(APIView):
+
+    def put(self, request, user_name, *args, **kwargs):
+        user = get_object_or_404(UofTUser, user_name=user_name)
+        serializer = UofTUserUpdateSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserImageViewSet(viewsets.ModelViewSet):
     queryset = UserImage.objects.all()

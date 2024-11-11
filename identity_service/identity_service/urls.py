@@ -30,6 +30,7 @@ urlpatterns = [
     path('user-list', UserList.as_view(), name='user-list'),
     path('info/<str:user_name>', UserDetail.as_view(), name='info'),
     path('name/<str:email>', UserName.as_view(), name='name'),
+    path('user-update/<str:user_name>', UpdateUserView.as_view(), name='user-update'),
     path('admin/', admin.site.urls),
     path('auth', AuthenticateToken.as_view(), name='auth'),
     path('register', RegisterUserView.as_view(), name='register'),
