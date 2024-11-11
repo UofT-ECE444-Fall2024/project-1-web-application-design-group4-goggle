@@ -68,7 +68,7 @@ const HomePage = () => {
         })
       );
   
-      setListings(listingsArr || []);
+      setListings(listingsArr || listings);
 
     } catch (error) {
       console.error('Error fetching product details:', error);

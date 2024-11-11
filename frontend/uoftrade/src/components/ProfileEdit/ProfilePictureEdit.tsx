@@ -29,7 +29,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
 
             try {
                 // Send file to server
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}UserImages`, formData, {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/identity/UserImages/`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
 
@@ -47,7 +47,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
 
         // Send a delete request to the server to reset the profile picture
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}UserImages`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/identity/UserImages/`, {
                 profilePic: '/images/logo/UTrade_small.svg',
             });
 

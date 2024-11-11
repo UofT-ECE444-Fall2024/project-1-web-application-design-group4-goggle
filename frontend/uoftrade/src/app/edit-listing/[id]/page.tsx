@@ -145,7 +145,7 @@ const EditListingPage = () => {
     uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}product-images`, imageFormData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/product-images/`, imageFormData);
       alert(response.data.message || "Image upload successful!");
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -160,7 +160,7 @@ const EditListingPage = () => {
     textFormData.append("sold", String(sold)); // Include the "sold" status
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}products`, textFormData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/products`, textFormData);
       alert(response.data.message || "Text upload successful!");
     } catch (error) {
       console.error("Text upload failed:", error);
