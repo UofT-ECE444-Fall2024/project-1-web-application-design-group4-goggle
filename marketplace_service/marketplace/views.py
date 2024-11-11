@@ -96,9 +96,18 @@ class ProductList(generics.ListAPIView):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        search_query = self.request.query_params.get('q')
-        priority = self.request.query_params.get('priority')  # 'title', 'user_name', etc.
 
+        # Get search query for title
+        search_query = self.request.query_params.get('q')
+
+        # Get priority field (title, user_name, etc.)
+        priority = self.request.query_params.get('priority')
+
+        # Get price range parameters
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
+
+        # Apply title search filter if query is provided
         if search_query:
             if priority == 'title' and queryset.filter(title__icontains=search_query).exists():
                 queryset = queryset.filter(title__icontains=search_query)
@@ -120,4 +129,19 @@ class ProductList(generics.ListAPIView):
                     Q(location__icontains=search_query)
                 )
 
+        # Apply price range filtering if parameters are provided and valid
+        if min_price or max_price:
+            try:
+                if min_price:
+                    min_price = float(min_price)
+                    queryset = queryset.filter(price__gte=min_price)
+                if max_price:
+                    max_price = float(max_price)
+                    queryset = queryset.filter(price__lte=max_price)
+            except ValueError:
+                # Skip price filter if invalid input, but don't modify the queryset
+                pass  # Do nothing, just continue with the current queryset
+
+        # Return queryset ordered by user_name (or any other default order)
         return queryset.order_by("user_name")
+
