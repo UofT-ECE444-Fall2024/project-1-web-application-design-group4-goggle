@@ -8,18 +8,18 @@ interface CampusFilterProps {
     onCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CampusFilter: React.FC<CampusFilterProps> = ({ isOpen, onToggle, checkboxes, onCheckboxChange }) => (
+const LocationFilter: React.FC<CampusFilterProps> = ({ isOpen, onToggle, checkboxes, onCheckboxChange }) => (
     <div className="p-3 pl-8 w-full hover:bg-light-grey">
         <button onClick={onToggle} className="flex justify-between w-full text-left">
-            Campus
+            Location
             <span>{isOpen ? '▲' : '▼'}</span>
         </button>
         {isOpen && (
             <div className="pl-4 mt-2 space-y-1">
-                {["utsg", "utm", "utsc"].map((name) => (
+                {["Myhal", "Bahen", "Gerstein", "Robarts", "Sidney Smith", "Medical Science", "Other"].map((name) => (
                     <LabelledCheckbox
                         key={name}
-                        label={`${name.toUpperCase()} - ${name === "utsg" ? "St. George" : name === "utm" ? "Mississauga" : "Scarborough"}`}
+                        label={name}
                         name={name}
                         checked={checkboxes[name]}
                         onChange={onCheckboxChange}
@@ -30,4 +30,4 @@ const CampusFilter: React.FC<CampusFilterProps> = ({ isOpen, onToggle, checkboxe
     </div>
 );
 
-export default CampusFilter;
+export default LocationFilter;

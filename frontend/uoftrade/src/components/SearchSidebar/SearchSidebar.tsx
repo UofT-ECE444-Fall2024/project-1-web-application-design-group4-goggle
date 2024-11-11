@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PriceFilter from "./PriceFilter";
-import CampusFilter from "./CampusFilter";
+import LocationFilter from "./LocationFilter";
 import ParentDropDown from "./ParentDropDown";
 import SortMenu from "./SortMenu";
 
@@ -8,15 +8,19 @@ const SearchSidebar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [filterByOpen, setFilterByOpen] = useState(true);
     const [priceFilterOpen, setPriceOpen] = useState(true);
-    const [campusOpen, setCampusOpen] = useState(true);
+    const [locationOpen, setLocationOpen] = useState(true);
     const [sortByOpen, setSortByOpen] = useState(true);
     const [priceSortOpen, setPriceSortOpen] = useState(true);
     const [dateSortOpen, setDateSortOpen] = useState(true);
 
     const [checkboxes, setCheckboxes] = useState<Record<string, boolean>>({
-        utsg: true,
-        utm: false,
-        utsc: false,
+        "Myhal": true,
+        "Bahen": true,
+        "Gerstein": true,
+        "Robarts": true,
+        "Sidney Smith": true,
+        "Medical Science": true,
+        "Other": true,
     });
 
     const [selectedPriceSort, setSelectedPriceSort] = useState("Lowest to Highest");
@@ -48,7 +52,7 @@ const SearchSidebar: React.FC = () => {
 
                     <ParentDropDown isOpen={filterByOpen} onToggle={() => setFilterByOpen(!filterByOpen)} text={"Filter by"}>
                         <PriceFilter isOpen={priceFilterOpen} onToggle={() => setPriceOpen(!priceFilterOpen)} />
-                        <CampusFilter isOpen={campusOpen} onToggle={() => setCampusOpen(!campusOpen)} checkboxes={checkboxes} onCheckboxChange={handleCheckboxChange} />
+                        <LocationFilter isOpen={locationOpen} onToggle={() => setLocationOpen(!locationOpen)} checkboxes={checkboxes} onCheckboxChange={handleCheckboxChange} />
                     </ParentDropDown>
 
                     <ParentDropDown isOpen={sortByOpen} onToggle={() => setSortByOpen(!sortByOpen)} text={"Sort by"}>
