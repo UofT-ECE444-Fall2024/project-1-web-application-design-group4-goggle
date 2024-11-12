@@ -31,15 +31,15 @@ const HomePage = () => {
         console.log(productsData);
     
         // Create an array of promises using .map() inside Promise.all
-        await Promise.all(
-          productsData.map(async (product: any) => {
-            // Fetch user details and images asynchronously
+        for (const product of productsData) {
+          try {
+            // Fetch user details and images sequentially
             const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.data?.user_name}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
-    
+        
             const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -48,9 +48,9 @@ const HomePage = () => {
                 user_name: product?.data?.user_name,
               },
             });
-    
+        
             const sellerName = `${userDetails?.data?.firstName} ${userDetails?.data?.lastName}`;
-    
+        
             listings.push({
               id: product?.id,
               title: product?.title,
@@ -67,8 +67,11 @@ const HomePage = () => {
               tags: product?.category ? [product.category] : [],
               publishDate: product?.date_posted,
             });
-          })
-        );
+        
+          } catch (error) {
+            console.error('Error processing product', product?.id, error);
+          }
+        }
         
         console.log(listings);
         setListings(listings)
