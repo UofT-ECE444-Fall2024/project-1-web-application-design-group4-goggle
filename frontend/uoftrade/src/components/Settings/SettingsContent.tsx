@@ -79,30 +79,27 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
             }
           });
 
-          const listingsArr: Listing[] = userListings.data?.map((product: any) => {
+          userListings.data?.forEach((product: any) => {
 
-            let sellerName = `${seller?.firstName} ${seller?.lastName}`
+            let sellerName = `${userDetails.data?.first_name} ${userDetails.data?.last_name}`
 
-            return {
+            listings.push ({
               id: product?.id,
               title: product?.title,
               price: product?.price,
               description: product?.description,
-              images: product?.images || '', // Assuming the product has an image
+              image: product?.images?.[0].image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2") || '', // Assuming the product has an image
               location: product?.location,
               seller: {
                 name: sellerName || 'Unknown Seller', // Use the seller name from state
-                username: seller?.username || '',
-                image: seller?.profilePic || '', // Use the seller image from state
-                rating: seller?.rating || 0, // Use the seller rating from state
+                username: userDetails.data?.user_name || '',
+                image: userImages.data[userImages.data.length - 1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '', // Use the seller image from state
+                rating: userDetails.data?.rating || 0, // Use the seller rating from state
               },
               tags: product?.category ? [product.category] : [], // Add category as a tag, if available
               publishDate: product?.date_posted,
-            };
+            });
           });
-
-          //update the listings state
-          setListings(listingsArr);
         }
 
       } catch (error) {

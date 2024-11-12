@@ -112,9 +112,24 @@ class ProductList(generics.ListAPIView):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        search_query = self.request.query_params.get('q')
-        priority = self.request.query_params.get('priority')  # 'title', 'user_name', etc.
 
+        # Get search query for title
+        search_query = self.request.query_params.get('q')
+
+        # Get priority field (title, user_name, etc.)
+        priority = self.request.query_params.get('priority')
+
+        # Get price range parameters
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
+
+        # Get price_order (ascending or descending)
+        price_order = self.request.query_params.get('price_order', 'asc').lower()
+
+        # Get locations from the URL (comma-separated)
+        locations = self.request.query_params.get('locations')
+
+        # Apply title search filter if query is provided
         if search_query:
             if priority == 'title' and queryset.filter(title__icontains=search_query).exists():
                 queryset = queryset.filter(title__icontains=search_query)
@@ -136,4 +151,33 @@ class ProductList(generics.ListAPIView):
                     Q(location__icontains=search_query)
                 )
 
-        return queryset.order_by("user_name")
+        # Apply price range filtering if parameters are provided and valid
+        if min_price or max_price:
+            try:
+                if min_price:
+                    min_price = float(min_price)
+                    queryset = queryset.filter(price__gte=min_price)
+                if max_price:
+                    max_price = float(max_price)
+                    queryset = queryset.filter(price__lte=max_price)
+            except ValueError:
+                # Skip price filter if invalid input, but don't modify the queryset
+                pass  # Do nothing, just continue with the current queryset
+
+        # Apply sorting by price if price_order is provided
+        if price_order in ['asc', 'desc']:
+            if price_order == 'asc':
+                queryset = queryset.order_by('price')  # Lowest to highest
+            elif price_order == 'desc':
+                queryset = queryset.order_by('-price')  # Highest to lowest
+        else:
+            # Default sorting, in case price_order is invalid or not provided
+            queryset = queryset.order_by("user_name")  # Default sort order
+
+        # Apply location filtering if 'locations' parameter is provided
+        if locations:
+            location_list = locations.split(',')
+            queryset = queryset.filter(location__in=location_list)
+
+        return queryset
+

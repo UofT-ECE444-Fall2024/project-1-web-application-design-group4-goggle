@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
@@ -12,6 +12,11 @@ import Loading from "@/components/Loading/Loading";
 const PostListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [product_id, setProduct_id] = useState<string>("");
+
+  useEffect(() => {
+    console.log(uploadedImages)
+  }, [uploadedImages])
 
   const handleImagesChange = (newImages: File[]) => {
     setUploadedImages((prevImages) => {
@@ -47,6 +52,60 @@ const PostListingPage = () => {
     console.log("Uplaoded Images",uploadedImages);
   };
 
+  // const postUserImages = async (images: File[]) => {
+  //   const token = localStorage.getItem('token');
+  //   const currentUser = localStorage.getItem('currentUser');
+  //   console.log("current user", currentUser);
+
+  //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, images, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
+  //   console.log("response data:", response.data);
+  // }
+
+  const postUserImages = async (image: File, id: number) => {
+    const token = localStorage.getItem('token');
+    console.log("image:",image);
+    const currentUser = localStorage.getItem('currentUser');
+    console.log("current user", currentUser);
+    const payload: Object = {
+      image: image,
+      product: id
+    };
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("response data:", response.data);
+  }
+
+  const postTextData = async (textData: any, images: File[], useImages: boolean) => {
+    const token = localStorage.getItem('token');
+    const currentUser = localStorage.getItem('currentUser');
+    const payload: Object = {
+      title: textData.title,
+      price: textData.price,
+      description: textData.description,
+      location: textData.location.replace(/\s+/g, ''),
+      category: textData.category,
+      ...(useImages ? { images: images } : {}), // Conditionally include images field
+      user_name: currentUser
+    };
+    return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // alert(response.data.message || "Text upload successful!");
+  }
+
   const handlePublish = async (textData: any) => {
     console.log(uploadedImages);
     uploadedImages.forEach((image, index) => console.log(`image${index}`, image));
@@ -54,36 +113,12 @@ const PostListingPage = () => {
     uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
     console.log(imageFormData);
 
-    const token = localStorage.getItem('token');
-
-    // Upload image text
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/product-images`, imageFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert(response.data.message || "Image upload successful!");
-    } catch (error) {
-      console.error("Image upload failed:", error);
-    }
+      const response = await postTextData(textData, uploadedImages, false);
 
-    const textFormData = new FormData();
-    textFormData.append("title", textData.title);
-    textFormData.append("price", textData.price);
-    textFormData.append("description", textData.description);
-    textFormData.append("location", textData.location.replace(/\s+/g, ''));
-    textFormData.append("category", textData.category);
-    console.log(textFormData);
-
-    // Upload form text
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/products`, textFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert(response.data.message || "Text upload successful!");
+      for (const image of uploadedImages) {
+        await postUserImages(image, response?.data?.id);
+      }
     } catch (error) {
       console.error("Text upload failed:", error);
     }

@@ -36,25 +36,38 @@ const SearchPage = () => {
 
   // Function to fetch posts based on filters and sorting
   const fetchPosts = async () => {
+    const { minPrice, maxPrice } = filters;
+
+    const token = localStorage.getItem('token');
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
-          search: decodedURI,
-          location: filters.location.join(','),  // Convert location array to a string
-          minPrice: filters.minPrice,
-          maxPrice: filters.maxPrice,
-          sortPrice: sort.price,
-          sortDate: sort.date,
+          q: decodedURI,
+          location: filters.location.join(','),
+          min_price: minPrice ?? undefined,
+          max_price: maxPrice ?? undefined,
+          price_order: sort.price === "Lowest to Highest" ? "asc" : "desc",
         },
       });
-      setPosts(response.data);
+      console.log("Request URL:", response.config.url); // Log the full request URL for inspection
+
+      response.data.forEach( (post: any) => {
+        posts.push(post);
+      });
+
+      console.log(posts);
+      
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchPosts();
@@ -80,43 +93,48 @@ const SearchPage = () => {
     }));
   };
 
-  return (
-    <>
-      <Loading loading={loading}/>
-      <div className="flex flex-col min-h-screen w-full">
-        <NavBar />
-        <Header title={`Search Results for "${decodedURI}"`} />
-        <div className="flex flex-row flex-grow">
-          <SearchSidebar
-            filters={filters}
-            setFilters={setFilters}
-            sort={sort}
-            setSort={setSort}
-            onLocationChange={handleLocationChange}  // Pass the location change handler
-            onPriceChange={handlePriceChange}  // Pass the price change handler
-          />
-          <div className="flex-grow z-30 transition-all duration-300 flex justify-center">
-            <div className="flex flex-col m-[2rem] gap-[1rem] max-w-[80%]">
-              {posts.length === 0 ? (
-                <div>No results found</div>
-              ) : (
-                posts.map((post: any) => (
-                  <PostCard
-                    key={post.id}
-                    image={`/product-images/${post.image}`}
-                    title={post.title}
-                    price={post.price}
-                    description={post.description}
-                  />
-                ))
-              )}
+  if (loading) {
+    return <Loading loading={loading}/>
+  }
+  else {
+    return (
+      <>
+        <div className="flex flex-col min-h-screen w-full">
+          <NavBar />
+          <Header title={`Search Results for "${decodedURI}"`} />
+          <div className="flex flex-row flex-grow">
+            <SearchSidebar
+              filters={filters}
+              setFilters={setFilters}
+              sort={sort}
+              setSort={setSort}
+              onLocationChange={handleLocationChange}  // Pass the location change handler
+              onPriceChange={handlePriceChange}  // Pass the price change handler
+            />
+            <div className="flex-grow z-30 transition-all duration-300 flex justify-center">
+              <div className="flex flex-col m-[2rem] gap-[1rem] max-w-[80%]">
+                {posts.length === 0 ? (
+                  <div>No results found</div>
+                ) : (
+                  posts.map((post: any) => (
+                    <PostCard
+                      id={post.id}
+                      key={post.id}
+                      image={post?.images?.[0]?.image}
+                      title={post.title}
+                      price={post.price}
+                      description={post.description}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 export default SearchPage;
