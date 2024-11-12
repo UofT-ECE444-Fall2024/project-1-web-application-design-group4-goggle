@@ -1,12 +1,10 @@
-'use client';
-
+"use client";
+import React, { useState, useEffect } from "react";
 import NavBar from '@/components/NavBar/NavBar';
 import { useParams } from 'next/navigation';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
-import React, { useState, useEffect } from "react";
 import SearchSidebar from "@/components/SearchSidebar/SearchSidebar";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import PostCard from '@/components/PostCard/PostCard';
 import Loading from '@/components/Loading/Loading';
 import axios from 'axios';
@@ -17,15 +15,13 @@ interface SortState {
 }
 
 const SearchPage = () => {
-  const { searchField } = useParams(); // Get the dynamic category from the URL
+  const { searchField } = useParams();
   const decodedURI = Array.isArray(searchField) ? decodeURIComponent(searchField[0]) : decodeURIComponent(searchField || '');
 
-  const [posts, setPosts] = useState<any[]>([]); // Store posts from the server
+  const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // State for filters and sorting
   const [filters, setFilters] = useState({
-    location: [] as string[],  // List of selected locations
+    location: [] as string[],
     minPrice: null as number | null,
     maxPrice: null as number | null,
   });
@@ -34,17 +30,13 @@ const SearchPage = () => {
     date: "Most Recent",
   });
 
-  // Function to fetch posts based on filters and sorting
   const fetchPosts = async () => {
     const { minPrice, maxPrice } = filters;
-
     const token = localStorage.getItem('token');
     setLoading(true);
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         params: {
           q: decodedURI,
           location: filters.location.join(','),
@@ -53,14 +45,7 @@ const SearchPage = () => {
           price_order: sort.price === "Lowest to Highest" ? "asc" : "desc",
         },
       });
-      console.log("Request URL:", response.config.url); // Log the full request URL for inspection
-
-      response.data.forEach( (post: any) => {
-        posts.push(post);
-      });
-
-      console.log(posts);
-      
+      setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -68,12 +53,10 @@ const SearchPage = () => {
     }
   };
 
-
   useEffect(() => {
     fetchPosts();
-  }, [filters, sort]); // Re-fetch data when filters or sorting changes
+  }, [filters, sort]);
 
-  // Handle location checkbox change
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     setFilters((prevFilters) => {
@@ -84,7 +67,6 @@ const SearchPage = () => {
     });
   };
 
-  // Handle price input changes
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>, field: 'minPrice' | 'maxPrice') => {
     const value = event.target.value ? parseInt(event.target.value) : null;
     setFilters((prevFilters) => ({
@@ -94,9 +76,8 @@ const SearchPage = () => {
   };
 
   if (loading) {
-    return <Loading loading={loading}/>
-  }
-  else {
+    return <Loading loading={loading} />;
+  } else {
     return (
       <>
         <div className="flex flex-col min-h-screen w-full">
@@ -108,8 +89,8 @@ const SearchPage = () => {
               setFilters={setFilters}
               sort={sort}
               setSort={setSort}
-              onLocationChange={handleLocationChange}  // Pass the location change handler
-              onPriceChange={handlePriceChange}  // Pass the price change handler
+              onLocationChange={handleLocationChange}
+              onPriceChange={handlePriceChange}
             />
             <div className="flex-grow z-30 transition-all duration-300 flex justify-center">
               <div className="flex flex-col m-[2rem] gap-[1rem] max-w-[80%]">
