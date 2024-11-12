@@ -31,6 +31,7 @@ const CreatePostTextBoxes = ({
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
     await onPublish(data);
+    alert("Post Sucess!");
     router.push("/home"); // Redirect to success page
   };
 

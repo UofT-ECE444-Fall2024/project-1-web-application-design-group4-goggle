@@ -52,6 +52,7 @@ const SelectDropdown = <T extends FieldValues>({
     <div className="relative inline-block w-full">
       {topText && <span className="text-xs text-heading-1">{topText}</span>}
       <button
+        type="button" // Ensure this is set to button, not submit
         className="bg-light-grey border border-black px-4 py-3 flex justify-between items-center rounded-xl w-full h-full border-black/[.08] dark:border-white/[.145] transition-colors text-heading-1 hover:bg-dark-grey hover:border-transparent text-l font-medium sm:h-12"
         onClick={toggleDropdown}
         {...(register ? register(name, { required, ...options }) : { name })}
