@@ -58,7 +58,7 @@ const ViewProfilePage = () => {
         setSellerEmail(userDetails?.data?.email)
         setSellerIsUser(userDetails.data?.user_name === currentUser);
 
-        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list/`, {
+        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
