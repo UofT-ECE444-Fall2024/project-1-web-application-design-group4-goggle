@@ -31,13 +31,12 @@ const SelectDropdown = <T extends FieldValues>({
   const [selectedOption, setSelectedOption] = useState<string | null>(selectedItem);
   const error = errors?.[name];
 
-  // Set selectedOption only if selectedItem exists in menuItems
+  // Update selectedOption when selectedItem or menuItems changes
   useEffect(() => {
-    if (selectedItem) {
-      handleOptionSelect(selectedItem);
+    if (selectedItem && menuItems.includes(selectedItem)) {
+      setSelectedOption(selectedItem);
     }
-    // Run only once on mount
-  }, []);
+  }, [selectedItem, menuItems]);
 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);

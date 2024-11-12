@@ -1,4 +1,3 @@
-// CreatePostTextBoxes.tsx
 import React from "react";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -13,7 +12,6 @@ const CreatePostTextBoxes = ({
   priceValue = '',
   descriptionValue = '',
   pickup_locationValue = '', // Default empty string if undefined
-  campusValue = '',          // Default empty string if undefined
   categoryValue = '',         // Default empty string if undefined
 }: {
   isEdit?: boolean;
@@ -33,7 +31,7 @@ const CreatePostTextBoxes = ({
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
     await onPublish(data);
-    // router.push("/home"); // Redirect to success page
+    router.push("/home"); // Redirect to success page
   };
 
   const buttonText = isEdit ? "Save Changes" : "Publish";
