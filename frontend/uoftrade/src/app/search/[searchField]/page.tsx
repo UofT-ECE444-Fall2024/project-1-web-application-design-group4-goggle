@@ -38,19 +38,19 @@ const SearchPage = () => {
   const fetchPosts = async () => {
     const { minPrice, maxPrice } = filters;
 
-    console.log("Min Price:", minPrice);  // Debugging log
-    console.log("Max Price:", maxPrice);  // Debugging log
-
+    const token = localStorage.getItem('token');
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list/`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           q: decodedURI,
           location: filters.location.join(','),
-          minPrice: minPrice ?? undefined,
-          maxPrice: maxPrice ?? undefined,
-          sortPrice: sort.price,
-          sortDate: sort.date,
+          min_price: minPrice ?? undefined,
+          max_price: maxPrice ?? undefined,
+          price_order: sort.price === "Lowest to Highest" ? "asc" : "desc",
         },
       });
       console.log("Request URL:", response.config.url); // Log the full request URL for inspection
@@ -109,6 +109,7 @@ const SearchPage = () => {
               ) : (
                 posts.map((post: any) => (
                   <PostCard
+                    id={post.id}
                     key={post.id}
                     image={`/product-images/${post.image}`}
                     title={post.title}
