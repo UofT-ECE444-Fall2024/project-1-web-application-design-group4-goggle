@@ -75,7 +75,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-     f'http://{os.environ.get('HOST_ADDRESS')}:3000',  # The default port for create-next-app
+     'http://18.207.149.254:3000',  # The default port for create-next-app
 ]
 
 
