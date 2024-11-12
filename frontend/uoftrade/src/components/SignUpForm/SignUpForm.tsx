@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TextBox from "../TextBox/TextBox";
 import { RegistrationInputs } from "@/types/inputs";
+import api from "@/api/axiosInstance";
 
 const SignUpForm = () => {
     const router = useRouter();
@@ -36,10 +37,17 @@ const SignUpForm = () => {
                 password: data.password,
                 password_confirmation: data.password_confirmation
             };
- 
-            registered = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/register`, payload, {
+            
+            registered = await api.post(`${process.env.NEXT_PUBLIC_API_URL}identity/register`, payload, {
                 headers: { 'Content-Type': 'application/json' }
               });
+
+            axios.defaults.baseURL = 'http://18.207.149.254/'
+            registered = await axios.post(`identity/register`, payload, {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            
+
             const token = registered.data?.token;
             if (token) {
                 localStorage.setItem("token", token);
