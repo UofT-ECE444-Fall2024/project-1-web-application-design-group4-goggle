@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldValues, UseFormRegister, FieldErrors, Path } from "react-hook-form";
+import { FieldValues, UseFormRegister, FieldError, FieldErrors, Path } from "react-hook-form";
 import InlineErrorMessage from "../InlineErrorMessage/InlineErrorMessage"; // Ensure this import is correct
 
 interface TextBoxProps<T extends FieldValues> {

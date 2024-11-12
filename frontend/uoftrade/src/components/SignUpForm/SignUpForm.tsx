@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TextBox from "../TextBox/TextBox";
-import { RegistrationInputs } from "@/types/inputs";
+import "../../types/inputs"
 
 const SignUpForm = () => {
     const router = useRouter();
@@ -27,7 +27,7 @@ const SignUpForm = () => {
         let registered; 
         try {
 
-            const payload = {
+            const payload:Object = {
                 first_name: data.first_name, 
                 last_name: data.last_name,
                 email: data.email, 
@@ -158,7 +158,7 @@ const SignUpForm = () => {
                                         name="password_confirmation"
                                         register={register}
                                         options={{
-                                            validate: (value: any) => 
+                                            validate: (value: {}) => 
                                                 value === password.current || "The passwords do not match"
                                         }}
                                         divClassNames={"mt-3"}

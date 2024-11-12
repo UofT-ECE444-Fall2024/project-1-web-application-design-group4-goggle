@@ -1,6 +1,8 @@
 'use client'
 
 import React from "react";
+import Link from "next/link";
+
 import "../../types/inputs"
 import ProfileEditForm from "./ProfileEditForm";
 import ProfileEditHeader from "./ProfileEditHeader";

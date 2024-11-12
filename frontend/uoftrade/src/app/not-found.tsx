@@ -30,7 +30,7 @@ export default function NotFound() {
 
         {/* Subheading with link to go back */}
         <div className="text-white">
-          <p className="text-lg">Sorry, the page you are looking for cannot be found.</p>
+          <p className="text-lg">Sorry, the page you are looking for doesn't exist.</p>
           <button
             onClick={goBack} // Trigger the goBack function
             className="mt-4 text-md text-white hover:underline"

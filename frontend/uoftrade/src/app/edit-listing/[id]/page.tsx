@@ -294,7 +294,7 @@ const EditListingPage = () => {
     console.log("image:", image);
     const currentUser = localStorage.getItem('currentUser');
     console.log("current user", currentUser);
-    const payload = {
+    const payload: Object = {
       image: image,
       product: id
     };
@@ -310,7 +310,7 @@ const EditListingPage = () => {
   const postTextData = async (textData: any, images: File[], useImages: boolean) => {
     const token = localStorage.getItem('token');
     const currentUser = localStorage.getItem('currentUser');
-    const payload = {
+    const payload: Object = {
       title: textData.title,
       price: textData.price,
       description: textData.description,
