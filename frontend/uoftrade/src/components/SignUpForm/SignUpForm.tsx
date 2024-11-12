@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useRef } from "react";
-import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form"
 import Link from "next/link";
 import Image from "next/image";
@@ -42,12 +41,6 @@ const SignUpForm = () => {
                 headers: { 'Content-Type': 'application/json' }
               });
 
-            // axios.defaults.baseURL = 'http://18.207.149.254/'
-            // registered = await axios.post(`identity/register`, payload, {
-            //     headers: { 'Content-Type': 'application/json' }
-            //   });
-            
-
             const token = registered.data?.token;
             if (token) {
                 localStorage.setItem("token", token);
@@ -61,8 +54,8 @@ const SignUpForm = () => {
         }
         catch(e:unknown) {
             
-            if (axios.isAxiosError(e) && e.response && e.response.status === 400) {
-                const errorDetail = e.response.data?.detail || "Email already in use. Please Login or use a different email.";
+            if (e) {
+                const errorDetail = "Email already in use. Please Login or use a different email.";
                 setError("email", { type: "manual", message: errorDetail });
             } else {
                 console.error(e);

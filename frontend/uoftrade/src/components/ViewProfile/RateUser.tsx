@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Rating } from '@mui/material';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 
 const RateUser: React.FC<{ sellerIsUser: boolean, sellerEmail:string }> = ({ sellerIsUser, sellerEmail }) => {
   // Track the rating the user gives
@@ -8,7 +8,7 @@ const RateUser: React.FC<{ sellerIsUser: boolean, sellerEmail:string }> = ({ sel
 
   const updateUserRating = async (newValue: number | null) => {
     const token = localStorage.getItem('token');
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/rating/${sellerEmail}`, newValue, {
+    await api.post(`identity/rating/${sellerEmail}`, newValue, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rating } from '@mui/material';
 import Link from 'next/link';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 import { useRouter } from 'next/navigation';
 import { Seller } from "@/types/seller";
 

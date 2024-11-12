@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatBox from './ChatBox';
 import ConversationsList from './ConversationsList';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 import {useRouter, useParams } from 'next/navigation';
 import Loading from '../Loading/Loading';
 import { Conversation } from '@/types/conversation';
@@ -32,7 +32,7 @@ const MessagePageContent = () => {
             user2: username
           }
   
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/conversations/create`, participants, {
+          await api.post(`identity/conversations/create`, participants, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -40,7 +40,7 @@ const MessagePageContent = () => {
         }
   
         const payload = { user1: currentUser }
-        const conversationsData = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/conversations`, payload, {
+        const conversationsData = await api.post(`identity/conversations`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -70,7 +70,7 @@ const MessagePageContent = () => {
           setActiveConvoID(currActiveConversation?.conversation_id as number)
         }
   
-        const messagesData = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/conversations/messages/${activeConvoID}`, {
+        const messagesData = await api.get(`identity/conversations/messages/${activeConvoID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -129,7 +129,7 @@ const MessagePageContent = () => {
       content: message
     }
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/conversations/send_message/${activeConvoID}`, payload, {
+    await api.post(`identity/conversations/send_message/${activeConvoID}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { Seller } from "@/types/seller";
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 
 const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -21,7 +21,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
             image: image,
             user_name: currentUser
         };
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, payload, {
+        const response = await api.post(`identity/UserImages/`, payload, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
 
         // Send a delete request to the server to reset the profile picture
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+            const response = await api.post(`identity/UserImages/`, {
                 profilePic: '/images/logo/UTrade_small.svg',
             });
 

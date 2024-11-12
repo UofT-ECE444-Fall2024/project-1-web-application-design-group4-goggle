@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import NavBar from "../NavBar/NavBar";
 import Footer from "../Footer/Footer";
 import Loading from "../Loading/Loading";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 import { Seller } from "@/types/seller";
 import { Listing } from "@/types/listing";
 
@@ -45,13 +45,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
       setLoading(true); // Start loading before the request
       try {
         //get current user details
-        const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+        const userDetails = await api.get(`identity/info/${currentUser}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+        const userImages = await api.get(`identity/UserImages/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -70,7 +70,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
         });
 
         if (requiresListingData) {
-          const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
+          const userListings = await api.get(`marketplace/product-list`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

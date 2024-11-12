@@ -1,7 +1,7 @@
 // "use client";
 
 // import React, { useEffect, useState } from "react";
-// import axios from "axios";
+// import api from "@/api/axiosInstance";
 // import NavBar from "@/components/NavBar/NavBar";
 // import ImageUpload from "@/components/ImageUpload/ImageUpload";
 // import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
@@ -32,13 +32,13 @@
 //     setLoading(true); // Start loading before the request
 //     try {
 //       // get current user details
-//       const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${currentUser}`, {
+//       const userDetails = await api.get(`identity/info/${currentUser}`, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
 //       });
 
-//       const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+//       const userImages = await api.get(`identity/UserImages/`, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
@@ -55,7 +55,7 @@
 //         profilePic: userImages.data[0]?.image || '',
 //       });
 
-//       const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+//       const userListings = await api.get(`marketplace/products/`, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
@@ -146,7 +146,7 @@
 //     uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
 
 //     try {
-//       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, imageFormData, {
+//       const response = await api.post(`marketplace/product-images/`, imageFormData, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
@@ -165,7 +165,7 @@
 //     textFormData.append("sold", String(sold)); // Include the "sold" status
 
 //     try {
-//       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/marketplace/products`, textFormData, {
+//       const response = await api.post(`/marketplace/products`, textFormData, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },
@@ -218,7 +218,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
 import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
@@ -280,7 +280,7 @@ const EditListingPage = () => {
   //   const currentUser = localStorage.getItem('currentUser');
   //   console.log("current user", currentUser);
 
-  //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, images, {
+  //   const response = await api.post(`marketplace/product-images/`, images, {
   //     headers: {
   //       'Content-Type': 'multipart/form-data',
   //       Authorization: `Bearer ${token}`,
@@ -298,7 +298,7 @@ const EditListingPage = () => {
       image: image,
       product: id
     };
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, payload, {
+    const response = await api.post(`marketplace/product-images/`, payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -319,7 +319,7 @@ const EditListingPage = () => {
       ...(useImages ? { images: images } : {}), // Conditionally include images field
       user_name: currentUser
     };
-    return await axios.put(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-detail/${id}`, payload, {
+    return await api.put(`marketplace/product-detail/${id}`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

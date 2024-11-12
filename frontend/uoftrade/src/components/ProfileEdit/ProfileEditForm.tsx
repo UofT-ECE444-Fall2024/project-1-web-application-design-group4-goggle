@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import TextBox from "../TextBox/TextBox";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 import { ProfileEditInputs } from "@/types/inputs";
 
 const ProfileEditForm = () => {
@@ -40,7 +40,7 @@ const ProfileEditForm = () => {
 
         try {
             
-            updateUser = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}identity/user-update/${currentUser}`, data, {
+            updateUser = await api.put(`identity/user-update/${currentUser}`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

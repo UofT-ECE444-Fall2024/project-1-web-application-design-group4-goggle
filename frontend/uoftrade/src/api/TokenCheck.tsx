@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 import { useRouter } from 'next/navigation';
 
 const useTokenCheck = (setAuthenticated: (auth: boolean) => void) => {
@@ -7,7 +7,7 @@ const useTokenCheck = (setAuthenticated: (auth: boolean) => void) => {
    
     const verifyToken = async (token: string) => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/auth`, {
+            const response = await api.get(`identity/auth`, {
             headers: { Authorization: `Bearer ${token}` },
             });
             console.log("Token verified", response.data);
