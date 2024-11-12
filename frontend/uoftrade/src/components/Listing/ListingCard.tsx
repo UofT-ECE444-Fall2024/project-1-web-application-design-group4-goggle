@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Rating } from '@mui/material';
 import { Listing } from "@/types/listing";
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,7 +28,7 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
               <EditIcon className="text-primary" />
             </button>
           )}
-          <Image src={images[0]?.image} alt={images[0]?.alt} fill />
+          <img src={images[0]?.image} alt={images[0]?.alt} />
         </button>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <button
@@ -53,7 +51,7 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
               <div className="mr-5 flex items-center border-r border-outline-grey pr-5 dark:border-white dark:border-opacity-10 xl:mr-3 xl:pr-3 2xl:mr-5 2xl:pr-5">
                 <div className="mr-4">
                   <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                    <Image src={seller.image} alt="seller" fill />
+                    <img src={seller.image} alt="seller" />
                   </div>
                 </div>
                 <div className="w-full">
