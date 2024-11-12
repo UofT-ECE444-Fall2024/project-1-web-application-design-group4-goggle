@@ -42,7 +42,7 @@ const SignUpForm = () => {
                 headers: { 'Content-Type': 'application/json' }
               });
 
-            // axios.defaults.baseURL = 'http://18.207.149.254/'
+            // axios.defaults.baseURL = 'http://localhost/'
             // registered = await axios.post(`identity/register`, payload, {
             //     headers: { 'Content-Type': 'application/json' }
             //   });
