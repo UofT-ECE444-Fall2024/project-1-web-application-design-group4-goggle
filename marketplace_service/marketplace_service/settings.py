@@ -25,7 +25,21 @@ SECRET_KEY = 'django-insecure-_g2sc8rld%*(3(v+fq_wf&wr%$u+ce7^o%wih=wfu+!ny$sin8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1', os.environ.get('HOST_ADDRESS')]
+ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1', os.environ.get('HOST_ADDRESS'), 'https://project-1-web-application-design-group4-goggle.vercel.app']
+
+SCHEME = "https"
+
+# Enforce HTTPS for session and CSRF cookies
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

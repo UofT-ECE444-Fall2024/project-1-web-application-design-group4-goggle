@@ -25,13 +25,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-cttsdiovd#7x(($))fgp5=+7rms_dg)si&%#ttkxi@^qi_#st$'
 
 HOST_ADDRESS = os.environ.get('HOST_ADDRESS')
-SCHEME = "http"
+SCHEME = "https"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['identity-service', 'localhost', '127.0.0.1', os.environ.get('HOST_ADDRESS')]
+ALLOWED_HOSTS = ['identity-service', 'localhost', '127.0.0.1', os.environ.get('HOST_ADDRESS'), 'https://project-1-web-application-design-group4-goggle.vercel.app']
+
+# Enforce HTTPS for session and CSRF cookies
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
