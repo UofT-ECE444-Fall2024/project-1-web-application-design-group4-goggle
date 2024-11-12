@@ -13,10 +13,10 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}  # Ensure this is set in your .env file
     env_file:
       - .env  # Include the .env file if you have environment variables needed for production
-    command: npm run start  # Start the Next.js app in production mode
     volumes:
       - ./frontend/uoftrade:/app 
       - /app/node_modules
+    command: npm run start  # Start the Next.js app in production mode
 
   identity-service:
     build:
