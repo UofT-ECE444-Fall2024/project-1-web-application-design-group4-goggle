@@ -33,6 +33,7 @@ const HomePage = () => {
         // Create an array of promises using .map() inside Promise.all
         for (const product of productsData) {
           try {
+            console.log(product);
             // Fetch user details and images sequentially
             const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.data?.user_name}`, {
               headers: {
