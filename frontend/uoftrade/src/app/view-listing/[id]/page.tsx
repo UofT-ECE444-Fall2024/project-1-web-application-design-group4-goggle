@@ -6,7 +6,7 @@ import Footer from '@/components/Footer/Footer';
 import ListingPageContent from '@/components/ListingDetails/ListingPageContent';
 import SellerInfo from '@/components/ListingDetails/SellerInfo';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import api from "@/api/axiosInstance"
 import Loading from '@/components/Loading/Loading';
 import { Listing } from '@/types/listing';
 import { Seller } from '@/types/seller';
@@ -30,7 +30,7 @@ const ViewListingPage = () => {
       setLoading(true); // Start loading before the request
       try {
 
-        const product = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-detail/${id}`, {
+        const product = await api.get(`marketplace/product-detail/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,13 +41,13 @@ const ViewListingPage = () => {
         });
 
         //get current user details
-        const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.data?.user_name}`, {
+        const userDetails = await api.get(`identity/info/${product?.data?.user_name}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+        const userImages = await api.get(`identity/UserImages/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

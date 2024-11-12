@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
 import CreatePostTextBoxes from "@/components/CreatePostTextBoxes/CreatePostTextBoxes";
@@ -57,7 +57,7 @@ const PostListingPage = () => {
   //   const currentUser = localStorage.getItem('currentUser');
   //   console.log("current user", currentUser);
 
-  //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, images, {
+  //   const response = await api.post(`marketplace/product-images/`, images, {
   //     headers: {
   //       'Content-Type': 'multipart/form-data',
   //       Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ const PostListingPage = () => {
       image: image,
       product: id
     };
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, payload, {
+    const response = await api.post(`marketplace/product-images/`, payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ const PostListingPage = () => {
       ...(useImages ? { images: images } : {}), // Conditionally include images field
       user_name: currentUser
     };
-    return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, payload, {
+    return await api.post(`marketplace/products/`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,

@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Footer from '@/components/Footer/Footer';
 import SellerInfo from '@/components/ListingDetails/SellerInfo';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 import Loading from '@/components/Loading/Loading'; // Reusing Loading component
 import ViewProfile from '@/components/ViewProfile/ViewProfile';
 import { Seller } from '@/types/seller';
@@ -31,13 +31,13 @@ const ViewProfilePage = () => {
       setLoading(true); // Start loading before the request
       try {
         //get current user details
-        const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${username}`, {
+        const userDetails = await api.get(`identity/info/${username}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+        const userImages = await api.get(`identity/UserImages/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,7 +58,7 @@ const ViewProfilePage = () => {
         setSellerEmail(userDetails?.data?.email)
         setSellerIsUser(userDetails.data?.user_name === currentUser);
 
-        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
+        const userListings = await api.get(`marketplace/product-list`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

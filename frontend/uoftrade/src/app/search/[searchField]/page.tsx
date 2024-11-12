@@ -9,7 +9,7 @@ import SearchSidebar from "@/components/SearchSidebar/SearchSidebar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PostCard from '@/components/PostCard/PostCard';
 import Loading from '@/components/Loading/Loading';
-import axios from 'axios';
+import api from "@/api/axiosInstance";
 
 interface SortState {
   price: string;
@@ -41,7 +41,7 @@ const SearchPage = () => {
     const token = localStorage.getItem('token');
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
+      const response = await api.get(`marketplace/product-list`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

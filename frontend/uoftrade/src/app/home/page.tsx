@@ -8,7 +8,7 @@ import CategoriesSelection from "@/components/CategoriesSelection/CategoriesSele
 import Loading from "@/components/Loading/Loading";
 
 import { Listing } from "@/types/listing";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 
 const HomePage = () => {
   const [listings, setListings] = useState<Listing[] | Array<any>>([]);
@@ -20,7 +20,7 @@ const HomePage = () => {
       setLoading(true);
     
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+        const response = await api.get(`marketplace/products/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,14 +35,14 @@ const HomePage = () => {
           try {
             console.log(product);
             // Fetch user details and images sequentially
-            const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.user_name}`, {
+            const userDetails = await api.get(`identity/info/${product?.user_name}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
             console.log(userDetails);
         
-            const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
+            const userImages = await api.get(`identity/UserImages/`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },

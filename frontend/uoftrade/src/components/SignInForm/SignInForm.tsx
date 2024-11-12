@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import TextBox from "../TextBox/TextBox";
-import axios from "axios";
+import api from "@/api/axiosInstance";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { LoginInputs } from "@/types/inputs";
@@ -27,10 +27,6 @@ const SignInForm = () => {
                 password: data.password
             };
 
-            const api = axios.create({
-                baseURL: process.env.NEXT_PUBLIC_API_URL,  // Use environment variable
-                headers: { 'Content-Type': 'application/json' },
-              });
             const response = await api.post('identity/login', payload);
       
             if (response.status === 200 ) {
