@@ -18,7 +18,19 @@ const ViewListingPage = () => {
   const [product, setProduct] = useState<Listing>();
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
   const [images, setImages] = useState<string[]>([]);
-
+  function formatDate(isoString: string): string {
+    const date = new Date(isoString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZoneName: "short"
+    });
+  }
   useEffect(() => {
     /** This function gets the current users data and optionally gets their listings if the parameter is true 
      * then it sets the appropriate states
@@ -83,7 +95,7 @@ const ViewListingPage = () => {
               rating: userDetails.data?.rating || 0, // Use the seller rating from state
             },
             tags: product?.data?.category ? [product.data?.category] : [], // Add category as a tag, if available
-            publishDate: product?.data?.date_posted,
+            publishDate: formatDate(product?.data?.date_posted),
         };
 
           //update the listings state

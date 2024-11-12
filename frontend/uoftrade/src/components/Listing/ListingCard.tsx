@@ -22,10 +22,10 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
           </span>
           {currentUser === seller.username && (
             <button
-              onClick={() => { router.push(`/edit-listing/${id}`); }}
+              // onClick={() => { router.push(`/edit-listing/${id}`); }}
               className="absolute top-6 left-6 z-20 flex items-center justify-center p-2 bg-white rounded-full shadow-md transition-transform hover:scale-125"
             >
-              <EditIcon className="text-primary" />
+              <EditIcon className="text-primary" href={`/edit-listing/${id}`} />
             </button>
           )}
           <img src={image} alt={""} />

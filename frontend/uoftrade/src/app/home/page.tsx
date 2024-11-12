@@ -14,6 +14,20 @@ const HomePage = () => {
   const [listings, setListings] = useState<Listing[] | Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
 
+  function formatDate(isoString: string): string {
+    const date = new Date(isoString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZoneName: "short"
+    });
+  }
+
   useEffect(() => {
     const getProductDetails = async () => {
       const token = localStorage.getItem('token');
@@ -68,7 +82,7 @@ const HomePage = () => {
                 rating: userDetails?.data?.rating || 0,
               },
               tags: product?.category ? [product.category] : [],
-              publishDate: product?.date_posted,
+              publishDate: formatDate(product?.date_posted),
             });
         
           } catch (error) {

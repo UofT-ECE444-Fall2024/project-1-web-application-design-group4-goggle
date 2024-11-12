@@ -33,6 +33,20 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
 
+  function formatDate(isoString: string): string {
+    const date = new Date(isoString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZoneName: "short"
+    });
+  }
+
   // Fetch user details once the component mounts if requiredData is true
   useEffect(() => {
     /** This function gets the current users data and optionally gets their listings if the parameter is true 
@@ -97,7 +111,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
                 rating: userDetails.data?.rating || 0, // Use the seller rating from state
               },
               tags: product?.category ? [product.category] : [], // Add category as a tag, if available
-              publishDate: product?.date_posted,
+              publishDate: formatDate(product?.date_posted),
             });
           });
         }
