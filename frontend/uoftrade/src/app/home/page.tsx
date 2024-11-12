@@ -64,7 +64,7 @@ const HomePage = () => {
               seller: {
                 name: sellerName || 'Unknown Seller',
                 username: userImages?.data?.username || '',
-                image: userImages?.data?.images?.[userImages?.data?.images?.length -1].image || '',
+                image: userImages.data[userImages.data.length - 1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '',
                 rating: userDetails?.data?.rating || 0,
               },
               tags: product?.category ? [product.category] : [],
