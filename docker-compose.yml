@@ -13,6 +13,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     volumes:
       - ./frontend/uoftrade:/app
+      - /app/node_modules
     command: npm run dev
     env_file:
       - .env
