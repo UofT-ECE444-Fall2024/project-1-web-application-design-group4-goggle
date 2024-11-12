@@ -11,7 +11,7 @@ export type Listing = {
     price: string;
     description: string;
     location: string;
-    images: Array<any>;
+    image: string;
     seller: Seller;
     tags: string[];
     publishDate: string;

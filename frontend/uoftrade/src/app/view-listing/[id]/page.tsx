@@ -17,6 +17,7 @@ const ViewListingPage = () => {
   const [sellerIsUser, setSellerIsUser] = useState<boolean>(false)
   const [product, setProduct] = useState<Listing>();
   const [loading, setLoading] = useState<boolean>(true); // Manage loading state for data fetching
+  const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
     /** This function gets the current users data and optionally gets their listings if the parameter is true 
@@ -33,6 +34,10 @@ const ViewListingPage = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+        });
+
+        product?.data?.images?.forEach(( image: any) => {
+          images.push(image?.image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2"));
         });
 
         //get current user details
@@ -60,22 +65,22 @@ const ViewListingPage = () => {
           profilePic: userImages.data[userImages.data.length - 1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '', // Add profilePic if available
         });
 
-        setSellerIsUser(seller?.username === currentUser);
+        setSellerIsUser(userDetails.data?.user_name === currentUser);
 
-        const sellerName = `${seller?.firstName} ${seller?.lastName}`
+        const sellerName = `${userDetails.data?.first_name} ${userDetails.data?.last_name}`
 
         const productDetails:Listing = {
             id: product?.data?.id,
             title: product?.data?.title,
             price: product?.data?.price,
             description: product?.data?.description,
-            images: product?.data?.images || '', // Assuming the product has an image
+            image: product?.data.images?.[0].image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2") || '', // Assuming the product has an image
             location: product?.data?.location,
             seller: {
               name: sellerName || 'Unknown Seller', // Use the seller name from state
-              username: seller?.username || '',
-              image: seller?.profilePic || '', // Use the seller image from state
-              rating: seller?.rating || 0, // Use the seller rating from state
+              username: userDetails.data?.user_name || '',
+              image: userImages.data[userImages.data.length - 1]?.image.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12000$2") || '',
+              rating: userDetails.data?.rating || 0, // Use the seller rating from state
             },
             tags: product?.data?.category ? [product.data?.category] : [], // Add category as a tag, if available
             publishDate: product?.data?.date_posted,
@@ -105,7 +110,7 @@ const ViewListingPage = () => {
           {/**Main Content */}
           <div className="w-full h-full flex-grow flex gap-4 flex-row justify-between">
             <div className="flex-grow my-4 ml-4 w-4/5">
-              <ListingPageContent listing={product} />
+              <ListingPageContent listing={product} images={images} />
             </div>
   
             <div className="flex-grow my-4 mr-4 w-1/5">

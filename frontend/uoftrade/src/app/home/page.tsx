@@ -59,7 +59,7 @@ const HomePage = () => {
               title: product?.title,
               price: product?.price,
               description: product?.description,
-              images: product?.images || '',
+              image: product?.images?.[0].image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2") || '',
               location: product?.location,
               seller: {
                 name: sellerName || 'Unknown Seller',

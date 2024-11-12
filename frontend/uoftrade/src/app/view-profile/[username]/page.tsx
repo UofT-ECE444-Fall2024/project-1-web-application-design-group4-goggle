@@ -56,7 +56,7 @@ const ViewProfilePage = () => {
         });
 
         setSellerEmail(userDetails?.data?.email)
-        setSellerIsUser(seller?.username === currentUser);
+        setSellerIsUser(userDetails.data?.user_name === currentUser);
 
         const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
           headers: {
@@ -78,7 +78,7 @@ const ViewProfilePage = () => {
             price: product?.price,
             description: product?.description,
             location: product?.location,
-            images: product?.images || '', // Assuming the product has an image
+            image: product?.images?.[0].image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2") || '',
             seller: {
               name: sellerName || 'Unknown Seller', // Use the seller name from state
               username: userDetails.data?.user_name || '',

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const ListingCard = ({ listing }: { listing: Listing }) => {
   const router = useRouter();
 
-  const { id, title, price, images, description, seller, tags, publishDate } = listing;
+  const { id, title, price, image, description, seller, tags, publishDate } = listing;
 
   const currentUser = localStorage.getItem('currentUser')
 
@@ -28,7 +28,7 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
               <EditIcon className="text-primary" />
             </button>
           )}
-          <img src={images[0]?.image} alt={images[0]?.alt} />
+          <img src={image} alt={""} />
         </button>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <button

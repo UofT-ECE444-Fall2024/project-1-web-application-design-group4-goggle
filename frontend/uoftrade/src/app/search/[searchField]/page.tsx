@@ -54,7 +54,13 @@ const SearchPage = () => {
         },
       });
       console.log("Request URL:", response.config.url); // Log the full request URL for inspection
-      setPosts(response.data);
+
+      response.data.forEach( (post: any) => {
+        posts.push(post);
+      });
+
+      console.log(posts);
+      
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -87,44 +93,48 @@ const SearchPage = () => {
     }));
   };
 
-  return (
-    <>
-      {loading && <Loading />}
-      <div className="flex flex-col min-h-screen w-full">
-        <NavBar />
-        <Header title={`Search Results for "${decodedURI}"`} />
-        <div className="flex flex-row flex-grow">
-          <SearchSidebar
-            filters={filters}
-            setFilters={setFilters}
-            sort={sort}
-            setSort={setSort}
-            onLocationChange={handleLocationChange}  // Pass the location change handler
-            onPriceChange={handlePriceChange}  // Pass the price change handler
-          />
-          <div className="flex-grow z-30 transition-all duration-300 flex justify-center">
-            <div className="flex flex-col m-[2rem] gap-[1rem] max-w-[80%]">
-              {posts.length === 0 ? (
-                <div>No results found</div>
-              ) : (
-                posts.map((post: any) => (
-                  <PostCard
-                    id={post.id}
-                    key={post.id}
-                    image={`/product-images/${post.image}`}
-                    title={post.title}
-                    price={post.price}
-                    description={post.description}
-                  />
-                ))
-              )}
+  if (loading) {
+    return <Loading loading={loading}/>
+  }
+  else {
+    return (
+      <>
+        <div className="flex flex-col min-h-screen w-full">
+          <NavBar />
+          <Header title={`Search Results for "${decodedURI}"`} />
+          <div className="flex flex-row flex-grow">
+            <SearchSidebar
+              filters={filters}
+              setFilters={setFilters}
+              sort={sort}
+              setSort={setSort}
+              onLocationChange={handleLocationChange}  // Pass the location change handler
+              onPriceChange={handlePriceChange}  // Pass the price change handler
+            />
+            <div className="flex-grow z-30 transition-all duration-300 flex justify-center">
+              <div className="flex flex-col m-[2rem] gap-[1rem] max-w-[80%]">
+                {posts.length === 0 ? (
+                  <div>No results found</div>
+                ) : (
+                  posts.map((post: any) => (
+                    <PostCard
+                      id={post.id}
+                      key={post.id}
+                      image={post?.images?.[0]?.image}
+                      title={post.title}
+                      price={post.price}
+                      description={post.description}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 export default SearchPage;

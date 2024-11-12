@@ -66,14 +66,14 @@ const PostListingPage = () => {
   //   console.log("response data:", response.data);
   // }
 
-  const postUserImages = async (image: File) => {
+  const postUserImages = async (image: File, id: number) => {
     const token = localStorage.getItem('token');
     console.log("image:",image);
     const currentUser = localStorage.getItem('currentUser');
     console.log("current user", currentUser);
     const payload: Object = {
       image: image,
-      product: product_id
+      product: id
     };
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, payload, {
       headers: {
@@ -96,16 +96,12 @@ const PostListingPage = () => {
       ...(useImages ? { images: images } : {}), // Conditionally include images field
       user_name: currentUser
     };
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, payload, {
+    return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log("response data:", response.data);
-
-    {useImages && setProduct_id(response.data.id)};
 
     // alert(response.data.message || "Text upload successful!");
   }
@@ -118,22 +114,11 @@ const PostListingPage = () => {
     console.log(imageFormData);
 
     try {
-      await postTextData(textData, uploadedImages, false);
+      const response = await postTextData(textData, uploadedImages, false);
 
-    } catch (error) {
-      console.error("Text upload failed:", error);
-    }
-
-    // Upload image text
-    try {
-      await postUserImages(uploadedImages[0]);
-    } catch (error) {
-      console.error("Image upload failed:", error);
-    }
-
-    try {
-      await postTextData(textData, uploadedImages, true);
-
+      for (const image of uploadedImages) {
+        await postUserImages(image, response?.data?.id);
+      }
     } catch (error) {
       console.error("Text upload failed:", error);
     }

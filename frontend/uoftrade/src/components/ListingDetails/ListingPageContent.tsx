@@ -6,10 +6,8 @@ import ListingDetails from './ListingDetails';
 import { Listing } from '@/types/listing';
 
 // Use the Listing interface directly in the component
-const ListingPageContent: React.FC<{ listing: Listing | undefined }> = ({ listing }) => {
-
-  const images: string[] | undefined = listing?.images?.map(item => item.image);
-
+const ListingPageContent: React.FC<{ listing: Listing | undefined, images: string[] }> = ({ listing, images }) => {
+  
   // When using useState, safely access images[0] with optional chaining
   const [selectedImage, setSelectedImage] = useState<string | undefined>(images?.[0]);
 
