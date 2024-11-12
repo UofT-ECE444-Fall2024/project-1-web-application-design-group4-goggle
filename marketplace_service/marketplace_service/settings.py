@@ -58,7 +58,7 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',  # The default port for create-next-app
-     f'http://{os.environ.get('HOST_ADDRESS')}:3000'
+     'http://18.207.149.254:3000'
 ]
 
 ROOT_URLCONF = 'marketplace_service.urls'
