@@ -16,11 +16,11 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
     const postUserImage = async (image: File) => {
         const token = localStorage.getItem('token');
         const currentUser = localStorage.getItem('currentUser');
-        console.log("current user",currentUser);
         const payload: Object = {
             image: image,
             user_name: currentUser
         };
+        console.log(image);
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, payload, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -35,7 +35,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
     // Function to handle file selection
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+        if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg')) {
             try {
                 postUserImage(file);
             } catch (error) {
@@ -46,19 +46,18 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
 
     // Function to handle "Delete Picture" button click
     const handleDeletePicture = async () => {
-        // Reset to the default image locally
+        // Convert the SVG string into a File object
+        const svgString = '/images/logo/UTrade_small.svg';
+        const file = new File([svgString], 'profilePic.svg', { type: 'image/svg+xml' });
 
-        // Send a delete request to the server to reset the profile picture
+        // Call postUserImage with the File object
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
-                profilePic: '/images/logo/UTrade_small.svg',
-            });
-
-            console.log(response.data.message);  // Log success message from server
+            await postUserImage(file);
         } catch (error) {
             console.error('Error deleting profile picture:', error);
         }
     };
+
 
     return (
         <div className="container my-8 flex flex-row">
