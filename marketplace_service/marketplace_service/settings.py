@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-_g2sc8rld%*(3(v+fq_wf&wr%$u+ce7^o%wih=wfu+!ny$sin8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1', '50.19.142.203']
+ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1', '174.129.53.127']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -58,7 +58,7 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',  # The default port for create-next-app
-     'http://50.19.142.203:3000'
+     'http://174.129.53.127:3000'
 ]
 
 ROOT_URLCONF = 'marketplace_service.urls'
