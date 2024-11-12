@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_g2sc8rld%*(3(v+fq_wf&wr%$u+ce7^o%wih=wfu+!ny$sin8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['marketplace-service', 'localhost', '127.0.0.1']
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'marketplace',
     'rest_framework',
     'django_filters',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
+]
+
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',  # The default port for create-next-app
 ]
 
 ROOT_URLCONF = 'marketplace_service.urls'

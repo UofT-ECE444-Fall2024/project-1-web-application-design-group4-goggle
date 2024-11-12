@@ -232,7 +232,8 @@ class MessageHistoryView(ListAPIView):
 
 class SendMessageView(APIView):
     def post(self, request, conversation_id):
-        user = request.user
+        user1 = request.data.get('user1')
+        user = UofTUser.objects.get(user_name=user1)
         content = request.data.get('content')
 
         conversation = Conversation.objects.get(id=conversation_id)
@@ -254,7 +255,7 @@ class UpdateRatingView(generics.UpdateAPIView):
     queryset = UofTUser.objects.all()
     serializer_class = UofTUserFeaturesSerializer
     # permission_classes = [RatingPermission]
-    lookup_field = "email"
+    lookup_field = "user_name"
 
     def post(self, request, *args, **kwargs):
         user = self.get_object()

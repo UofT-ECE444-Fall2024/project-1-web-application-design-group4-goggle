@@ -3,27 +3,19 @@
 import React, { useState } from 'react';
 import ListingImages from './ListingImages';
 import ListingDetails from './ListingDetails';
-
-// Define the Listing interface
-interface Listing {
-  title: string;
-  price: number;
-  description: string;
-  pickupLocation: string;
-  category: string;
-  images: string[];
-  datePublished: string;
-}
+import { Listing } from '@/types/listing';
 
 // Use the Listing interface directly in the component
-const ListingPageContent: React.FC<{ listing: Listing }> = ({ listing }) => {
-  const [selectedImage, setSelectedImage] = useState(listing.images[0]);
+const ListingPageContent: React.FC<{ listing: Listing | undefined, images: string[] }> = ({ listing, images }) => {
+  
+  // When using useState, safely access images[0] with optional chaining
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(images?.[0]);
 
   return (
     <div className="w-full h-full flex flex-row p-6 bg-white-bg shadow-lg rounded-lg">
       {/* Image Gallery on the Left */}
       <ListingImages 
-        images={listing.images} 
+        images={images} 
         selectedImage={selectedImage} 
         onSelectImage={setSelectedImage} 
       />
@@ -31,12 +23,12 @@ const ListingPageContent: React.FC<{ listing: Listing }> = ({ listing }) => {
       {/* Listing Details on the Right */}
       <div className="ml-6 flex-1">
         <ListingDetails
-          title={listing.title}
-          price={listing.price}
-          description={listing.description}
-          pickupLocation={listing.pickupLocation}
-          category={listing.category}
-          date={listing.datePublished}
+          title={listing?.title}
+          price={listing?.price}
+          description={listing?.description}
+          pickupLocation={listing?.location}
+          category={listing?.tags?.[0]}
+          date={listing?.publishDate}
         />
       </div>
     </div>

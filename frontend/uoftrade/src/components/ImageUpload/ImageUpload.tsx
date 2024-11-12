@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import Image from "next/image";
 import DeleteIcon from '@mui/icons-material/Delete';
 import InlineErrorMessage from '../InlineErrorMessage/InlineErrorMessage'; // Assuming this component is in the same directory
@@ -21,25 +21,61 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [totalImagesCount, setTotalImagesCount] = useState(initialPreviews.length);
   const MAX_IMAGES = 10;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Function to handle "Change Picture" button click
+  const handleImageUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();  // Open file input dialog
+    }
+  };
+
+  // Function to handle file selection
+  // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+  //     try {
+  //       postUserImage(file);
+  //     } catch (error) {
+  //       console.error('Error posting image', error);
+  //     }
+  //   }
+  // };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    if (totalImagesCount >= MAX_IMAGES) {
-      setErrorMessage(`You can only upload a maximum of ${MAX_IMAGES} images.`);
-    } else {
-      setErrorMessage(null); // Clear error message if valid
-      const newPreviews = files.map(file => URL.createObjectURL(file));
-      setImageFiles(prevFiles => [...prevFiles, ...files]);
-      setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
-      onImagesChange([...imageFiles, ...files]); // Send updated files to parent
-      setTotalImagesCount(totalImagesCount + files.length);
+    // Filter valid image types
+    const validFiles = files.filter(file =>
+      ["image/png", "image/jpeg", "image/jpg"].includes(file.type)
+    );
+
+    // If any files are invalid, set an error message
+    if (validFiles.length !== files.length) {
+      setErrorMessage("Only .png, .jpg, and .jpeg files are allowed.");
+      return;
     }
 
-    // Reset the file input so users can upload the same image again
+    // Check if maximum image count would be exceeded
+    if (totalImagesCount + validFiles.length > MAX_IMAGES) {
+      setErrorMessage(`You can only upload a maximum of ${MAX_IMAGES} images.`);
+      return;
+    }
+
+    // Clear any previous error message if valid files are selected
+    setErrorMessage(null);
+
+    const newPreviews = validFiles.map(file => URL.createObjectURL(file));
+    setImageFiles(prevFiles => [...prevFiles, ...validFiles]);
+    setImagePreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
+    onImagesChange([...imageFiles, ...validFiles]); // Update parent with new file array
+    setTotalImagesCount(totalImagesCount + validFiles.length);
+
+    // Reset the file input field
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    if (fileInput) fileInput.value = "";  // Reset the file input field
+    if (fileInput) fileInput.value = "";
   };
+
 
   const handleDeleteImage = (index: number) => {
     const updatedFiles = imageFiles.filter((_, i) => i !== index);
@@ -65,17 +101,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesChange, imagePreviews
     <div className="w-full">
       <div
         className="aspect-square bg-light-grey rounded-lg flex flex-col items-center justify-center cursor-pointer border-[3px] border-outline-grey hover:border-primary transition w-full"
-        onClick={() => document.getElementById("fileInput")?.click()}
+        onClick={handleImageUpload}
       >
         <span className="text-4xl user-select-none font-bold text-heading-1">+</span>
         <span className="text-2xl user-select-none font-bold text-heading-1">Add photo</span>
-        <input
+        {/* <input
           id="fileInput"
           type="file"
           accept="image/*"
           multiple
           onChange={handleImageChange}
           className="hidden"
+        /> */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".png, .jpeg, .jpg"
+          multiple
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
         />
       </div>
 

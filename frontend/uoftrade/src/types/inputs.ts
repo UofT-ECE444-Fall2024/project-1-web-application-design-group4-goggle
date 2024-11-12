@@ -16,15 +16,15 @@ type LoginInputs = {
 type ProfileEditInputs = {
     first_name: string
     last_name: string
-    email: string
+    user_name:string
   }
 
 type CreatePostInputs = {
   title: string
   price: number
   description: string
-  campus: string
-  pickup_location: string
+  location: string
   category: string
+  sold: boolean
 }
 

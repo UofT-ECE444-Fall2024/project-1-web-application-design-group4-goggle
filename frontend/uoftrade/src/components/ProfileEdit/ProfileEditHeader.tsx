@@ -3,8 +3,9 @@ import { Rating } from '@mui/material';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Seller } from "@/types/seller";
 
-const ProfileEditHeader = () => {
+const ProfileEditHeader:React.FC<{ seller: Seller | undefined }> = ({ seller }) => {
 
     const getUser = () => {
         return localStorage.getItem('currentUser');
@@ -21,7 +22,7 @@ const ProfileEditHeader = () => {
                 
                 <Rating
                     name="profile-rating"
-                    value={5} // You can change this value dynamically if needed
+                    value={seller?.rating} // You can change this value dynamically if needed
                     readOnly
                     precision={0.5}
                     className="text-yellow-500 text-3xl"

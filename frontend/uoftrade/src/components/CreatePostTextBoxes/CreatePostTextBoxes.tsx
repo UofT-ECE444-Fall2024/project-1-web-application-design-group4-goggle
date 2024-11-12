@@ -6,23 +6,25 @@ import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
 
-const CreatePostTextBoxes = ({ 
-  onPublish, 
-  isEdit=false, 
-  titleValue='', 
-  priceValue='', 
-  descriptionValue='', 
-  pickup_locationValue='',
-  campusValue=null,
-  categoryValue=null,}: { 
-    isEdit?: boolean; 
-    titleValue?: string; 
-    priceValue?: string; 
-    descriptionValue?: string;
-    pickup_locationValue?: string;
-    campusValue?: string|null;
-    categoryValue?: string|null;
-    onPublish: (data: CreatePostInputs) => Promise<void> }) => {
+const CreatePostTextBoxes = ({
+  onPublish,
+  isEdit = false,
+  titleValue = '',
+  priceValue = '',
+  descriptionValue = '',
+  pickup_locationValue = '', // Default empty string if undefined
+  campusValue = '',          // Default empty string if undefined
+  categoryValue = '',         // Default empty string if undefined
+}: {
+  isEdit?: boolean;
+  titleValue?: string;
+  priceValue?: string;
+  descriptionValue?: string;
+  pickup_locationValue?: string | null;
+  campusValue?: string | null;
+  categoryValue?: string | null;
+  onPublish: (data: CreatePostInputs) => Promise<void>
+}) => {
   const router = useRouter();
   const methods = useForm<CreatePostInputs>({
     mode: "onSubmit",
@@ -31,10 +33,11 @@ const CreatePostTextBoxes = ({
 
   const handleFormSubmit: SubmitHandler<CreatePostInputs> = async (data) => {
     await onPublish(data);
-    router.push("/home"); // success page
+    // router.push("/home"); // Redirect to success page
   };
+
   const buttonText = isEdit ? "Save Changes" : "Publish";
-  const campuses = ["UTSG", "UTM", "UTSC"];
+  const locations = ["Myhal", "Bahen", "Gerstein", "Robarts", "Sidney Smith", "Medical Science", "Other"];
 
   return (
     <FormProvider {...methods}>
@@ -84,22 +87,18 @@ const CreatePostTextBoxes = ({
             <div className="flex flex-col gap-2 sm:flex-row w-full">
               {/* Campus Dropdown */}
               <SelectDropdown
-                label="Choose Campus"
-                topText="Choose Campus"
-                name="campus"
+                label="Choose Location"
+                topText="Choose Location"
+                name="location"
                 errors={errors}
                 register={register}
                 required={true}
                 options={{
-                  validate: value => {
-                    return campuses.find((item) => item === value) 
-                      ? true 
-                      : "Not a valid campus.";
-                  }
+                  validate: value => locations.includes(value as string) || "Not a valid location."
                 }}
-                selectedItem={campusValue}
-                menuItems={campuses}
-                onSelect={(selected) => setValue("campus", selected, { shouldValidate: true })}
+                selectedItem={pickup_locationValue || ''} // Fallback to empty string
+                menuItems={locations}
+                onSelect={(selected) => setValue("location", selected, { shouldValidate: true })}
               />
               {/* Category Dropdown */}
               <SelectDropdown
@@ -109,40 +108,23 @@ const CreatePostTextBoxes = ({
                 register={register}
                 errors={errors}
                 options={{
-                  validate: value => {
-                    return categories.find((item) => item.name === value) 
-                      ? true 
-                      : "Not a valid category.";
-                  }
+                  validate: value => categories.some((item) => item.name === (value as string)) || "Not a valid category."
                 }}
                 required={true}
-                selectedItem={categoryValue}
+                selectedItem={categoryValue || ''} // Fallback to empty string
                 menuItems={categories.map(category => category.name)}
                 onSelect={(selected) => setValue("category", selected, { shouldValidate: true })}
-              />    
+              />
             </div>
 
-            <div className="mt-2 flex flex-col gap-2 sm:flex-row w-full items-end mb-10">
-              {/* Location Field */}
-              <TextBox<CreatePostInputs>
-                placeholder="Location (optional)"
-                name="pickup_location"
-                register={register}
-                errors={errors}
-                value={pickup_locationValue}
-                topText="Pickup Location"
-                divClassNames="w-full"
-                required={false}
-              />
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
-                          text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 xs:h-16 xs:mt-5 mt-0"
-              >
-                {buttonText}
-              </button>
-            </div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="rounded-xl w-full h-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors 
+                        text-white-bg bg-primary dark:hover:bg-[#1a1a1a] hover:border-transparent text-l sm:text-base sm:h-12 xs:h-16 xs:mt-5 mt-0"
+            >
+              {buttonText}
+            </button>
           </form>
         </div>
       </div>

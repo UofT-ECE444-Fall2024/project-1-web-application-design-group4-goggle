@@ -9,3 +9,4 @@ django_filter==23.2
 django-phonenumber-field==8.0.0
 Pillow==11.0.0
 requests==2.32.3
+django-cors-headers==4.5.0

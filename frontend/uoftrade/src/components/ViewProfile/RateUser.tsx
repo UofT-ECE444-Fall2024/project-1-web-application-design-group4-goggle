@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { Rating } from '@mui/material';
+import axios from 'axios';
 
-const RateUser: React.FC<{ sellerIsUser: boolean }> = ({ sellerIsUser }) => {
+const RateUser: React.FC<{ sellerIsUser: boolean, sellerEmail:string }> = ({ sellerIsUser, sellerEmail }) => {
   // Track the rating the user gives
   const [rating, setRating] = useState<number | null>(2.5); // Default rating is 2.5
 
+  const updateUserRating = async (newValue: number | null) => {
+    const token = localStorage.getItem('token');
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}identity/rating/${sellerEmail}`, newValue, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
   const handleChange = (event: React.SyntheticEvent, newValue: number | null) => {
-    if (!sellerIsUser) { // Allow rating changes only if the seller is not the current user
+    if (!sellerIsUser && newValue) { // Allow rating changes only if the seller is not the current user
       setRating(newValue);
+      updateUserRating(newValue);
     }
   };
 

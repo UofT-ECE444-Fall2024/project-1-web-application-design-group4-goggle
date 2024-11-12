@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar/NavBar";
 import ImageUpload from "@/components/ImageUpload/ImageUpload";
@@ -12,31 +12,115 @@ import Loading from "@/components/Loading/Loading";
 const PostListingPage = () => {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [product_id, setProduct_id] = useState<string>("");
+
+  useEffect(() => {
+    console.log(uploadedImages)
+  }, [uploadedImages])
 
   const handleImagesChange = (newImages: File[]) => {
-    // Update the uploaded images
-    setUploadedImages((prevImages) => [...prevImages, ...newImages]); // Append new images to existing ones
+    setUploadedImages((prevImages) => {
+      // Filter out duplicates based on 'name' and 'lastModified' properties
+      const uniqueNewImages = newImages.filter(
+        (newImage) =>
+          !prevImages.some(
+            (existingImage) =>
+              existingImage.name === newImage.name &&
+              existingImage.lastModified === newImage.lastModified
+          )
+      );
 
-    // Create new previews and append them to existing previews
-    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
-    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]); // Append new previews
+      // Append only the unique new images to existing images
+      return [...prevImages, ...uniqueNewImages];
+    });
+
+    setImagePreviews((prevPreviews) => {
+      // Generate previews only for unique new images
+      const uniquePreviews = newImages
+        .filter(
+          (newImage) =>
+            !uploadedImages.some(
+              (existingImage) =>
+                existingImage.name === newImage.name &&
+                existingImage.lastModified === newImage.lastModified
+            )
+        )
+        .map((file) => URL.createObjectURL(file));
+
+      return [...prevPreviews, ...uniquePreviews];
+    });
+    console.log("Uplaoded Images",uploadedImages);
   };
 
-  const handlePublish = async (textData: any) => {
-    const formData = new FormData();
-    uploadedImages.forEach((image, index) => formData.append(`image${index}`, image));
+  // const postUserImages = async (images: File[]) => {
+  //   const token = localStorage.getItem('token');
+  //   const currentUser = localStorage.getItem('currentUser');
+  //   console.log("current user", currentUser);
 
-    formData.append("title", textData.title);
-    formData.append("price", textData.price);
-    formData.append("description", textData.description);
-    formData.append("pickup_location", textData.pickup_location);
-    formData.append("category", textData.category);
+  //   const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, images, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
+  //   console.log("response data:", response.data);
+  // }
+
+  const postUserImages = async (image: File, id: number) => {
+    const token = localStorage.getItem('token');
+    console.log("image:",image);
+    const currentUser = localStorage.getItem('currentUser');
+    console.log("current user", currentUser);
+    const payload: Object = {
+      image: image,
+      product: id
+    };
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-images/`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("response data:", response.data);
+  }
+
+  const postTextData = async (textData: any, images: File[], useImages: boolean) => {
+    const token = localStorage.getItem('token');
+    const currentUser = localStorage.getItem('currentUser');
+    const payload: Object = {
+      title: textData.title,
+      price: textData.price,
+      description: textData.description,
+      location: textData.location.replace(/\s+/g, ''),
+      category: textData.category,
+      ...(useImages ? { images: images } : {}), // Conditionally include images field
+      user_name: currentUser
+    };
+    return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // alert(response.data.message || "Text upload successful!");
+  }
+
+  const handlePublish = async (textData: any) => {
+    console.log(uploadedImages);
+    uploadedImages.forEach((image, index) => console.log(`image${index}`, image));
+    const imageFormData = new FormData();
+    uploadedImages.forEach((image, index) => imageFormData.append(`${index}`, image));
+    console.log(imageFormData);
 
     try {
-      const response = await axios.post("/api/upload", formData);
-      alert(response.data.message || "Upload successful!");
+      const response = await postTextData(textData, uploadedImages, false);
+
+      for (const image of uploadedImages) {
+        await postUserImages(image, response?.data?.id);
+      }
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error("Text upload failed:", error);
     }
   };
 

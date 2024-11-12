@@ -1,34 +1,23 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Rating } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image'; // Import Next.js Image component
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Seller } from '@/types/seller';
 
-// Define the interface for the single props object
-interface SellerInfoProps {
-    firstName: string;
-    lastName: string;
-    username: string;
-    rating: number;
-    profilePic: string;
-}
-
-const SellerInfo: React.FC<{ sellerInfo: any, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
+const SellerInfo: React.FC<{ sellerInfo: Seller | undefined, buttonLink: string, buttonText:string }> = ({ sellerInfo, buttonLink, buttonText }) => {
 
   const router = useRouter();
-
-  console.log(sellerInfo);
 
   return (
     <div className="h-full flex flex-col items-center p-4 bg-white-bg rounded-lg shadow-lg">
       {/* Profile Picture - Using Next.js Image component */}
       <div className="w-1/2 aspect-square rounded-full overflow-hidden border-2 border-primary shadow-lg">
-        <Image 
-          src={(sellerInfo?.profilePic) ? sellerInfo.profilePic : ''} 
-          alt="Seller Profile" 
+        <img
+          src={sellerInfo?.profilePic || '/images/logo/UTrade_small.svg'}
+          alt="Profile Picture"
           width={160} // Equivalent to w-40
           height={160} // Equivalent to h-40
           className="w-full h-full object-cover"
