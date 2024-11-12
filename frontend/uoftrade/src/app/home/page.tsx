@@ -35,7 +35,7 @@ const HomePage = () => {
           try {
             console.log(product);
             // Fetch user details and images sequentially
-            const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.data?.user_name}`, {
+            const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/info/${product?.user_name}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
