@@ -2,22 +2,6 @@ version: '3'
 
 services:
 
-  frontend:
-    build:
-      context: ./frontend/uoftrade  # Build context should point to the uoftrade folder
-      dockerfile: Dockerfile  # Path to the Dockerfile
-    ports:
-      - "3000:3000"  # Expose port 3000 to the host
-    environment:
-      - NODE_ENV=production  # Set environment to production
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}  # Ensure this is set in your .env file
-    env_file:
-      - .env  # Include the .env file if you have environment variables needed for production
-    volumes:
-      - ./frontend/uoftrade:/app 
-      - /app/node_modules
-    command: npm run start  # Start the Next.js app in production mode
-
   identity-service:
     build:
       context: ./identity_service
