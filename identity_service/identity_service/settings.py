@@ -24,14 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-cttsdiovd#7x(($))fgp5=+7rms_dg)si&%#ttkxi@^qi_#st$'
 
-HOST_ADDRESS = "174.129.53.127"
+HOST_ADDRESS = os.environ.get('HOST_ADDRESS')
 SCHEME = "http"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['identity-service', 'localhost', '127.0.0.1', '174.129.53.127']
+ALLOWED_HOSTS = ['identity-service', 'localhost', '127.0.0.1', os.environ.get('HOST_ADDRESS')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -75,7 +75,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-     'http://174.129.53.127:3000',  # The default port for create-next-app
+     f'http://{os.environ.get('HOST_ADDRESS')}:3000',  # The default port for create-next-app
 ]
 
 
