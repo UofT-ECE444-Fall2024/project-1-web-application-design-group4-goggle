@@ -14,7 +14,7 @@ const ListingImages: React.FC<ListingImagesProps> = ({ images, selectedImage, on
   const uniqueImages = images ? Array.from(new Set(images)) : [];
 
   return (
-    <div className="flex flex-row items-center mt-4 justify-center w-3/5">
+    <div className="flex flex-row mt-4 justify-items-start items-start w-3/5">
       {/* Thumbnail Images */}
       <div className="space-y-2 h-full flex bg-white-bg flex-col items-center">
         {uniqueImages.map((imageUrl, index) => (
@@ -24,7 +24,7 @@ const ListingImages: React.FC<ListingImagesProps> = ({ images, selectedImage, on
               }`}
             onClick={() => onSelectImage(imageUrl)}
           >
-            <div className="w-full h-full flex justify-center items-center bg-grey-bg-opaque">
+            <div className="w-full h-full flex bg-grey-bg-opaque">
               <img
                 src={imageUrl}
                 alt={`Thumbnail ${index + 1}`}
@@ -37,10 +37,11 @@ const ListingImages: React.FC<ListingImagesProps> = ({ images, selectedImage, on
       </div>
 
       {/* Main Image View */}
-      <div className="relative w-full h-full bg-grey-bg-opaque border border solid border-outline-grey rounded-lg overflow-hidden ml-8 mb-4">
+      <div className="relative bg-grey-bg-opaque border border flex items-start solid border-outline-grey rounded-lg overflow-hidden ml-8 mb-4">
         <img
           src={selectedImage || 'images/logo/UTrade_logo.svg'}
           alt="Main Image"
+
         />
       </div>
     </div>
