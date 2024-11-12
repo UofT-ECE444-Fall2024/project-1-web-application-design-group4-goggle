@@ -21,6 +21,9 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ filters, setFilters, sort
     const [sortByOpen, setSortByOpen] = React.useState(true);
     const [priceSortOpen, setPriceSortOpen] = React.useState(true);
     const [dateSortOpen, setDateSortOpen] = React.useState(true);
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen); // Toggle the sidebar's open state
+    };
 
     return (
         <div className="flex">
@@ -71,18 +74,36 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ filters, setFilters, sort
                 </div>
             </div>
 
+            {/* Button to open/close sidebar */}
             <button
                 className="h-12 ml-4 mt-4 z-40 px-6 bg-primary text-white-bg transition-all duration-300 shadow-three"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={toggleSidebar}
+                style={{ marginLeft: isOpen ? '0' : '-450px' }} // Adjust position based on sidebar state
             >
                 {/* Toggle icon based on isOpen state */}
                 {isOpen ? (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 ) : (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                    <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
                 )}
             </button>
