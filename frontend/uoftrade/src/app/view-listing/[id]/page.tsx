@@ -6,7 +6,7 @@ import Footer from '@/components/Footer/Footer';
 import ListingPageContent from '@/components/ListingDetails/ListingPageContent';
 import SellerInfo from '@/components/ListingDetails/SellerInfo';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import api from "@/api/axiosInstance"
 import Loading from '@/components/Loading/Loading';
 import { Listing } from '@/types/listing';
 import { Seller } from '@/types/seller';
