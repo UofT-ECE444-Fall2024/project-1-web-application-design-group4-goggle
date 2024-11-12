@@ -57,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-     'http://52.1.68.74:3000',  # The default port for create-next-app
+     'http://54.205.122.75:3000',  # The default port for create-next-app
      #'https://project-1-web-application-design-group4-goggle.vercel.app'
      
 ]
