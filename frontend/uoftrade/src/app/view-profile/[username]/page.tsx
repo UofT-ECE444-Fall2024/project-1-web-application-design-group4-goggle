@@ -58,12 +58,13 @@ const ViewProfilePage = () => {
         setSellerEmail(userDetails?.data?.email)
         setSellerIsUser(userDetails.data?.user_name === currentUser);
 
-        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+        const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            user_name: userDetails.data?.user_name,
+            q: userDetails.data?.user_name,
+            priority: "user_name"
           }
         });
 

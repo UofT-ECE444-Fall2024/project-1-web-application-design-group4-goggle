@@ -70,13 +70,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
         });
 
         if (requiresListingData) {
-          const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/products/`, {
+          const userListings = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-list`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
             params: {
-              user_name: currentUser,
-            }
+              q: currentUser,
+              priority: "user_name"
+            },
           });
 
           userListings.data?.forEach((product: any) => {
