@@ -86,6 +86,22 @@ class ProductDetail(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
     lookup_field = "id"
 
+    #delete product
+    def delete(self, request, *args, **kwargs):
+        product = self.get_object()
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    #update product
+    def put(self, request, *args, **kwargs):
+        product = self.get_object()
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
