@@ -21,7 +21,7 @@ const PostCard: React.FC<PostCardProps> = ({ image, title, price, description, i
     <button onClick={() => {router.push(`/view-listing/${id}`)}} className="border border-outline-grey rounded-lg p-4 flex flex-col md:flex-row space-x-4 items-center md:items-start shadow-sm bg-off-white hover:bg-light-grey">
       <div className="relative w-32 h-32 flex-shrink-0 ">
         <img
-          src={(image !== "") ? image?.replace(/(http:\/\/[^/]+)(\/media)/, "$1:12001$2") : 'images/logo/UTrade_logo.svg'}
+          src={'images/misc/viewlisting.jpg'}
           alt={title}
           className="rounded-md border-outline-grey"
         />
