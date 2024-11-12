@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import TextBox from "../TextBox/TextBox";
 import axios from "axios";
-
-import "../../types/inputs"
+import { ProfileEditInputs } from "@/types/inputs";
 
 const ProfileEditForm = () => {
     const [showNotif, setShowNotif] = useState<boolean>(false);
