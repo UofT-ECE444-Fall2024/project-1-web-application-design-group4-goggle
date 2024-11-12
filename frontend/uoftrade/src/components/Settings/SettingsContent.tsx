@@ -82,7 +82,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ ContentComponent, hig
 
           userListings.data?.forEach((product: any) => {
 
-            const sellerName = `${userDetails.data?.first_name} ${userDetails.data?.last_name}`
+            let sellerName = `${userDetails.data?.first_name} ${userDetails.data?.last_name}`
 
             listings.push ({
               id: product?.id,

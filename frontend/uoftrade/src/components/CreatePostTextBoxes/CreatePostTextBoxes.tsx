@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import TextBox from "../TextBox/TextBox";
 import SelectDropdown from "./SelectDropdown";
 import { categories } from "@/data/categories";
-import { CreatePostInputs } from "@/types/inputs";
 
 const CreatePostTextBoxes = ({
   onPublish,

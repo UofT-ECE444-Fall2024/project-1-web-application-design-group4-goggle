@@ -1,16 +1,16 @@
 'use client'
 
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import TextBox from "../TextBox/TextBox";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form"
-import { LoginInputs } from "@/types/inputs";
+import "../../types/inputs"
 
 const SignInForm = () => {
-
+    const [serverError, setServerError] = useState<string | null>(null); // State to hold server error
     const router = useRouter();
     const {
         register,
@@ -22,7 +22,7 @@ const SignInForm = () => {
     const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
         try {
 
-            const payload = {
+            const payload:Object = {
                 email: data.email, 
                 password: data.password
             };

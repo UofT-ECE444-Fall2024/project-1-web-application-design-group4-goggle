@@ -17,7 +17,7 @@ const ProfilePictureEdit: React.FC<{ seller: Seller | undefined }> = ({ seller }
         const token = localStorage.getItem('token');
         const currentUser = localStorage.getItem('currentUser');
         console.log("current user",currentUser);
-        const payload = {
+        const payload: Object = {
             image: image,
             user_name: currentUser
         };

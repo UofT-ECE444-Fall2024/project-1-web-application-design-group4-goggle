@@ -1,4 +1,4 @@
-export type SettingsMenuItem = {
+type SettingsMenuItem = {
     text: string
     link: string
   }

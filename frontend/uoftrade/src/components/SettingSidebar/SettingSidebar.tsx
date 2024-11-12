@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {useRouter} from "next/navigation";
 import SidebarMenuItem from "./SidebarMenuItem";
 
-import { SettingsMenuItem } from "@/types/settingsMenuItem";
+import '../../types/settingsMenuItem'
 
 
 const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
@@ -43,7 +43,7 @@ const SettingSidebar = ({ highlightIndex }: {highlightIndex: number}) => {
                             Settings
                         </h3>
                         {menuItems.map((item: SettingsMenuItem, idx: number) => {
-                            const highlight: boolean = highlightIndex === idx;
+                            let highlight: boolean = highlightIndex === idx;
                             return (
                                 <SidebarMenuItem 
                                     key={idx}
