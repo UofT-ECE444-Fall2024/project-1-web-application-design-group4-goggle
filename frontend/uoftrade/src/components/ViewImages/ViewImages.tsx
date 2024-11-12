@@ -68,11 +68,10 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
         <ArrowForwardIosIcon className="rotate-180" />
       </button>
       <div className="relative w-3/4 h-3/4">
-        <Image
+        <img
           src={images[currentImageIndex]}
           alt={`Image ${currentImageIndex}`}
-          layout="fill"
-          objectFit="contain"
+          className={"object-contain"}
         />
       </div>
       <button
@@ -88,7 +87,7 @@ const ViewImages: React.FC<ViewImagesProps> = ({ images, initialIndex, onClose, 
             className={`w-[90px] h-[90px] border-2 rounded-md overflow-hidden cursor-pointer ${index === currentImageIndex ? "border-white" : "border-black"}`}
             onClick={() => setCurrentImageIndex(index)}
           >
-            <Image
+            <img
               src={src}
               alt={`Thumbnail ${index}`}
               className="object-cover w-full h-full"
