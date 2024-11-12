@@ -1,4 +1,4 @@
-type RegistrationInputs = {
+export type RegistrationInputs = {
     first_name: string
     last_name: string
     password: string
@@ -7,19 +7,19 @@ type RegistrationInputs = {
     user_name: string
   }
 
-type LoginInputs = {
+export type LoginInputs = {
     password: string
     email: string
     signedin: boolean
   }
 
-type ProfileEditInputs = {
+export type ProfileEditInputs = {
     first_name: string
     last_name: string
     user_name:string
   }
 
-type CreatePostInputs = {
+export type CreatePostInputs = {
   title: string
   price: number
   description: string

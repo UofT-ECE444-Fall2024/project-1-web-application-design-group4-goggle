@@ -2,22 +2,6 @@ version: '3'
 
 services:
 
-  frontend:
-    build:
-      context: ./frontend/uoftrade
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    volumes:
-      - ./frontend/uoftrade:/app
-      - /app/node_modules
-    command: npm run dev
-    env_file:
-      - .env
-
   identity-service:
     build:
       context: ./identity_service
