@@ -40,6 +40,7 @@ const HomePage = () => {
                 Authorization: `Bearer ${token}`,
               },
             });
+            console.log(userDetails);
         
             const userImages = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}identity/UserImages/`, {
               headers: {
@@ -49,8 +50,9 @@ const HomePage = () => {
                 user_name: product?.data?.user_name,
               },
             });
+            console.log(userDetails);
         
-            const sellerName = `${userDetails?.data?.firstName} ${userDetails?.data?.lastName}`;
+            const sellerName = `${userDetails?.data?.first_name} ${userDetails?.data?.last_name}`;
         
             listings.push({
               id: product?.id,
@@ -62,7 +64,7 @@ const HomePage = () => {
               seller: {
                 name: sellerName || 'Unknown Seller',
                 username: userImages?.data?.username || '',
-                image: userImages?.data?.images?.[0].image || '',
+                image: userImages?.data?.images?.[userImages?.data?.images?.length -1].image || '',
                 rating: userDetails?.data?.rating || 0,
               },
               tags: product?.category ? [product.category] : [],

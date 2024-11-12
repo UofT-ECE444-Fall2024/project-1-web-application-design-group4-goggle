@@ -92,7 +92,7 @@ const PostListingPage = () => {
       price: textData.price,
       description: textData.description,
       location: textData.location.replace(/\s+/g, ''),
-      tags: [textData.category],
+      category: textData.category,
       ...(useImages ? { images: images } : {}), // Conditionally include images field
       user_name: currentUser
     };
