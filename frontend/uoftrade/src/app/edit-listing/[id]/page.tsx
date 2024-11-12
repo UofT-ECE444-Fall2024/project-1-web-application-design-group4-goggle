@@ -319,7 +319,7 @@ const EditListingPage = () => {
       ...(useImages ? { images: images } : {}), // Conditionally include images field
       user_name: currentUser
     };
-    return await axios.put(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-details/${id}`, payload, {
+    return await axios.put(`${process.env.NEXT_PUBLIC_API_URL}marketplace/product-detail/${id}`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
