@@ -32,7 +32,7 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
         </button>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <button
-              onClick={() => {router.push(`/listing-details/${id}`)}}
+              onClick={() => {router.push(`/view-listing/${id}`)}}
           >
             <h3 className="block text-xl font-bold text-heading-1 hover:underline hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl">        
                 {title}
