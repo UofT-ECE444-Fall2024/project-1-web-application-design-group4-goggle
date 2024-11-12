@@ -38,14 +38,14 @@ const SignUpForm = () => {
                 password_confirmation: data.password_confirmation
             };
             
-            registered = await api.post(`${process.env.NEXT_PUBLIC_API_URL}identity/register`, payload, {
+            registered = await api.post(`identity/register`, payload, {
                 headers: { 'Content-Type': 'application/json' }
               });
 
-            axios.defaults.baseURL = 'http://18.207.149.254/'
-            registered = await axios.post(`identity/register`, payload, {
-                headers: { 'Content-Type': 'application/json' }
-              });
+            // axios.defaults.baseURL = 'http://18.207.149.254/'
+            // registered = await axios.post(`identity/register`, payload, {
+            //     headers: { 'Content-Type': 'application/json' }
+            //   });
             
 
             const token = registered.data?.token;
